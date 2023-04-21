@@ -1,5 +1,7 @@
 export const environment = {
     production: false,
+    // PUSH_NOTIFY_BASE_URL: "http://localhost:7979/api/v1",
+    PUSH_NOTIFY_BASE_URL: "https://be-springboot-firebase-pn.herokuapp.com/api/v1",
     FirebaseConfig: {
         apiKey: "AIzaSyDS7QB__SBdRDOZPTKX4_jqDFbZqIzM7S4",
         authDomain: "social-network-app-19cd7.firebaseapp.com",

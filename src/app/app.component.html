@@ -1,4 +1,8 @@
+<p-toast></p-toast>
 <h1 class="text-3xl font-bold underline">
   Hello world!
 </h1>
-<p-button class="p-button-primary" label="Confirm" icon="pi pi-check"></p-button>
+<!-- <button pButton pRipple class="p-button-warning" label="Subscribe" (click)="subscribe()"></button> -->
+<p-inputSwitch [(ngModel)]="userToken.active" (onChange)="subscribe()"></p-inputSwitch>
+<br>
+<button pButton pRipple class="p-button-warning" label="Notify" (click)="notify()"></button>
