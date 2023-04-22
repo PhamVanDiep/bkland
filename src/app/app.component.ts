@@ -98,7 +98,7 @@ export class AppComponent implements OnInit{
   }
 
   subscribe(): void {
-    if (this.userToken.id >= 0) {
+    if (this.userToken.id > 0) {
       this._pushNotificationService.updateUserToken(this.userToken)
         .subscribe((response: UserToken) => {
           this.userToken = response;
