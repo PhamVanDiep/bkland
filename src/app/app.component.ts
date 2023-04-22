@@ -15,7 +15,13 @@ import { NotificationMessage } from './core/models/message.model';
 export class AppComponent implements OnInit{
   title = 'bkland-fe';
   deviceInfo: DeviceInfo;
-  userToken: UserToken;
+  userToken: UserToken = {
+    id: 0,
+    userId: 'dieppv',
+    deviceInfo: '',
+    token: '',
+    active: false
+  };
   userTokens: UserToken[];
 
   constructor(
@@ -71,13 +77,7 @@ export class AppComponent implements OnInit{
 
     // this.epicFunction();
     this.deviceInfo = this._deviceDetectorService.getDeviceInfo();
-    this.userToken = {
-      id: 0,
-      userId: 'dieppv',
-      deviceInfo: this.deviceInfo.userAgent,
-      token: '',
-      active: false
-    };
+    this.userToken.deviceInfo = this.deviceInfo.userAgent;
 
     this._pushNotificationService.getUserToken(this.userToken)
       .subscribe((response: UserToken) => {
