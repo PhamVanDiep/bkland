@@ -15,13 +15,7 @@ import { NotificationMessage } from './core/models/message.model';
 export class AppComponent implements OnInit{
   title = 'bkland-fe';
   deviceInfo: DeviceInfo;
-  userToken: UserToken = {
-    id: 0,
-    userId: 'dieppv',
-    deviceInfo: '',
-    token: '',
-    active: false
-  };
+  userToken: UserToken;
   userTokens: UserToken[];
 
   constructor(
@@ -33,6 +27,13 @@ export class AppComponent implements OnInit{
   ) {
     // this._appTitleService.setTitle("Hello world");
     this._appUpdateService.update();
+    this.userToken = {
+      id: 0,
+      userId: 'dieppv',
+      deviceInfo: '',
+      token: '',
+      active: false
+    };
   }
 
   ngOnInit(): void {
@@ -45,7 +46,9 @@ export class AppComponent implements OnInit{
     
     this._pushNotificationService.getAllUserToken()
       .subscribe((response: UserToken[]) => {
-        this.userTokens = response;
+        if (response) {
+          this.userTokens = response; 
+        }
       });
 
     this._pushNotificationService.pushNotifyToken$
@@ -81,7 +84,9 @@ export class AppComponent implements OnInit{
 
     this._pushNotificationService.getUserToken(this.userToken)
       .subscribe((response: UserToken) => {
-        this.userToken = response;
+        if (response) {
+          this.userToken = response; 
+        }
       });
   }
 
