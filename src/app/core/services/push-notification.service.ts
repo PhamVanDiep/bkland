@@ -13,6 +13,7 @@ export class PushNotificationService {
     private pushNotifyToken: ReplaySubject<string> = new ReplaySubject<string>();
     private message: ReplaySubject<any> = new ReplaySubject<any>();
     private PN_FIREBASE_URL: string = 'https://fcm.googleapis.com/fcm/send';
+    private FCM_KEY: string = 'AAAA6jZuRHA:APA91bGh0Ji9Gx0sXjQ38v4um54ofTP4eWyn2WBdOC7vqV9GO_sacXotS6FWL1aQdZK0dWK97dOaQFUm9zsqOiA_MNOS9_yPC30QyYR9dN0ckaER-MqImSLJGvi7vIXA7erI5U--WO5N';
 
     constructor(private _httpClient: HttpClient){}
 
@@ -24,6 +25,10 @@ export class PushNotificationService {
                         title: message.content
                     },
                     to: e.token
+                }, { headers: {
+                    'Authorization': `key=${this.FCM_KEY}`
+                } }).subscribe((response: any) => {
+
                 });   
             }
         });
