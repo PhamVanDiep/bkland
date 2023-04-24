@@ -6,3 +6,29 @@
 <p-inputSwitch [(ngModel)]="userToken.active" (onChange)="subscribe()"></p-inputSwitch>
 <br>
 <button pButton pRipple class="p-button-warning" label="Notify" (click)="notify()"></button>
+<br>
+<!-- <google-map height="500px" width="900px" [center]="center" [zoom]="zoom" (mapClick)="moveMap($event)"
+  (mapMousemove)="move($event)">
+</google-map>
+
+<div>Latitude: {{display?.lat}}</div>
+<div>Longitude: {{display?.lng}}</div> -->
+<!-- app.component.html -->
+<div class="container">
+
+  <h1>Angular Google Maps with Places Search Example</h1>
+
+  <div class="form-group">
+    <label>Enter address</label>
+    <input type="text" class="form-control" (keydown.enter)="$event.preventDefault()"
+      placeholder="Search Nearest Location" autocorrect="off" autocapitalize="off" spellcheck="off" type="text" #search>
+  </div>
+
+  <google-map [width]="'500px'" [center]="center" [zoom]="zoom">
+    <map-marker [position]="markerPosition" [options]="markerOptions" (mapDragend)="setLocation()"></map-marker>
+  </google-map>
+
+  <h5>Address: {{address}}</h5>
+  <div>Latitude: {{ display?.lat }}</div>
+  <div>Longitude: {{ display?.lng }}</div>
+</div>

@@ -18,6 +18,7 @@ import { MessageService } from 'primeng/api';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { GoogleMapsModule } from '@angular/google-maps';
 
 initializeApp(environment.FirebaseConfig);
 
@@ -36,6 +37,7 @@ initializeApp(environment.FirebaseConfig);
     HttpClientModule,
     ToastModule,
     InputSwitchModule,
+    GoogleMapsModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production,
       // Register the ServiceWorker as soon as the application is stable

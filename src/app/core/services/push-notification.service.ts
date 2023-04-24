@@ -13,7 +13,7 @@ export class PushNotificationService {
     private pushNotifyToken: ReplaySubject<string> = new ReplaySubject<string>();
     private message: ReplaySubject<any> = new ReplaySubject<any>();
     private PN_FIREBASE_URL: string = 'https://fcm.googleapis.com/fcm/send';
-    private FCM_KEY: string = 'AAAA6jZuRHA:APA91bGh0Ji9Gx0sXjQ38v4um54ofTP4eWyn2WBdOC7vqV9GO_sacXotS6FWL1aQdZK0dWK97dOaQFUm9zsqOiA_MNOS9_yPC30QyYR9dN0ckaER-MqImSLJGvi7vIXA7erI5U--WO5N';
+    private FCM_KEY: string = 'AAAAQHd6Jxs:APA91bGAxydZmPaHEfVY7ZM8kh_k6engPxiYImUjZ37B96AfIFH9sW5IheYnjrdzu5DZ76rB2ML8Ul-RI_Ufr3xGOXU7gowMrH0SPMblAHb_RsqSk9C-CNB4AzN1jPosu1k6gZBgQr_w';
 
     constructor(private _httpClient: HttpClient){}
 

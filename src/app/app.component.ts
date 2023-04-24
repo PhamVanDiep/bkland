@@ -12,11 +12,24 @@ import { NotificationMessage } from './core/models/message.model';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit{
+export class AppComponent implements OnInit {
   title = 'bkland-fe';
   deviceInfo: DeviceInfo;
   userToken: UserToken;
   userTokens: UserToken[];
+  // google maps variable
+  display: any;
+  center: google.maps.LatLngLiteral = {
+    lat: 21.0431599,
+    lng: 105.8407837
+  }
+  address: string;
+  zoom: number = 16;
+  markerPosition: google.maps.LatLngLiteral = this.center;
+  markerOptions: google.maps.MarkerOptions = {
+    draggable: true
+  }
+  geoCoder: google.maps.Geocoder;
 
   constructor(
     private _appTitleService: AppTitleService,
@@ -34,6 +47,7 @@ export class AppComponent implements OnInit{
       token: '',
       active: false
     };
+    this.geoCoder = new google.maps.Geocoder;
   }
 
   ngOnInit(): void {
@@ -43,11 +57,11 @@ export class AppComponent implements OnInit{
           this.reload();
         }
       });
-    
+
     this._pushNotificationService.getAllUserToken()
       .subscribe((response: UserToken[]) => {
         if (response) {
-          this.userTokens = response; 
+          this.userTokens = response;
         }
       });
 
@@ -65,7 +79,7 @@ export class AppComponent implements OnInit{
           this._pushNotificationService.addUserToken(userToken)
             .subscribe((response: UserToken) => {
               if (response) {
-                this._messageService.add({ severity: 'success', summary: 'Thông báo', detail: `Đăng ký nhận thông báo thành công: ${response.id}` });  
+                this._messageService.add({ severity: 'success', summary: 'Thông báo', detail: `Đăng ký nhận thông báo thành công: ${response.id}` });
               } else {
                 this._messageService.add({ severity: 'success', summary: 'Thông báo', detail: `Đã đăng ký nhận thông báo trước đó` });
               }
@@ -85,9 +99,11 @@ export class AppComponent implements OnInit{
     this._pushNotificationService.getUserToken(this.userToken)
       .subscribe((response: UserToken) => {
         if (response) {
-          this.userToken = response; 
+          this.userToken = response;
         }
       });
+
+    this.setAddress();
   }
 
   reload(): void {
@@ -117,6 +133,9 @@ export class AppComponent implements OnInit{
     this._pushNotificationService.notify(message, this.userTokens);
   }
 
+  /**
+   * get device info func
+   */
   epicFunction() {
     this.deviceInfo = this._deviceDetectorService.getDeviceInfo();
     const isMobile = this._deviceDetectorService.isMobile();
@@ -126,5 +145,28 @@ export class AppComponent implements OnInit{
     console.log(isMobile);  // returns if the device is a mobile device (android / iPhone / windows-phone etc)
     console.log(isTablet);  // returns if the device us a tablet (iPad etc)
     console.log(isDesktopDevice); // returns if the app is running on a Desktop browser.
+  }
+
+  moveMap(event: google.maps.MapMouseEvent) {
+    if (event.latLng != null) this.center = (event.latLng.toJSON());
+  }
+
+  move(event: google.maps.MapMouseEvent) {
+    if (event.latLng != null) this.display = event.latLng.toJSON();
+  }
+
+  setLocation(): void {
+    console.log('dragged end');
+  }
+
+  setAddress(): void {
+    this.geoCoder.geocode({ 'location': { lat: this.center.lat, lng: this.center.lng } }, (result: any, status: any) => {
+      console.log(result);
+      console.log(status);
+      
+      if (status === 'OK') {
+        
+      }
+    })
   }
 }
