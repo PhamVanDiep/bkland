@@ -19,4 +19,12 @@ export class NoAuthGuardService {
         | UrlTree {
         return true;
     }
+
+    canActivateChild(childRoute: ActivatedRouteSnapshot, state: RouterStateSnapshot): 
+        | Observable<boolean | UrlTree>
+        | Promise<boolean | UrlTree>
+        | boolean
+        | UrlTree {
+        return true;
+    }
 }

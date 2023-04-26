@@ -22,6 +22,9 @@ const routes: Routes = [
     path: 'user',
     canActivate: [AuthGuard],
     canActivateChild: [AuthGuard],
+    data: {
+      expectedRole: 'user'
+    },
     children: [
       {
         path: '',
@@ -33,6 +36,9 @@ const routes: Routes = [
     path: 'admin',
     canActivate: [AuthGuard],
     canActivateChild: [AuthGuard],
+    data: {
+      expectedRole: 'admin'
+    },
     children: [
       {
         path: '',
@@ -44,6 +50,10 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
+  providers: [
+    AuthGuard,
+    NoAuthGuard
+  ]
 })
 export class AppRoutingModule { }
