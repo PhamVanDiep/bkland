@@ -19,6 +19,8 @@ import { InputSwitchModule } from 'primeng/inputswitch';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { GoogleMapsModule } from '@angular/google-maps';
+import { JWT_OPTIONS, JwtHelperService } from '@auth0/angular-jwt';
+import { AuthService } from './core/auth_test/auth.service';
 
 initializeApp(environment.FirebaseConfig);
 
@@ -38,20 +40,23 @@ initializeApp(environment.FirebaseConfig);
     ToastModule,
     InputSwitchModule,
     GoogleMapsModule,
-    ServiceWorkerModule.register('ngsw-worker.js', {
-      enabled: environment.production,
-      // Register the ServiceWorker as soon as the application is stable
-      // or after 30 seconds (whichever comes first).
-      registrationStrategy: 'registerWhenStable:30000'
-    })
+    // ServiceWorkerModule.register('ngsw-worker.js', {
+    //   enabled: environment.production,
+    //   // Register the ServiceWorker as soon as the application is stable
+    //   // or after 30 seconds (whichever comes first).
+    //   registrationStrategy: 'registerWhenStable:30000'
+    // })
   ],
   providers: [
     Title, 
     AppTitleService, 
-    AppUpdateService, 
+    // AppUpdateService, 
     PushNotificationService, 
     DeviceDetectorService,
-    MessageService
+    MessageService,
+    { provide: JWT_OPTIONS, useValue: JWT_OPTIONS },
+    JwtHelperService,
+    AuthService
   ],
   bootstrap: [AppComponent]
 })

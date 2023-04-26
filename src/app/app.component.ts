@@ -33,13 +33,13 @@ export class AppComponent implements OnInit {
 
   constructor(
     private _appTitleService: AppTitleService,
-    private _appUpdateService: AppUpdateService,
+    // private _appUpdateService: AppUpdateService,
     private _pushNotificationService: PushNotificationService,
     private _deviceDetectorService: DeviceDetectorService,
     private _messageService: MessageService
   ) {
     // this._appTitleService.setTitle("Hello world");
-    this._appUpdateService.update();
+    // this._appUpdateService.update();
     this.userToken = {
       id: 0,
       userId: 'dieppv',
@@ -51,59 +51,59 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this._appUpdateService.reload$
-      .subscribe((response: boolean) => {
-        if (response) {
-          this.reload();
-        }
-      });
+    // this._appUpdateService.reload$
+    //   .subscribe((response: boolean) => {
+    //     if (response) {
+    //       this.reload();
+    //     }
+    //   });
 
-    this._pushNotificationService.getAllUserToken()
-      .subscribe((response: UserToken[]) => {
-        if (response) {
-          this.userTokens = response;
-        }
-      });
+    // this._pushNotificationService.getAllUserToken()
+    //   .subscribe((response: UserToken[]) => {
+    //     if (response) {
+    //       this.userTokens = response;
+    //     }
+    //   });
 
-    this._pushNotificationService.pushNotifyToken$
-      .subscribe((response: string) => {
-        console.log(response);
-        if (response) {
-          let userToken: UserToken = {
-            id: 0,
-            userId: 'dieppv',
-            token: response,
-            deviceInfo: this.deviceInfo.userAgent,
-            active: true
-          }
-          this._pushNotificationService.addUserToken(userToken)
-            .subscribe((response: UserToken) => {
-              if (response) {
-                this._messageService.add({ severity: 'success', summary: 'Thông báo', detail: `Đăng ký nhận thông báo thành công: ${response.id}` });
-              } else {
-                this._messageService.add({ severity: 'success', summary: 'Thông báo', detail: `Đã đăng ký nhận thông báo trước đó` });
-              }
-            })
-        }
-      });
+    // this._pushNotificationService.pushNotifyToken$
+    //   .subscribe((response: string) => {
+    //     console.log(response);
+    //     if (response) {
+    //       let userToken: UserToken = {
+    //         id: 0,
+    //         userId: 'dieppv',
+    //         token: response,
+    //         deviceInfo: this.deviceInfo.userAgent,
+    //         active: true
+    //       }
+    //       this._pushNotificationService.addUserToken(userToken)
+    //         .subscribe((response: UserToken) => {
+    //           if (response) {
+    //             this._messageService.add({ severity: 'success', summary: 'Thông báo', detail: `Đăng ký nhận thông báo thành công: ${response.id}` });
+    //           } else {
+    //             this._messageService.add({ severity: 'success', summary: 'Thông báo', detail: `Đã đăng ký nhận thông báo trước đó` });
+    //           }
+    //         })
+    //     }
+    //   });
 
-    this._pushNotificationService.message$
-      .subscribe((response: any) => {
-        console.log(response);
-      });
+    // this._pushNotificationService.message$
+    //   .subscribe((response: any) => {
+    //     console.log(response);
+    //   });
 
-    // this.epicFunction();
-    this.deviceInfo = this._deviceDetectorService.getDeviceInfo();
-    this.userToken.deviceInfo = this.deviceInfo.userAgent;
+    // // this.epicFunction();
+    // this.deviceInfo = this._deviceDetectorService.getDeviceInfo();
+    // this.userToken.deviceInfo = this.deviceInfo.userAgent;
 
-    this._pushNotificationService.getUserToken(this.userToken)
-      .subscribe((response: UserToken) => {
-        if (response) {
-          this.userToken = response;
-        }
-      });
+    // this._pushNotificationService.getUserToken(this.userToken)
+    //   .subscribe((response: UserToken) => {
+    //     if (response) {
+    //       this.userToken = response;
+    //     }
+    //   });
 
-    this.setAddress();
+    // this.setAddress();
   }
 
   reload(): void {
