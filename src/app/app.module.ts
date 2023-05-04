@@ -21,6 +21,8 @@ import { FormsModule } from '@angular/forms';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { JWT_OPTIONS, JwtHelperService } from '@auth0/angular-jwt';
 import { AuthService } from './core/auth_test/auth.service';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { LoadingService } from './core/services/loading.service';
 
 initializeApp(environment.FirebaseConfig);
 
@@ -40,6 +42,7 @@ initializeApp(environment.FirebaseConfig);
     ToastModule,
     InputSwitchModule,
     GoogleMapsModule,
+    ProgressSpinnerModule
     // ServiceWorkerModule.register('ngsw-worker.js', {
     //   enabled: environment.production,
     //   // Register the ServiceWorker as soon as the application is stable
@@ -56,7 +59,8 @@ initializeApp(environment.FirebaseConfig);
     MessageService,
     { provide: JWT_OPTIONS, useValue: JWT_OPTIONS },
     JwtHelperService,
-    AuthService
+    AuthService,
+    LoadingService
   ],
   bootstrap: [AppComponent]
 })

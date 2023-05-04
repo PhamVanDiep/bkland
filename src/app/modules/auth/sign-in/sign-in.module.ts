@@ -10,6 +10,11 @@ import { FormsModule } from '@angular/forms';
 import { PasswordModule } from 'primeng/password';
 import { InputTextModule } from 'primeng/inputtext';
 import { CheckboxModule } from 'primeng/checkbox';
+import { LoadingService } from 'src/app/core/services/loading.service';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { SocialLoginModule, SocialAuthServiceConfig, GoogleLoginProvider } from '@abacritt/angularx-social-login';
 
 @NgModule({
   declarations: [
@@ -22,11 +27,28 @@ import { CheckboxModule } from 'primeng/checkbox';
     FormsModule,
     CheckboxModule,
     InputTextModule,
-    PasswordModule
+    PasswordModule,
+    ToastModule,
+    ProgressSpinnerModule,
+    SocialLoginModule
   ],
   providers: [
+    {
+      provide: 'SocialAuthServiceConfig',
+      useValue: {
+        autoLogin: false,
+        providers: [
+          {
+            id: GoogleLoginProvider.PROVIDER_ID,
+            provider: new GoogleLoginProvider('276882401051-qmrklqqvuuht57jdcutjvs9bq5cuiihf.apps.googleusercontent.com'),
+          },
+        ],
+      } as SocialAuthServiceConfig,
+    },
     AppTitleService,
-    AuthService
+    AuthService,
+    LoadingService,
+    MessageService
   ]
 })
 export class SignInModule { }

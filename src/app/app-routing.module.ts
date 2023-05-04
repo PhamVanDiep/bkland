@@ -4,10 +4,14 @@ import { RouterModule, Routes } from '@angular/router';
 // import { NoAuthGuardService as NoAuthGuard } from './core/auth_test/no-auth.guard';
 import { AuthGuardService as AuthGuard } from 'src/app/core/guards/auth.guard';
 import { NoAuthGuardService as NoAuthGuard } from 'src/app/core/guards/no-auth.guard';
+import { ROLE } from './core/constants/role.constant';
 
 const routes: Routes = [
   {
     path: '', redirectTo: '/home', pathMatch: 'full'
+  },
+  {
+    path: 'signed-in-redirect', pathMatch: 'full', redirectTo: '/home'
   },
   {
     path: 'login',
@@ -47,7 +51,7 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     canActivateChild: [AuthGuard],
     data: {
-      expectedRole: 'user'
+      expectedRole: ROLE.ROLE_USER
     },
     children: [
       {
@@ -61,7 +65,7 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     canActivateChild: [AuthGuard],
     data: {
-      expectedRole: 'admin'
+      expectedRole: ROLE.ROLE_ADMIN
     },
     children: [
       {
