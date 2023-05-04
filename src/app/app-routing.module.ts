@@ -1,11 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AuthGuardService as AuthGuard } from './core/auth_test/auth.guard';
-import { NoAuthGuardService as NoAuthGuard } from './core/auth_test/no-auth.guard';
+// import { AuthGuardService as AuthGuard } from './core/auth_test/auth.guard';
+// import { NoAuthGuardService as NoAuthGuard } from './core/auth_test/no-auth.guard';
+import { AuthGuardService as AuthGuard } from 'src/app/core/guards/auth.guard';
+import { NoAuthGuardService as NoAuthGuard } from 'src/app/core/guards/no-auth.guard';
 
 const routes: Routes = [
   {
-    path: '', redirectTo: '/user', pathMatch: 'full'
+    path: '', redirectTo: '/home', pathMatch: 'full'
   },
   {
     path: 'login',
@@ -14,7 +16,29 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        loadChildren: () => import('src/app/modules/login/login.module').then(m => m.LoginModule)
+        loadChildren: () => import('src/app/modules/auth/sign-in/sign-in.module').then(m => m.SignInModule)
+      }
+    ]
+  },
+  {
+    path: 'register',
+    canActivate: [NoAuthGuard],
+    canActivateChild: [NoAuthGuard],
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('src/app/modules/auth/sign-up/sign-up.module').then(m => m.SignUpModule)
+      }
+    ]
+  },
+  {
+    path: 'home',
+    canActivate: [NoAuthGuard],
+    canActivateChild: [NoAuthGuard],
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('src/app/modules/landing-page/landing-page.module').then(m => m.LandingPageModule)
       }
     ]
   },
