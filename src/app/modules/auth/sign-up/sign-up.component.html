@@ -1,1 +1,142 @@
-<p>sign-up works!</p>
+<div class="progress-spinner" *ngIf="loading">
+    <p-progressSpinner></p-progressSpinner>
+</div>
+<p-toast></p-toast>
+<div class="h-full bg-cover bg-no-repeat bg-login-bgr-img flex items-center justify-center">
+    <div
+        class="w-full h-full lg:w-1/3 lg:max-h-[80%] lg:overflow-y-auto bg-white lg:rounded-2xl flex flex-col p-8 space-y-4">
+        <div class="flex flex-col w-full items-center">
+            <span class="font-semibold text-3xl">Đăng ký tài khoản</span>
+        </div>
+        <div class="flex flex-col space-y-4 pb-8">
+            <!-- <label for="username" class="block text-base font-medium mb-2">Tên đăng nhập</label>
+            <input id="username" type="text" placeholder="Nhập tên đăng nhập" pInputText 
+                class="w-full md:w-30rem mb-5 p-4" [(ngModel)]="signUpRequest.username"> -->
+            <div>
+                <label for="username" class="text-sm">Tên đăng nhập</label>
+                <input id="username" pInputText class="w-full" [(ngModel)]="signUpRequest.username"
+                    placeholder="Tên đăng nhập" [autofocus]="true"
+                    [ngClass]="nullable(signUpRequest.username) ? 'ng-invalid ng-dirty' : ''">
+            </div>
+            <div>
+                <label for="email" class="text-sm">Email</label>
+                <input id="email" pInputText class="w-full" [(ngModel)]="signUpRequest.email" type="email"
+                    placeholder="Email" [ngClass]="nullable(signUpRequest.email) ? 'ng-invalid ng-dirty' : ''">
+            </div>
+            <div class="flex flex-col w-full">
+                <label for="gender" class="text-sm">Bạn là</label>
+                <div class="flex flex-row space-x-4">
+                    <div *ngFor="let item of lstAccounts" class="field-checkbox">
+                        <p-radioButton [inputId]="item.id" name="category" [value]="item.id" [(ngModel)]="selectedRole"
+                            (ngModelChange)="setRole()"></p-radioButton>
+                        <label [for]="item.id" class="ml-2">{{ item.title }}</label>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="selectedRole == 1">
+                <div class="flex flex-row space-x-2 justify-between">
+                    <div>
+                        <label for="firstName" class="text-sm">Họ</label>
+                        <input id="firstName" pInputText class="w-full" [(ngModel)]="signUpRequest.firstName"
+                            placeholder="Họ" [ngClass]="nullable(signUpRequest.firstName) ? 'ng-invalid ng-dirty' : ''">
+                    </div>
+                    <div>
+                        <label for="middleName" class="text-sm">Tên đệm</label>
+                        <input id="middleName" pInputText class="w-full" [(ngModel)]="signUpRequest.middleName"
+                            placeholder="Tên đệm"
+                            [ngClass]="nullable(signUpRequest.middleName) ? 'ng-invalid ng-dirty' : ''">
+                    </div>
+                    <div>
+                        <label for="lastName" class="text-sm">Tên</label>
+                        <input id="lastName" pInputText class="w-full" [(ngModel)]="signUpRequest.lastName"
+                            placeholder="Tên" [ngClass]="nullable(signUpRequest.lastName) ? 'ng-invalid ng-dirty' : ''">
+                    </div>
+                </div>
+                <div>
+                    <label for="identification" class="text-sm">CCCD</label>
+                    <input id="identification" pInputText class="w-full" [(ngModel)]="signUpRequest.identification"
+                        placeholder="Nhập số căn cước công dân" minlength="12" maxlength="12"
+                        [ngClass]="nullable(signUpRequest.identification) ? 'ng-invalid ng-dirty' : ''">
+                </div>
+                <div class="flex flex-row space-x-4">
+                    <div class="flex flex-col w-full">
+                        <label for="dateOfBirth" class="text-sm">Ngày sinh</label>
+                        <p-calendar id="dateOfBirth" class="w-full" [(ngModel)]="signUpRequest.dateOfBirth"
+                            placeholder="dd/MM/YYYY"
+                            [ngClass]="nullable(signUpRequest.dateOfBirth) ? 'ng-invalid ng-dirty' : ''"></p-calendar>
+                    </div>
+                    <div class="w-full">
+                        <label for="gender" class="text-sm">Giới tính</label>
+                        <div class="flex flex-row space-x-4">
+                            <div *ngFor="let item of lstGenders" class="field-checkbox">
+                                <p-radioButton [inputId]="item.key" name="category" [value]="item.key"
+                                    [(ngModel)]="signUpRequest.gender"></p-radioButton>
+                                <label [for]="item.key" class="ml-2">{{ item.value }}</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="selectedRole == 3">
+                <label for="firstName" class="text-sm">Tên doanh nghiệp</label>
+                <input id="firstName" pInputText class="w-full" [(ngModel)]="signUpRequest.firstName"
+                    placeholder="Tên doanh nghiệp"
+                    [ngClass]="nullable(signUpRequest.firstName) ? 'ng-invalid ng-dirty' : ''">
+            </div>
+            <div class="flex flex-col space-y-4 justify-between w-full">
+                <div class="flex flex-col w-full">
+                    <label for="provinceCode" class="text-sm">Tỉnh/Thành phố</label>
+                    <p-dropdown [options]="provinces" [(ngModel)]="signUpRequest.provinceCode"
+                        [style]="{'width': '100%'}" optionLabel="fullName" (ngModelChange)="getDistrictsInProvince()"
+                        optionValue="code" [filter]="true" filterBy="fullName" autoWidth="false"></p-dropdown>
+                </div>
+                <div class="flex flex-col w-full">
+                    <label for="districtCode" class="text-sm">Quận/Huyện/Thị xã</label>
+                    <p-dropdown [options]="districts" [(ngModel)]="signUpRequest.districtCode"
+                        [style]="{'width': '100%'}" optionLabel="fullName"
+                        [disabled]="signUpRequest.provinceCode.length <= 0" (ngModelChange)="getWardsInDistrict()"
+                        optionValue="code" [filter]="true" filterBy="fullName"></p-dropdown>
+                </div>
+                <div class="flex flex-col w-full">
+                    <label for="wardCode" class="text-sm">Xã/Phường/Thị trấn</label>
+                    <p-dropdown [options]="wards" [(ngModel)]="signUpRequest.wardCode" [style]="{'width': '100%'}"
+                        optionLabel="fullName" [disabled]="signUpRequest.provinceCode.length <= 0" optionValue="code"
+                        [filter]="true" filterBy="fullName"></p-dropdown>
+                </div>
+            </div>
+            <div class="flex flex-col w-full">
+                <label for="address" class="text-sm">Địa chỉ</label>
+                <input id="address" pInputText class="w-full" [(ngModel)]="signUpRequest.address"
+                    placeholder="Nhập địa chỉ cụ thể"
+                    [ngClass]="nullable(signUpRequest.address) ? 'ng-invalid ng-dirty' : ''">
+            </div>
+            <div class="flex flex-col w-full">
+                <label for="phoneNumber" class="text-sm">Số điện thoại</label>
+                <input id="phoneNumber" pInputText class="w-full" [(ngModel)]="signUpRequest.phoneNumber"
+                    placeholder="Nhập số điện thoại" minlength="10" maxlength="10"
+                    [ngClass]="nullable(signUpRequest.phoneNumber) ? 'ng-invalid ng-dirty' : ''">
+            </div>
+            <div class="flex flex-col w-full">
+                <label for="password" class="text-sm">Mật khẩu</label>
+                <p-password id="password" placeholder="Nhập mật khẩu" [toggleMask]="true"
+                    inputStyleClass="block w-full p-3 md:w-30rem" [style]="{'width':'100%'}"
+                    [ngClass]="nullable(signUpRequest.password) ? 'ng-invalid ng-dirty' : ''"
+                    [inputStyle]="{'width':'100%'}" [(ngModel)]="signUpRequest.password"></p-password>
+            </div>
+            <div class="flex flex-col w-full">
+                <label for="passwordAgain" class="text-sm">Nhập lại mật khẩu</label>
+                <p-password id="password" placeholder="Nhập mật khẩu" [toggleMask]="true"
+                    inputStyleClass="block w-full p-3 md:w-30rem" [style]="{'width':'100%'}"
+                    ria-describedby="valid-password"
+                    [ngClass]="nullable(passwordAgain) ? 'ng-invalid ng-dirty' : ''"
+                    [inputStyle]="{'width':'100%'}" [(ngModel)]="passwordAgain"></p-password>
+                <!-- <p-password id="passwordAgain" pInputText class="w-full" [(ngModel)]="passwordAgain"
+                    placeholder="Nhập lại mật khẩu" ria-describedby="valid-password"
+                    [ngClass]="nullable(passwordAgain) ? 'ng-invalid ng-dirty' : ''"></p-password> -->
+                <small id="valid-password" *ngIf="validPassword()" class="text-red-500">Mật khẩu không giống nhau</small>
+            </div>
+            <button pButton pRipple class="p-button-success w-full" [disabled]="disabledCheck()" label="Đăng ký"
+                (click)="register()"></button>
+        </div>
+    </div>
+</div>

@@ -23,6 +23,7 @@ import { JWT_OPTIONS, JwtHelperService } from '@auth0/angular-jwt';
 import { AuthService } from './core/auth_test/auth.service';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { LoadingService } from './core/services/loading.service';
+import { LayoutModule } from './core/layout/layout.module';
 
 initializeApp(environment.FirebaseConfig);
 
@@ -42,6 +43,7 @@ initializeApp(environment.FirebaseConfig);
     ToastModule,
     InputSwitchModule,
     GoogleMapsModule,
+    LayoutModule,
     ProgressSpinnerModule
     // ServiceWorkerModule.register('ngsw-worker.js', {
     //   enabled: environment.production,
