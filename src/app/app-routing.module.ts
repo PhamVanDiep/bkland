@@ -1,11 +1,19 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AuthGuardService as AuthGuard } from './core/auth_test/auth.guard';
-import { NoAuthGuardService as NoAuthGuard } from './core/auth_test/no-auth.guard';
+// import { AuthGuardService as AuthGuard } from './core/auth_test/auth.guard';
+// import { NoAuthGuardService as NoAuthGuard } from './core/auth_test/no-auth.guard';
+import { AuthGuardService as AuthGuard } from 'src/app/core/guards/auth.guard';
+import { NoAuthGuardService as NoAuthGuard } from 'src/app/core/guards/no-auth.guard';
+import { ROLE } from './core/constants/role.constant';
+import { MainLayoutComponent } from 'src/app/layout/main-layout/main-layout.component';
+import { AdministrationLayoutComponent } from 'src/app/layout/administration-layout/administration-layout.component';
 
 const routes: Routes = [
   {
-    path: '', redirectTo: '/user', pathMatch: 'full'
+    path: '', redirectTo: '/home', pathMatch: 'full'
+  },
+  {
+    path: 'signed-in-redirect', pathMatch: 'full', redirectTo: '/home'
   },
   {
     path: 'login',
@@ -14,7 +22,29 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        loadChildren: () => import('src/app/modules/login/login.module').then(m => m.LoginModule)
+        loadChildren: () => import('src/app/modules/auth/sign-in/sign-in.module').then(m => m.SignInModule)
+      }
+    ]
+  },
+  {
+    path: 'register',
+    canActivate: [NoAuthGuard],
+    canActivateChild: [NoAuthGuard],
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('src/app/modules/auth/sign-up/sign-up.module').then(m => m.SignUpModule)
+      }
+    ]
+  },
+  {
+    path: 'home',
+    canActivate: [NoAuthGuard],
+    canActivateChild: [NoAuthGuard],
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('src/app/modules/landing-page/landing-page.module').then(m => m.LandingPageModule)
       }
     ]
   },
@@ -23,8 +53,9 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     canActivateChild: [AuthGuard],
     data: {
-      expectedRole: 'user'
+      expectedRole: ROLE.ROLE_USER
     },
+    component: MainLayoutComponent,
     children: [
       {
         path: '',
@@ -37,8 +68,9 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     canActivateChild: [AuthGuard],
     data: {
-      expectedRole: 'admin'
+      expectedRole: ROLE.ROLE_ADMIN
     },
+    component: AdministrationLayoutComponent,
     children: [
       {
         path: '',

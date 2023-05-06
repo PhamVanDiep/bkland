@@ -4,7 +4,14 @@ module.exports = {
     "./src/**/*.{html,ts}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      backgroundImage: {
+        'login-bgr-img': "url('assets/images/login-bgr.jpg')" 
+      },
+      colors: {
+        'gray-custom': "#CCD1D1"
+      }
+    },
   },
   plugins: [],
 }
