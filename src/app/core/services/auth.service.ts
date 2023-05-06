@@ -8,6 +8,7 @@ import { APIResponse } from '../models/api-response.model';
 import { environment } from 'src/environments/environment';
 import { RefreshTokenRequest } from '../models/refresh-token.model';
 import { SignUpRequest } from '../models/sign-up.model';
+import { ForgotPasswordChange } from '../models/forgot-password-change.model';
 
 @Injectable({
   providedIn: 'root'
@@ -37,7 +38,11 @@ export class AuthService  {
     return this._httpClient.get<APIResponse>(`${environment.API_URL}/auth/email-exist/${email}`);
   }
 
-  register(register: SignUpRequest): Observable<any> {
+  register(register: SignUpRequest): Observable<APIResponse> {
     return this._httpClient.post<APIResponse>(`${environment.API_URL}/auth/signup`, register);
+  }
+
+  forgotPasswordChange(forgotPasswordChange: ForgotPasswordChange): Observable<APIResponse> {
+    return this._httpClient.post<APIResponse>(`${environment.API_URL}/auth/change-password`, forgotPasswordChange);
   }
 }

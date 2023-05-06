@@ -15,6 +15,7 @@ import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { SocialLoginModule, SocialAuthServiceConfig, GoogleLoginProvider } from '@abacritt/angularx-social-login';
+import { DialogModule } from 'primeng/dialog';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { SocialLoginModule, SocialAuthServiceConfig, GoogleLoginProvider } from 
     PasswordModule,
     ToastModule,
     ProgressSpinnerModule,
-    SocialLoginModule
+    SocialLoginModule,
+    DialogModule
   ],
   providers: [
     {

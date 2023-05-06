@@ -24,19 +24,53 @@
                     <label for="rememberme1">Ghi nhớ đăng nhập</label>
                 </div>
                 <a class="font-medium no-underline ml-2 text-right cursor-pointer"
-                    style="color: var(--primary-color)">Quên mật khẩu?</a>
+                    style="color: var(--primary-color)" (click)="forgotPassword()">Quên mật khẩu?</a>
             </div>
             <button pButton pRipple label="Đăng nhập" class="w-full p-3 text-xl"
                 [disabled]="login.username.length <= 0 || login.password.length <= 0" (click)="loginRequest()"></button>
         </div>
-        <!-- <div class="relative flex justify-center items-center w-full h-6">
-            <div class="w-full h-[1px] bg-gray-custom"></div>
-            <div class="absolute left-[calc(50% - 24px)] h-6 w-12 bg-white py-1 px-1">
-                <div class="text-gray-400">Hoặc</div>
-            </div>
-        </div>
-        <div class="w-full">
-            <button pButton pRipple label="Google" (click)="loginWithGoogle()"></button>
-        </div> -->
     </div>
 </div>
+<p-dialog header="Nhận otp" [(visible)]="displayEmailVerify" [style]="{width: innerWidth <= 640 ? '100vw' : '30vw'}" 
+    [baseZIndex]="100" [modal]="true">
+    <div class="flex flex-col space-y-4 p-4">
+        <label for="emailVerify" class="text-sm">Email xác nhận</label>
+        <input id="emailVerify" pInputText class="w-full" [(ngModel)]="emailVerify"
+            placeholder="Nhập email đã đăng ký trước đó" [autofocus]="true"
+            [ngClass]="emailVerify.length <= 0 ? 'ng-invalid ng-dirty' : ''">
+    </div>
+    <ng-template pTemplate="footer">
+        <p-button (click)="sendEmail()" label="Gửi OTP" styleClass="p-button-text"></p-button>
+    </ng-template>
+</p-dialog>
+<p-dialog header="Mật khẩu mới" [(visible)]="displayChangePassword" [style]="{width: innerWidth <= 640 ? '100vw' : '30vw'}" 
+    [baseZIndex]="100" [modal]="true">
+    <div class="flex flex-col space-y-4 p-4">
+        <div>
+            <label for="verifyOTP" class="text-sm">Nhập OTP</label>
+            <input id="verifyOTP" pInputText class="w-full" [(ngModel)]="verifyOTP"
+                placeholder="Nhập mã OTP được gửi về email" [autofocus]="true" ria-describedby="valid-otp"
+                [ngClass]="verifyOTP.length <= 0 ? 'ng-invalid ng-dirty' : ''">
+            <small id="valid-otp" *ngIf="!validOTP()" class="text-red-500">Mã OTP không chính xác</small>
+        </div>
+        <div class="flex flex-col w-full">
+            <label for="newPassword" class="text-sm">Mật khẩu mới</label>
+            <p-password id="newPassword" placeholder="Nhập mật khẩu mới" [toggleMask]="true"
+                inputStyleClass="block w-full p-3 md:w-30rem" [style]="{'width':'100%'}"
+                [ngClass]="newPassword.length <= 0 ? 'ng-invalid ng-dirty' : ''"
+                [inputStyle]="{'width':'100%'}" [(ngModel)]="newPassword"></p-password>
+        </div>
+        <div class="flex flex-col w-full">
+            <label for="newPasswordAgain" class="text-sm">Nhập lại mật khẩu</label>
+            <p-password id="newPasswordAgain" placeholder="Nhập lại mật khẩu" [toggleMask]="true"
+                inputStyleClass="block w-full p-3 md:w-30rem" [style]="{'width':'100%'}"
+                ria-describedby="valid-password"
+                [ngClass]="newPasswordAgain.length <= 0 ? 'ng-invalid ng-dirty' : ''"
+                [inputStyle]="{'width':'100%'}" [(ngModel)]="newPasswordAgain"></p-password>
+            <small id="valid-password" *ngIf="validPassword()" class="text-red-500">Mật khẩu không giống nhau</small>
+        </div>
+    </div>
+    <ng-template pTemplate="footer">
+        <p-button (click)="changePassword()" [disabled]="validChangePassword()" label="Đổi mật khẩu" styleClass="p-button-text"></p-button>
+    </ng-template>
+</p-dialog>

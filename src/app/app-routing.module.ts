@@ -5,8 +5,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthGuardService as AuthGuard } from 'src/app/core/guards/auth.guard';
 import { NoAuthGuardService as NoAuthGuard } from 'src/app/core/guards/no-auth.guard';
 import { ROLE } from './core/constants/role.constant';
-import { MainLayoutComponent } from './core/layout/main-layout/main-layout.component';
-import { AdministrationLayoutComponent } from './core/layout/administration-layout/administration-layout.component';
+import { MainLayoutComponent } from 'src/app/layout/main-layout/main-layout.component';
+import { AdministrationLayoutComponent } from 'src/app/layout/administration-layout/administration-layout.component';
 
 const routes: Routes = [
   {
