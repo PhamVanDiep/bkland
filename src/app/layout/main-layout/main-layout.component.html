@@ -1,2 +1,99 @@
-<p>main-layout works!</p>
-<router-outlet></router-outlet>
+<div class="progress-spinner" *ngIf="loading">
+    <p-progressSpinner></p-progressSpinner>
+</div>
+<p-toast></p-toast>
+<div class="w-full flex flex-col">
+    <div class="w-full h-16 fixed flex flex-row">
+        <p-menubar [model]="items" class="bg-white w-full">
+            <ng-template pTemplate="start">
+                <img src="/assets/logo/logo_main.svg" class="w-20 h-full cursor-pointer"
+                    (click)="navigatePage('/home')">
+            </ng-template>
+            <ng-template pTemplate="end">
+                <div class="flex flex-row space-x-4">
+                    <p-avatar class="cursor-pointer mt-1" icon="pi pi-heart" 
+                        pBadge [value]="noInterestedPost"
+                        [style]="{ 'background-color': '#ffffff', color: '#000000' }"></p-avatar>
+                    <div *ngIf="!isAuth">
+                        <span class="font-semibold text-sm cursor-pointer" (click)="navigatePage('/register')">Đăng ký</span>
+                        <span class="mx-2">|</span>
+                        <span class="font-semibold text-sm cursor-pointer" (click)="navigatePage('/login')">Đăng nhập</span>
+                    </div>
+                    <div *ngIf="isAuth">
+                        <p-avatar [image]="avatarUrl" shape="circle" class="cursor-pointer"
+                            (click)="menu.toggle($event)"></p-avatar>
+                        <p-menu #menu [model]="menuItems" [popup]="true"></p-menu>
+                    </div>
+                </div>
+            </ng-template>
+        </p-menubar>
+    </div>
+    <div class="w-full mt-16">
+        <div class="w-full px-4 md:px-16 lg:px-32">
+            <router-outlet></router-outlet>
+        </div>
+        <div class="w-full bg-slate-200 py-4 px-4 md:px-16 lg:px-32 flex flex-col lg:flex-row space-y-4 lg:space-y-0">
+            <div class="w-full lg:w-1/3 flex flex-col">
+                <div class="w-full h-16 flex justify-center items-center">
+                    <img src="/assets/logo/logo_main.svg" alt="" class="h-full">
+                </div>
+                <span class="text-xl font-bold text-center">{{ about.name.toUpperCase() }}</span>
+            </div>
+            <div class="w-full lg:w-2/3 flex flex-col space-y-4">
+                <div class="space-x-2 flex flex-row items-center">
+                    <i class="pi pi-map-marker"></i>
+                    <div class="flex flex-col">
+                        <span class="text-sm">Địa chỉ</span>
+                        <span class="font-semibold">{{ about.address }}</span>
+                    </div>
+                </div>
+                <div class="space-x-2 flex flex-row items-center">
+                    <i class="pi pi-phone"></i>
+                    <div class="flex flex-col">
+                        <span class="text-sm">Điện thoại</span>
+                        <span class="font-semibold">{{ about.phoneNumber | phone}}</span>
+                    </div>
+                </div>
+                <div class="space-x-2 flex flex-row items-center">
+                    <i class="pi pi-envelope"></i>
+                    <div  class="flex flex-col">
+                        <span class="text-sm">Hòm thư</span>
+                        <span class="font-semibold">{{ about.email }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<p-dialog header="Mật khẩu mới" [(visible)]="displayChangePassword" [style]="{width: innerWidth <= 640 ? '100vw' : '30vw'}" 
+    [baseZIndex]="100" [modal]="true">
+    <div class="flex flex-col space-y-4 p-4">
+        <div>
+            <span class="italic">{{ 'Mã OTP đã được gửi về tài khoản email ' + emailVerify}}</span>
+            <label for="verifyOTP" class="text-sm">Nhập OTP</label>
+            <input id="verifyOTP" pInputText class="w-full" [(ngModel)]="verifyOTP"
+                placeholder="Nhập mã OTP được gửi về email" [autofocus]="true" ria-describedby="valid-otp"
+                [ngClass]="verifyOTP.length <= 0 ? 'ng-invalid ng-dirty' : ''">
+            <small id="valid-otp" *ngIf="!validOTP()" class="text-red-500">Mã OTP không chính xác</small>
+        </div>
+        <div class="flex flex-col w-full">
+            <label for="newPassword" class="text-sm">Mật khẩu mới</label>
+            <p-password id="newPassword" placeholder="Nhập mật khẩu mới" [toggleMask]="true"
+                inputStyleClass="block w-full p-3 md:w-30rem" [style]="{'width':'100%'}"
+                [ngClass]="newPassword.length <= 0 ? 'ng-invalid ng-dirty' : ''"
+                [inputStyle]="{'width':'100%'}" [(ngModel)]="newPassword"></p-password>
+        </div>
+        <div class="flex flex-col w-full">
+            <label for="newPasswordAgain" class="text-sm">Nhập lại mật khẩu</label>
+            <p-password id="newPasswordAgain" placeholder="Nhập lại mật khẩu" [toggleMask]="true"
+                inputStyleClass="block w-full p-3 md:w-30rem" [style]="{'width':'100%'}"
+                ria-describedby="valid-password"
+                [ngClass]="newPasswordAgain.length <= 0 ? 'ng-invalid ng-dirty' : ''"
+                [inputStyle]="{'width':'100%'}" [(ngModel)]="newPasswordAgain"></p-password>
+            <small id="valid-password" *ngIf="validPassword()" class="text-red-500">Mật khẩu không giống nhau</small>
+        </div>
+    </div>
+    <ng-template pTemplate="footer">
+        <p-button (click)="changePassword()" [disabled]="validChangePassword()" label="Đổi mật khẩu" styleClass="p-button-text"></p-button>
+    </ng-template>
+</p-dialog>

@@ -41,6 +41,7 @@ const routes: Routes = [
     path: 'home',
     canActivate: [NoAuthGuard],
     canActivateChild: [NoAuthGuard],
+    component: MainLayoutComponent,
     children: [
       {
         path: '',
@@ -55,7 +56,7 @@ const routes: Routes = [
     data: {
       expectedRole: ROLE.ROLE_USER
     },
-    component: MainLayoutComponent,
+    component: AdministrationLayoutComponent,
     children: [
       {
         path: '',

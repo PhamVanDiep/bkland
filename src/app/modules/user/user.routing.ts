@@ -1,9 +1,9 @@
 import { Route } from "@angular/router";
-import { UserComponent } from "./user.component";
+import { CreateMainPostComponent } from "./create-main-post/create-main-post.component";
 
 export const route: Route[] = [
     {
-        path: '',
-        component: UserComponent
+        path: 'create-post',
+        component: CreateMainPostComponent
     }
 ]

@@ -17,6 +17,9 @@ import { NoAuthService } from 'src/app/core/services/no-auth.service';
 import { EmailVerify } from 'src/app/core/models/email-verify.model';
 import { EMAIL_VERIFY_TYPE } from 'src/app/core/constants/email-verify.constant';
 import { ForgotPasswordChange } from 'src/app/core/models/forgot-password-change.model';
+import { UserDeviceTokenService } from 'src/app/core/services/user-device-token.service';
+import { UserDeviceToken } from 'src/app/core/models/user-device-token.model';
+import { DeviceDetectorService, DeviceInfo } from 'ngx-device-detector';
 
 @Component({
   selector: 'app-sign-in',
@@ -45,6 +48,8 @@ export class SignInComponent implements OnInit, OnDestroy {
   verifyOTP: string;
   responseOTP: string;
 
+  deviceInfo: DeviceInfo;
+
   constructor(
     private _appTitleService: AppTitleService,
     private _loadingService: LoadingService,
@@ -53,7 +58,9 @@ export class SignInComponent implements OnInit, OnDestroy {
     private _router: Router,
     private _route: ActivatedRoute,
     private _socialAuthService: SocialAuthService,
-    private _noAuthService: NoAuthService
+    private _noAuthService: NoAuthService,
+    private _userDeviceTokenService: UserDeviceTokenService,
+    private _deviceDetectorService: DeviceDetectorService,
   ) {
     this._appTitleService.setTitle(this.title);
     if (this._authService.isAuthenticated()) {
@@ -84,6 +91,8 @@ export class SignInComponent implements OnInit, OnDestroy {
       .subscribe((response: boolean) => {
         this.loading = response
       });
+
+    this.deviceInfo = this._deviceDetectorService.getDeviceInfo();
 
     this._socialAuthService.authState.subscribe((user) => {
       this.socialUser = user;
@@ -120,8 +129,28 @@ export class SignInComponent implements OnInit, OnDestroy {
           }
           localStorage.setItem('roles', loginResponse.roles.toString());
           // this._router.navigate(['/']);
-          const redirectUrl = this._route.snapshot.queryParamMap.get('redirectUrl') || '/signed-in-redirect';
-          this._router.navigateByUrl(redirectUrl);
+          let userDeviceToken: UserDeviceToken = {
+            id: 0,
+            deviceInfo: this.deviceInfo.userAgent,
+            enable: false,
+            logout: false,
+            notifyToken: '',
+            userId: loginResponse.id,
+            createBy: loginResponse.id,
+            createAt: null,
+            updateBy: '',
+            updateAt: null
+          }
+          this._userDeviceTokenService.createUserDeviceToken(userDeviceToken)
+            .pipe(takeUntil(this._unsubscribe))
+            .subscribe((response1: APIResponse) => {
+              if (response1.status === HttpStatusCode.Ok) {
+                const redirectUrl = this._route.snapshot.queryParamMap.get('redirectUrl') || '/signed-in-redirect';
+                this._router.navigateByUrl(redirectUrl); 
+              } else {
+                this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response1.message });
+              }
+            });
         } else {
           this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
         }
@@ -134,8 +163,9 @@ export class SignInComponent implements OnInit, OnDestroy {
   }
 
   registerGoogleAccount(): void {
+    let _id = uuid.v4()
     let registerRequest: SignUpRequest = {
-      id: uuid.v4(),
+      id: _id,
       firstName: this.socialUser.firstName,
       middleName: "",
       lastName: this.socialUser.lastName,
@@ -158,7 +188,11 @@ export class SignInComponent implements OnInit, OnDestroy {
           id: 1,
           name: ROLE.ROLE_USER
         }
-      ]
+      ],
+      createBy: _id,
+      createAt: null,
+      updateBy: '',
+      updateAt: null
     }
     this._authService.register(registerRequest)
       .subscribe((response: APIResponse) => {
