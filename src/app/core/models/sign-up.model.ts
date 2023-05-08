@@ -18,4 +18,8 @@ export interface SignUpRequest {
     enable: boolean;
     roles: any;
     avatarUrl: string;
+    createBy: string;
+    createAt: any;
+    updateBy: string;
+    updateAt: any;
 }

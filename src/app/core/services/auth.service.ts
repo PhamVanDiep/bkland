@@ -9,6 +9,7 @@ import { environment } from 'src/environments/environment';
 import { RefreshTokenRequest } from '../models/refresh-token.model';
 import { SignUpRequest } from '../models/sign-up.model';
 import { ForgotPasswordChange } from '../models/forgot-password-change.model';
+import { UserDeviceToken } from '../models/user-device-token.model';
 
 @Injectable({
   providedIn: 'root'
@@ -44,5 +45,9 @@ export class AuthService  {
 
   forgotPasswordChange(forgotPasswordChange: ForgotPasswordChange): Observable<APIResponse> {
     return this._httpClient.post<APIResponse>(`${environment.API_URL}/auth/change-password`, forgotPasswordChange);
+  }
+
+  logout(body: UserDeviceToken): Observable<APIResponse> {
+    return this._httpClient.post<APIResponse>(`${environment.API_URL}/auth/logout`, body);
   }
 }

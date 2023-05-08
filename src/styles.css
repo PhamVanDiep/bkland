@@ -16,6 +16,11 @@ html {
     font-family: 'Roboto', sans-serif;
 }
 
+.p-menubar {
+    background-color: #FFFFFF !important;
+    border-radius: 0% !important;
+}
+
 .progress-spinner {
     position: fixed;
     z-index: 999;

@@ -47,8 +47,9 @@ export class SignUpComponent implements OnInit, OnDestroy {
   ) {
     this._appTitleService.setTitle(this.title);
     this.loading = false;
+    let _id = uuid.v4();
     this.signUpRequest = {
-      id: uuid.v4(),
+      id: _id,
       accountBalance: 0,
       address: "",
       avatarUrl: "",
@@ -66,7 +67,11 @@ export class SignUpComponent implements OnInit, OnDestroy {
       provinceCode: "",
       roles: null,
       username: "",
-      wardCode: ""
+      wardCode: "",
+      createBy: _id,
+      createAt: null,
+      updateBy: '',
+      updateAt: null
     }
     this.lstGenders = GENDER_LST;
     this.provinces = [];

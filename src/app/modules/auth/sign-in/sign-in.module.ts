@@ -16,6 +16,7 @@ import { ToastModule } from 'primeng/toast';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { SocialLoginModule, SocialAuthServiceConfig, GoogleLoginProvider } from '@abacritt/angularx-social-login';
 import { DialogModule } from 'primeng/dialog';
+import { UserDeviceTokenService } from 'src/app/core/services/user-device-token.service';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import { DialogModule } from 'primeng/dialog';
     AppTitleService,
     AuthService,
     LoadingService,
-    MessageService
+    MessageService,
+    UserDeviceTokenService
   ]
 })
 export class SignInModule { }
