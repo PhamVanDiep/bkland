@@ -45,3 +45,19 @@ html {
   height: 100%;
   background-color: rgba(0,0,0,0.53);
 }
+
+.p-sidebar .p-sidebar-header {
+    /* padding: 0; */
+    /* padding-left: 1rem; */
+    /* border-bottom: 1px solid #dee2e6; */
+    /* height: 58px; */
+    height: 4rem;
+}
+
+/* .p-sidebar {
+    width: 16rem;
+} */
+
+.p-sidebar-left {
+    width: 16rem !important;
+}

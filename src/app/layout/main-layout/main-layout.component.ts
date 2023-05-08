@@ -1,16 +1,20 @@
 import { HttpStatusCode } from '@angular/common/http';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { DeviceDetectorService, DeviceInfo } from 'ngx-device-detector';
 import { MenuItem, MessageService } from 'primeng/api';
 import { ReplaySubject, takeUntil } from 'rxjs';
+import { EMAIL_VERIFY_TYPE } from 'src/app/core/constants/email-verify.constant';
 import { About } from 'src/app/core/models/about.model';
 import { APIResponse } from 'src/app/core/models/api-response.model';
+import { EmailVerify } from 'src/app/core/models/email-verify.model';
+import { ForgotPasswordChange } from 'src/app/core/models/forgot-password-change.model';
 import { SignUpRequest } from 'src/app/core/models/sign-up.model';
 import { UserDeviceToken } from 'src/app/core/models/user-device-token.model';
 import { AboutService } from 'src/app/core/services/about.service';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { LoadingService } from 'src/app/core/services/loading.service';
+import { NoAuthService } from 'src/app/core/services/no-auth.service';
 import { UserService } from 'src/app/core/services/user.service';
 
 @Component({
@@ -32,6 +36,19 @@ export class MainLayoutComponent implements OnInit, OnDestroy{
   noInterestedPost: string;
   about: About;
 
+  emailVerify: string;
+
+  displayChangePassword: boolean;
+  newPassword: string;
+  newPasswordAgain: string;
+  verifyOTP: string;
+  responseOTP: string;
+
+  innerWidth: any;
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.innerWidth = window.innerWidth;
+  }
   constructor(
     private _router: Router,
     private _authService: AuthService,
@@ -39,7 +56,8 @@ export class MainLayoutComponent implements OnInit, OnDestroy{
     private _messageService: MessageService,
     private _loadingService: LoadingService,
     private _deviceDetectorService: DeviceDetectorService,
-    private _aboutService: AboutService
+    private _aboutService: AboutService,
+    private _noAuthService: NoAuthService
   ) {
     this.items = [
       {
@@ -126,7 +144,7 @@ export class MainLayoutComponent implements OnInit, OnDestroy{
         label: 'Đổi mật khẩu',
         icon: 'pi pi-lock',
         command: () => {
-
+          this.changePasswordFunc();
         }
       },
       {
@@ -149,6 +167,14 @@ export class MainLayoutComponent implements OnInit, OnDestroy{
       updateAt: null,
       updateBy: ''
     }
+    this.innerWidth = window.innerWidth;
+    this.emailVerify = '';
+    
+    this.displayChangePassword = false;
+    this.newPassword = '';
+    this.newPasswordAgain = '';
+    this.verifyOTP = '';
+    this.responseOTP = '';
   }
 
   ngOnDestroy(): void {
@@ -170,6 +196,7 @@ export class MainLayoutComponent implements OnInit, OnDestroy{
           // console.log(response);
           if (response.status === HttpStatusCode.Ok) {
             this.user = response.data;
+            this.emailVerify = this.user.email;
             if (response.data.avatarUrl != undefined && response.data.avatarUrl != null && response.data.avatarUrl.length > 0) {
               this.avatarUrl = response.data.avatarUrl; 
             }
@@ -221,5 +248,77 @@ export class MainLayoutComponent implements OnInit, OnDestroy{
           this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
         }
       });
+  }
+
+  changePasswordFunc(): void {
+    this.sendEmail();
+  }
+
+  sendEmail(): void {
+    this._loadingService.loading(true);
+    let emailVerify: EmailVerify = {
+      email: this.emailVerify,
+      title: "Mã OTP xác nhận đổi mật khẩu bkland",
+      type: EMAIL_VERIFY_TYPE.FORGOT_PASSWORD
+    }
+    this._noAuthService.sendVerifyOTP(emailVerify)
+      .pipe(takeUntil(this._unsubscribe))
+      .subscribe((response: APIResponse) => {
+        this._loadingService.loading(false);
+        if (response.status === HttpStatusCode.Ok) {
+          this._messageService.add({ severity: 'success', summary: 'Thông báo', detail: response.message });
+          this.displayChangePassword = true;
+          this.responseOTP = response.data;
+        } else {
+          this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+        }
+      })
+  }
+
+  changePassword(): void {
+    this._loadingService.loading(true);
+    let forgotPasswordChange: ForgotPasswordChange = {
+      email: this.emailVerify,
+      newPassword: this.newPassword
+    };
+    this._authService.forgotPasswordChange(forgotPasswordChange)
+      .pipe(takeUntil(this._unsubscribe))
+      .subscribe((response: APIResponse) => {
+        this._loadingService.loading(false);
+        if (response.status === HttpStatusCode.Ok) {
+          this._messageService.add({ severity: 'success', summary: 'Thông báo', detail: response.message });
+          this.displayChangePassword = false;
+        } else {
+          this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+        }
+      })
+  }
+
+  validOTP(): boolean {
+    if (this.verifyOTP === this.responseOTP) {
+      return true;
+    }
+    return false;
+  }
+
+  validPassword(): boolean {
+    if (this.newPassword.length > 0 
+      && this.newPasswordAgain.length > 0 
+      && this.newPassword != this.newPasswordAgain) {
+      return true;
+    }
+    return false;
+  }
+
+  validChangePassword(): boolean {
+    if (this.verifyOTP !== this.responseOTP) {
+      return true;
+    }
+    if (this.newPassword.length == 0
+      || this.newPasswordAgain.length == 0
+      || (this.newPassword !== this.newPasswordAgain)) {
+      return true;
+    }
+    return false;
   }
 }

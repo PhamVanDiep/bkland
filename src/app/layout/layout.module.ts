@@ -11,6 +11,16 @@ import { LoadingService } from '../core/services/loading.service';
 import { BadgeModule } from 'primeng/badge';
 import { AboutService } from '../core/services/about.service';
 import { AppPipeModule } from '../shared/app-pipe/app-pipe.module';
+import { SidebarModule } from 'primeng/sidebar';
+import { ButtonModule } from 'primeng/button';
+import { RippleModule } from 'primeng/ripple';
+import { DialogModule } from 'primeng/dialog';
+import { PasswordModule } from 'primeng/password';
+import { FormsModule } from '@angular/forms';
+import { NoAuthService } from '../core/services/no-auth.service';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { ToastModule } from 'primeng/toast';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   declarations: [
@@ -24,7 +34,16 @@ import { AppPipeModule } from '../shared/app-pipe/app-pipe.module';
     AvatarModule,
     MenuModule,
     BadgeModule,
-    AppPipeModule
+    AppPipeModule,
+    SidebarModule,
+    ButtonModule,
+    RippleModule,
+    DialogModule,
+    PasswordModule,
+    FormsModule,
+    ProgressSpinnerModule,
+    ToastModule,
+    FontAwesomeModule
   ],
   exports: [
     MainLayoutComponent,
@@ -33,7 +52,8 @@ import { AppPipeModule } from '../shared/app-pipe/app-pipe.module';
   providers: [
     UserService,
     LoadingService,
-    AboutService
+    AboutService,
+    NoAuthService
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA

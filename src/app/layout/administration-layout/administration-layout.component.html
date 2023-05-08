@@ -1,2 +1,49 @@
-<p>administration-layout works!</p>
-<router-outlet></router-outlet>
+<div class="progress-spinner" *ngIf="loading">
+    <p-progressSpinner></p-progressSpinner>
+</div>
+<p-toast></p-toast>
+<div class="absolute w-full h-full">
+    <p-sidebar [(visible)]="sidebarVisible" [modal]="sidebarModal()" [showCloseIcon]="sidebarModal()"
+        styleClass="w-16rem" [baseZIndex]="sidebarModal() ? 51 : 49">
+        <ng-template pTemplate="header">
+            <!-- <img src="/assets/logo/logo_main.svg" class="h-12 cursor-pointer" (click)="navigatePage('/home')"
+                *ngIf="sidebarVisible"> -->
+        </ng-template>
+        <ng-template pTemplate="content">
+            <div class="w-full flex flex-col mb-4 space-y-2" *ngFor="let item of sidebarItems">
+                <div class="w-full flex flex-row space-x-4 items-center cursor-pointer">
+                    <i [ngClass]="item.icon"></i>
+                    <span class="font-semibold">{{ item.label }}</span>
+                </div>
+                <div *ngFor="let it of item.items" class="ml-8 cursor-pointer">
+                    <span class="font-medium">{{ it.label }}</span>
+                </div>
+            </div>
+        </ng-template>
+    </p-sidebar>
+    <div class="w-full h-16 fixed flex flex-row z-50">
+        <p-menubar [model]="items" class="bg-white w-full">
+            <ng-template pTemplate="start">
+                <div class="flex flex-row">
+                    <p-button icon="pi pi-ellipsis-v" styleClass="p-button-text" *ngIf="enableSideBar()"
+                        pRipple (click)="sidebarVisible = true"></p-button>
+                    <img src="/assets/logo/logo_main.svg" class="w-20 h-full cursor-pointer"
+                        (click)="navigatePage('/home')">
+                </div>
+            </ng-template>
+            <ng-template pTemplate="end">
+                <p-avatar [image]="avatarUrl" shape="circle" class="cursor-pointer"
+                    (click)="menu.toggle($event)"></p-avatar>
+                <p-menu #menu [model]="menuItems" [popup]="true"></p-menu>
+            </ng-template>
+        </p-menubar>
+    </div>
+    <!-- <div class="w-64 fixed mt-16 h-[calc(100%-4rem)] bg-white border-r-2">
+
+    </div> -->
+    <div class="w-full mt-16 lg:ml-64 lg:mt-16 lg:w-[calc(100%-16rem)]">
+        <div class="w-full px-4">
+            <router-outlet></router-outlet>
+        </div>
+    </div>
+</div>
