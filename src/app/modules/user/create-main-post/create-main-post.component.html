@@ -1,3 +1,183 @@
-<div class="w-full flex flex-col px-4 lg:px-6">
-    <span class="font-bold text-2xl">Thông tin cơ bản</span>
+<div class="w-full flex flex-col px-4 lg:px-6 space-y-6">
+    <div class="w-full flex flex-col space-y-4 mt-4">
+        <span class="font-bold text-2xl">Thông tin cơ bản</span>
+        <div class="w-full flex flex-row">
+            <div class="w-full h-8 border border-gray-custom flex items-center justify-center"
+            >
+                <span>Bán</span>
+            </div>
+            <div class="w-full h-8 border border-gray-custom flex items-center justify-center">
+                <span>Cho thuê</span>
+            </div>
+        </div>
+        <div class="flex flex-col w-full">
+            <label class="text-sm">Loại bất động sản</label>
+            <p-dropdown [options]="realEstateTypes" [style]="{'width': '100%'}" 
+                optionLabel="value" optionValue="key" [(ngModel)]="realEstatePost.type"
+                autoWidth="false"></p-dropdown>
+        </div>
+        <div class="flex flex-col w-full space-y-4 lg:space-y-0 lg:flex-row lg:space-x-4">
+            <div class="flex flex-col w-full">
+                <label for="provinceCode" class="text-sm">Tỉnh/Thành phố</label>
+                <p-dropdown [options]="provinces" [(ngModel)]="realEstatePost.province.code" [style]="{'width': '100%'}"
+                    optionLabel="fullName" (ngModelChange)="getDistrictsInProvince()" optionValue="code" [filter]="true"
+                    filterBy="fullName" autoWidth="false"></p-dropdown>
+            </div>
+            <div class="flex flex-col w-full">
+                <label for="districtCode" class="text-sm">Quận/Huyện/Thị xã</label>
+                <p-dropdown [options]="districts" [(ngModel)]="realEstatePost.district.code" [style]="{'width': '100%'}"
+                    optionLabel="fullName" [disabled]="realEstatePost.province.code.length <= 0"
+                    (ngModelChange)="getWardsInDistrict()" optionValue="code" [filter]="true"
+                    filterBy="fullName"></p-dropdown>
+            </div>
+        </div>
+        <div class="flex flex-col w-full space-y-4 lg:space-y-0 lg:flex-row lg:space-x-4">
+            <div class="flex flex-col w-full">
+                <label for="wardCode" class="text-sm">Xã/Phường/Thị trấn</label>
+                <p-dropdown [options]="wards" [(ngModel)]="realEstatePost.ward.code" [style]="{'width': '100%'}"
+                    optionLabel="fullName" [disabled]="realEstatePost.district.code.length <= 0" optionValue="code"
+                    [filter]="true" filterBy="fullName"></p-dropdown>
+            </div>
+            <div class="flex flex-col w-full">
+                <label for="street" class="text-sm">Đường</label>
+                <input id="street" pInputText class="w-full" placeholder="Nhập tên đường" [(ngModel)]="realEstatePost.street">
+            </div>
+        </div>
+        <div class="flex flex-col w-full">
+            <label for="addressShow" class="text-sm">Địa chỉ hiển thị trên bài đăng</label>
+            <input id="addressShow" pInputText class="w-full" [(ngModel)]="realEstatePost.addressShow"
+                placeholder="Nhập địa chỉ hiển thị trên bài đăng">
+        </div>
+    </div>
+    <div class="w-full flex flex-col space-y-4 mt-4">
+        <span class="font-bold text-2xl">Thông tin bài viết</span>
+        <div class="flex flex-col w-full">
+            <label for="title" class="text-sm">Tiêu đề</label>
+            <input id="title" pInputText class="w-full" [(ngModel)]="realEstatePost.title"
+                placeholder="Nhập tiêu đề bài đăng">
+        </div>
+        <div class="flex flex-col w-full">
+            <label for="description" class="text-sm">Mô tả</label>
+            <textarea id="description" rows="5" cols="30" pInputTextarea [(ngModel)]="realEstatePost.description"
+                placeholder="Nhập mô tả cho bài đăng"></textarea>
+        </div>
+    </div>
+    <div class="w-full flex flex-col space-y-4 mt-4">
+        <span class="font-bold text-2xl">Thông tin bất động sản</span>
+        <div class="flex flex-col w-full space-y-4 lg:space-y-0 lg:flex-row lg:space-x-4">
+            <div class="flex flex-col w-full">
+                <label for="area" class="text-sm">Diện tích</label>
+                <input id="area" pInputText class="w-full" placeholder="Nhập diện tích: m2"
+                    [(ngModel)]="realEstatePost.area">
+            </div>
+            <div class="flex flex-col w-full">
+                <label for="price" class="text-sm">Giá</label>
+                <input id="price" pInputText class="w-full" [(ngModel)]="realEstatePost.price"
+                    [placeholder]="realEstatePost.sell ? 'Nhập giá: tỷ VNĐ' : 'Nhập giá: triệu VNĐ'">
+            </div>
+            <div class="flex flex-col w-full">
+                <label for="direction" class="text-sm">Hướng</label>
+                <p-dropdown [options]="directions" [(ngModel)]="realEstatePost.direction" 
+                    [style]="{'width': '100%'}"
+                    optionLabel="value" optionValue="key"></p-dropdown>
+            </div>
+        </div>
+        <div class="flex flex-col w-full space-y-4 lg:space-y-0 lg:flex-row lg:space-x-4" *ngIf="isPlot()">
+            <div class="flex flex-col w-full">
+                <label for="frontWidth" class="text-sm">Mặt tiền</label>
+                <input id="frontWidth" pInputText class="w-full" [(ngModel)]="plot.frontWidth"
+                    placeholder="Nhập chiều dài mặt tiền: m">
+            </div>
+            <div class="flex flex-col w-full">
+                <label for="behindWidth" class="text-sm">Mặt hậu</label>
+                <input id="behindWidth" pInputText class="w-full" [(ngModel)]="plot.behindWidth"
+                    placeholder="Nhập chiều dài mặt hậu: m">
+            </div>
+        </div>
+        <div class="flex flex-col w-full space-y-4" *ngIf="isApartment()">
+            <div class="flex flex-col w-full space-y-4 lg:space-y-0 lg:flex-row lg:space-x-4">
+                <div class="flex flex-col w-full">
+                    <label for="floorNo" class="text-sm">Tầng số</label>
+                    <input id="floorNo" pInputText class="w-full" [(ngModel)]="apartment.floorNo"
+                        placeholder="BĐS ở tầng số?">
+                </div>
+                <div class="flex flex-col w-full">
+                    <label for="noBedroom" class="text-sm">Số phòng ngủ</label>
+                    <input id="noBedroom" pInputText class="w-full" [(ngModel)]="apartment.noBedroom"
+                        placeholder="Nhập số phòng ngủ">
+                </div>
+                <div class="flex flex-col w-full">
+                    <label for="noBathroom" class="text-sm">Số phòng tắm</label>
+                    <input id="noBathroom" pInputText class="w-full" [(ngModel)]="apartment.noBathroom"
+                        placeholder="Nhập số phòng tắm">
+                </div>
+                <div class="flex flex-col w-full">
+                    <label for="balconyDirection" class="text-sm">Hướng ban công</label>
+                    <p-dropdown [options]="directions" [(ngModel)]="apartment.balconyDirection" 
+                        [style]="{'width': '100%'}"
+                        optionLabel="value" optionValue="key"></p-dropdown>
+                </div>
+            </div>
+            <div class="flex flex-col w-full">
+                <label for="furniture" class="text-sm">Thông tin nội thất</label>
+                <input id="furniture" pInputText class="w-full" [(ngModel)]="apartment.furniture"
+                    placeholder="Nhập thông tin nội thất">
+            </div>
+            <div class="flex flex-col w-full">
+                <label for="construction" class="text-sm">Thông tin kiến trúc</label>
+                <input id="construction" pInputText class="w-full" [(ngModel)]="apartment.construction"
+                    placeholder="Nhập thông tin kiến trúc">
+            </div>
+        </div>
+        <div class="flex flex-col w-full space-y-4" *ngIf="isHouse()">
+            <div class="flex flex-col w-full space-y-4 lg:space-y-0 lg:flex-row lg:space-x-4">
+                <div class="flex flex-col w-full">
+                    <label for="noFloor" class="text-sm">Số tầng</label>
+                    <input id="noFloor" pInputText class="w-full" [(ngModel)]="house.noFloor"
+                        placeholder="Nhập số tầng">
+                </div>
+                <div class="flex flex-col w-full">
+                    <label for="noBedroom" class="text-sm">Số phòng ngủ</label>
+                    <input id="noBedroom" pInputText class="w-full"  [(ngModel)]="house.noBedroom"
+                        placeholder="Nhập số phòng ngủ">
+                </div>
+                <div class="flex flex-col w-full">
+                    <label for="noBathroom" class="text-sm">Số phòng tắm</label>
+                    <input id="noBathroom" pInputText class="w-full" [(ngModel)]="house.noBathroom"
+                        placeholder="Nhập số phòng tắm">
+                </div>
+                <div class="flex flex-col w-full">
+                    <label for="balconyDirection" class="text-sm">Hướng ban công</label>
+                    <p-dropdown [options]="directions" [(ngModel)]="house.balconyDirection" 
+                        [style]="{'width': '100%'}"
+                        optionLabel="value" optionValue="key"></p-dropdown>
+                </div>
+            </div>
+            <div class="flex flex-col w-full">
+                <label for="furniture" class="text-sm">Thông tin nội thất</label>
+                <input id="furniture" pInputText class="w-full" [(ngModel)]="house.furniture"
+                    placeholder="Nhập thông tin nội thất">
+            </div>
+            <div class="flex flex-col w-full space-y-4 lg:space-y-0 lg:flex-row lg:space-x-4">
+                <div class="flex flex-col w-full">
+                    <label for="frontWidth" class="text-sm">Mặt tiền</label>
+                    <input id="frontWidth" pInputText class="w-full" [(ngModel)]="house.frontWidth"
+                        placeholder="Nhập chiều dài mặt tiền: m">
+                </div>
+                <div class="flex flex-col w-full">
+                    <label for="behindWidth" class="text-sm">Mặt hậu</label>
+                    <input id="behindWidth" pInputText class="w-full" [(ngModel)]="house.behindWidth"
+                        placeholder="Nhập chiều dài mặt hậu: m">
+                </div>
+                <div class="flex flex-col w-full">
+                    <label for="streetWidth" class="text-sm">Chiều rộng đường trước nhà</label>
+                    <input id="streetWidth" pInputText class="w-full" [(ngModel)]="house.streetWidth"
+                        placeholder="Nhập chiều rộng đường trước nhà: m">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="w-full flex flex-col space-y-4 mt-4 pb-4 lg:justify-end">
+        <button pButton pRipple label="Đăng bài"></button>
+    </div>
 </div>
