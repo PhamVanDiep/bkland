@@ -1,10 +1,11 @@
 import { HttpStatusCode } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { MessageService } from 'primeng/api';
 import { ReplaySubject, takeUntil } from 'rxjs';
-import { DIRECTION } from 'src/app/core/constants/direction.constant';
+import { DIRECTION, DIRECTION_DROPDOWN } from 'src/app/core/constants/direction.constant';
+import { PERIOD_DROPDOWN } from 'src/app/core/constants/period.constant';
+import { PRIORITY_DROPDOWN } from 'src/app/core/constants/priority.constant';
 import { STATUS } from 'src/app/core/constants/status.constant';
-import { TYPE } from 'src/app/core/constants/type.constant';
+import { TYPE, TYPE_DROPDOWN } from 'src/app/core/constants/type.constant';
 import { Apartment } from 'src/app/core/models/apartment.model';
 import { APIResponse } from 'src/app/core/models/api-response.model';
 import { District } from 'src/app/core/models/district.model';
@@ -14,6 +15,7 @@ import { Province } from 'src/app/core/models/province.model';
 import { RealEstatePost } from 'src/app/core/models/real-estate-post.model';
 import { Ward } from 'src/app/core/models/ward.model';
 import { LoadingService } from 'src/app/core/services/loading.service';
+import { MessageService } from 'src/app/core/services/message.service';
 import { NoAuthService } from 'src/app/core/services/no-auth.service';
 
 @Component({
@@ -34,60 +36,20 @@ export class CreateMainPostComponent implements OnInit, OnDestroy {
   districts: District[];
   wards: Ward[];
   directions: any;
+  priorities: any;
+  periods: any;
+  payValue: number;
 
   constructor(
     private _noAuthService: NoAuthService,
     private _messageService: MessageService,
-    private _loadingService: LoadingService
+    public _loadingService: LoadingService
   ) {
-    this.realEstateTypes = [
-      {
-        key: TYPE.HOUSE,
-        value: 'Nhà đất'
-      },
-      {
-        key: TYPE.APARTMENT,
-        value: 'Chung cư'
-      },
-      {
-        key: TYPE.PLOT,
-        value: 'Đất nền'
-      }
-    ];
-    this.directions = [
-      {
-        key: DIRECTION.DONG,
-        value: 'Đông'
-      },
-      {
-        key: DIRECTION.TAY,
-        value: 'Tây'
-      },
-      {
-        key: DIRECTION.NAM,
-        value: 'Nam'
-      },
-      {
-        key: DIRECTION.BAC,
-        value: 'Bắc'
-      },
-      {
-        key: DIRECTION.DONG_NAM,
-        value: 'Đông Nam'
-      },
-      {
-        key: DIRECTION.TAY_NAM,
-        value: 'Tây Nam'
-      },
-      {
-        key: DIRECTION.DONG_BAC,
-        value: 'Đông Bắc'
-      },
-      {
-        key: DIRECTION.TAY_BAC,
-        value: 'Tây Bắc'
-      },
-    ]
+    this.realEstateTypes = TYPE_DROPDOWN;
+    this.directions = DIRECTION_DROPDOWN;
+    this.priorities = PRIORITY_DROPDOWN;
+    this.periods = PERIOD_DROPDOWN;
+    this.payValue = 0;
     this.realEstatePost = {
       addressShow: '',
       area: 0,
@@ -262,5 +224,38 @@ export class CreateMainPostComponent implements OnInit, OnDestroy {
       return true;
     }
     return false;
+  }
+
+  changeIsSell(sell: boolean): void {
+    this.realEstatePost.sell = sell;
+    this.calcPayVal();
+  }
+
+  calcPayVal(): void {
+    let price = 0;
+    let heSo = 0;
+    this.priorities.forEach((e: any) => {
+      if (e.key === this.realEstatePost.priority) {
+        if (this.realEstatePost.sell) {
+          price = e.priceSell;
+        } else {
+          price = e.priceHire;
+        }
+      }
+    });
+    this.periods.forEach((e: any) => {
+      if (this.realEstatePost.period === e.key) {
+        heSo = e.heSo;
+      }
+    });
+    this.payValue = price*heSo;
+  }
+
+  createPost(): void {
+    this._loadingService.loading(true);
+    // setTimeout(() => {
+    //   this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: 'Hello' });
+    //   this._loadingService.loading(false);
+    // }, 2000);
   }
 }

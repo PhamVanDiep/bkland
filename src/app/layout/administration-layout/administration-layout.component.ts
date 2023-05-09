@@ -2,14 +2,15 @@ import { HttpStatusCode } from '@angular/common/http';
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { DeviceDetectorService, DeviceInfo } from 'ngx-device-detector';
-import { MenuItem, MessageService } from 'primeng/api';
-import { ReplaySubject, ignoreElements, takeUntil } from 'rxjs';
+import { MenuItem } from 'primeng/api';
+import { ReplaySubject, takeUntil } from 'rxjs';
 import { ROLE } from 'src/app/core/constants/role.constant';
 import { APIResponse } from 'src/app/core/models/api-response.model';
 import { SignUpRequest } from 'src/app/core/models/sign-up.model';
 import { UserDeviceToken } from 'src/app/core/models/user-device-token.model';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { LoadingService } from 'src/app/core/services/loading.service';
+import { MessageService } from 'src/app/core/services/message.service';
 import { UserService } from 'src/app/core/services/user.service';
 
 @Component({
@@ -20,7 +21,7 @@ import { UserService } from 'src/app/core/services/user.service';
 export class AdministrationLayoutComponent implements OnInit, OnDestroy {
   private _unsubscribe: ReplaySubject<any> = new ReplaySubject<any>();
 
-  loading: boolean = false;
+  // loading: boolean = false;
   items: MenuItem[];
   menuItems: MenuItem[];
   avatarUrl: string;
@@ -258,12 +259,6 @@ export class AdministrationLayoutComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    // throw new Error('Method not implemented.');
-    this._loadingService.loading$
-      .subscribe((response: boolean) => {
-        this.loading = response;
-      });
-
     this._userService.getUserById()
       .pipe(takeUntil(this._unsubscribe))
       .subscribe((response: APIResponse) => {

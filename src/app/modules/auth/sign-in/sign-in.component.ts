@@ -1,7 +1,6 @@
 import { HttpStatusCode } from '@angular/common/http';
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MessageService } from 'primeng/api';
 import { ReplaySubject, takeUntil } from 'rxjs';
 import { APIResponse } from 'src/app/core/models/api-response.model';
 import { Login, LoginResponse } from 'src/app/core/models/sign-in.model';
@@ -20,6 +19,7 @@ import { ForgotPasswordChange } from 'src/app/core/models/forgot-password-change
 import { UserDeviceTokenService } from 'src/app/core/services/user-device-token.service';
 import { UserDeviceToken } from 'src/app/core/models/user-device-token.model';
 import { DeviceDetectorService, DeviceInfo } from 'ngx-device-detector';
+import { MessageService } from 'src/app/core/services/message.service';
 
 @Component({
   selector: 'app-sign-in',
@@ -29,7 +29,6 @@ import { DeviceDetectorService, DeviceInfo } from 'ngx-device-detector';
 export class SignInComponent implements OnInit, OnDestroy {
   private title: string = 'Đăng nhập';
   private _unsubscribe: ReplaySubject<any> = new ReplaySubject<any>();
-  loading: boolean = false;
   login: Login;
   socialUser !: SocialUser;
   loginRemember: boolean = true;
@@ -86,11 +85,6 @@ export class SignInComponent implements OnInit, OnDestroy {
       username: '',
       password: ''
     }
-
-    this._loadingService.loading$
-      .subscribe((response: boolean) => {
-        this.loading = response
-      });
 
     this.deviceInfo = this._deviceDetectorService.getDeviceInfo();
 

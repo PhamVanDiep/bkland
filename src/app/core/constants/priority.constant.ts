@@ -4,3 +4,24 @@ export const PRIORITY = {
     MUC_3: 3,
     MUC_4: 4
 }
+
+export const PRIORITY_DROPDOWN = [
+    {
+        key: 1,
+        value: 'Mức 1',
+        priceHire: 20000,
+        priceSell: 50000,
+    },
+    {
+        key: 2,
+        value: 'Mức 2',
+        priceHire: 40000,
+        priceSell: 100000,
+    },
+    {
+        key: 3,
+        value: 'Mức 3',
+        priceHire: 60000,
+        priceSell: 150000,
+    }
+]

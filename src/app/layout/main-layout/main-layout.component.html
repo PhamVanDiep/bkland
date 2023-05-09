@@ -1,7 +1,4 @@
-<div class="progress-spinner" *ngIf="loading">
-    <p-progressSpinner></p-progressSpinner>
-</div>
-<p-toast></p-toast>
+<p-menu #menu [model]="menuItems" [popup]="true"></p-menu>
 <div class="w-full flex flex-col">
     <div class="w-full h-16 fixed flex flex-row">
         <p-menubar [model]="items" class="bg-white w-full">
@@ -22,7 +19,6 @@
                     <div *ngIf="isAuth">
                         <p-avatar [image]="avatarUrl" shape="circle" class="cursor-pointer"
                             (click)="menu.toggle($event)"></p-avatar>
-                        <p-menu #menu [model]="menuItems" [popup]="true"></p-menu>
                     </div>
                 </div>
             </ng-template>

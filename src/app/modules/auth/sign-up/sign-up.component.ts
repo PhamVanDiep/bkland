@@ -1,7 +1,5 @@
-import { SocialAuthService } from '@abacritt/angularx-social-login';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { MessageService } from 'primeng/api';
+import { Router } from '@angular/router';
 import { SignUpRequest } from 'src/app/core/models/sign-up.model';
 import { AppTitleService } from 'src/app/core/services/app-title.service';
 import { AuthService } from 'src/app/core/services/auth.service';
@@ -17,6 +15,7 @@ import { HttpStatusCode } from '@angular/common/http';
 import { ROLE, ROLE_SIGN_UP } from 'src/app/core/constants/role.constant';
 import * as uuid from 'uuid';
 import { SpecialAccount } from 'src/app/core/models/special-account.model';
+import { MessageService } from 'src/app/core/services/message.service';
 
 @Component({
   selector: 'app-sign-up',
@@ -27,7 +26,6 @@ export class SignUpComponent implements OnInit, OnDestroy {
   private title: string = 'Đăng ký';
   private _unsubscribe: ReplaySubject<any> = new ReplaySubject();
 
-  loading: boolean;
   signUpRequest: SignUpRequest;
   lstGenders: any;
   provinces: Province[];
@@ -46,7 +44,6 @@ export class SignUpComponent implements OnInit, OnDestroy {
     private _noAuthService: NoAuthService
   ) {
     this._appTitleService.setTitle(this.title);
-    this.loading = false;
     let _id = uuid.v4();
     this.signUpRequest = {
       id: _id,
@@ -97,11 +94,6 @@ export class SignUpComponent implements OnInit, OnDestroy {
         } else {
           this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
         }
-      });
-
-    this._loadingService.loading$
-      .subscribe((response: boolean) => {
-        this.loading = response
       });
   }
 

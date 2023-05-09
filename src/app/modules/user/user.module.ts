@@ -9,8 +9,6 @@ import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { DropdownModule } from 'primeng/dropdown';
-import { MessageService } from 'primeng/api';
-import { LoadingService } from 'src/app/core/services/loading.service';
 import { RippleModule } from 'primeng/ripple';
 
 @NgModule({
@@ -29,8 +27,6 @@ import { RippleModule } from 'primeng/ripple';
     RippleModule
   ],
   providers: [
-    MessageService,
-    LoadingService
   ]
 })
 export class UserModule { }

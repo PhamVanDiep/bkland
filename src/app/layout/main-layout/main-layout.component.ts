@@ -2,7 +2,7 @@ import { HttpStatusCode } from '@angular/common/http';
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { DeviceDetectorService, DeviceInfo } from 'ngx-device-detector';
-import { MenuItem, MessageService } from 'primeng/api';
+import { MenuItem } from 'primeng/api';
 import { ReplaySubject, takeUntil } from 'rxjs';
 import { EMAIL_VERIFY_TYPE } from 'src/app/core/constants/email-verify.constant';
 import { About } from 'src/app/core/models/about.model';
@@ -14,6 +14,7 @@ import { UserDeviceToken } from 'src/app/core/models/user-device-token.model';
 import { AboutService } from 'src/app/core/services/about.service';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { LoadingService } from 'src/app/core/services/loading.service';
+import { MessageService } from 'src/app/core/services/message.service';
 import { NoAuthService } from 'src/app/core/services/no-auth.service';
 import { UserService } from 'src/app/core/services/user.service';
 
@@ -31,7 +32,7 @@ export class MainLayoutComponent implements OnInit, OnDestroy{
   user: SignUpRequest;
   avatarUrl: string;
   menuItems: MenuItem[];
-  loading: boolean = false;
+  // loading: boolean = false;
   deviceInfo: DeviceInfo;
   noInterestedPost: string;
   about: About;
@@ -184,10 +185,6 @@ export class MainLayoutComponent implements OnInit, OnDestroy{
 
   ngOnInit(): void {
     this.isAuth = this._authService.isAuthenticated();
-    this._loadingService.loading$
-      .subscribe((response: boolean) => {
-        this.loading = response;
-      });
 
     if (this.isAuth) {
       this._userService.getUserById()
@@ -255,7 +252,7 @@ export class MainLayoutComponent implements OnInit, OnDestroy{
   }
 
   sendEmail(): void {
-    this._loadingService.loading(true);
+    // this._loadingService.loading(true);
     let emailVerify: EmailVerify = {
       email: this.emailVerify,
       title: "Mã OTP xác nhận đổi mật khẩu bkland",
@@ -264,7 +261,7 @@ export class MainLayoutComponent implements OnInit, OnDestroy{
     this._noAuthService.sendVerifyOTP(emailVerify)
       .pipe(takeUntil(this._unsubscribe))
       .subscribe((response: APIResponse) => {
-        this._loadingService.loading(false);
+        // this._loadingService.loading(false);
         if (response.status === HttpStatusCode.Ok) {
           this._messageService.add({ severity: 'success', summary: 'Thông báo', detail: response.message });
           this.displayChangePassword = true;
@@ -276,7 +273,7 @@ export class MainLayoutComponent implements OnInit, OnDestroy{
   }
 
   changePassword(): void {
-    this._loadingService.loading(true);
+    // this._loadingService.loading(true);
     let forgotPasswordChange: ForgotPasswordChange = {
       email: this.emailVerify,
       newPassword: this.newPassword
@@ -284,7 +281,7 @@ export class MainLayoutComponent implements OnInit, OnDestroy{
     this._authService.forgotPasswordChange(forgotPasswordChange)
       .pipe(takeUntil(this._unsubscribe))
       .subscribe((response: APIResponse) => {
-        this._loadingService.loading(false);
+        // this._loadingService.loading(false);
         if (response.status === HttpStatusCode.Ok) {
           this._messageService.add({ severity: 'success', summary: 'Thông báo', detail: response.message });
           this.displayChangePassword = false;
