@@ -25,4 +25,8 @@ export class MediaService {
             }
         );
     }
+
+    getImage(id: string): Observable<APIResponse> {
+        return this._httpClient.get<APIResponse>(`${environment.BASE_URL_NO_AUTH}/photos/${id}`);
+    }
 }

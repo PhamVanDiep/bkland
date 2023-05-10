@@ -64,7 +64,8 @@ initializeApp(environment.FirebaseConfig);
     JwtHelperService,
     AuthService,
     LoadingService,
-    MessageServiceCustomize
+    MessageServiceCustomize,
+    // MediaService
   ],
   bootstrap: [AppComponent]
 })

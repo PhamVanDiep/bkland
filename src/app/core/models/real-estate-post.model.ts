@@ -1,4 +1,8 @@
+import { Apartment } from "./apartment.model";
 import { District } from "./district.model";
+import { House } from "./house.model";
+import { Plot } from "./plot.model";
+import { PostMedia } from "./post-media.model";
 import { Province } from "./province.model";
 import { SignUpRequest } from "./sign-up.model";
 import { Ward } from "./ward.model";
@@ -28,4 +32,12 @@ export interface RealEstatePost {
     createAt: any;
     updateBy: string;
     updateAt: any;
+}
+
+export interface RealEstatePostRequest {
+    realEstatePost: RealEstatePost;
+    images: PostMedia[];
+    plot: Plot;
+    apartment: Apartment;
+    house: House;
 }
