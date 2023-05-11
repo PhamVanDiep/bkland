@@ -1,0 +1,6 @@
+export const STATUS = {
+    CHO_KIEM_DUYET: "CHO_KIEM_DUYET",
+    DA_KIEM_DUYET: "DA_KIEM_DUYET",
+    BI_TU_CHOI: "BI_TU_CHOI",
+    DA_HET_HAN: "DA_HET_HAN"
+}

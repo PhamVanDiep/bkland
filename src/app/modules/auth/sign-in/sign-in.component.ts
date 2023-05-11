@@ -1,7 +1,6 @@
 import { HttpStatusCode } from '@angular/common/http';
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MessageService } from 'primeng/api';
 import { ReplaySubject, takeUntil } from 'rxjs';
 import { APIResponse } from 'src/app/core/models/api-response.model';
 import { Login, LoginResponse } from 'src/app/core/models/sign-in.model';
@@ -20,6 +19,7 @@ import { ForgotPasswordChange } from 'src/app/core/models/forgot-password-change
 import { UserDeviceTokenService } from 'src/app/core/services/user-device-token.service';
 import { UserDeviceToken } from 'src/app/core/models/user-device-token.model';
 import { DeviceDetectorService, DeviceInfo } from 'ngx-device-detector';
+import { MessageService } from 'src/app/core/services/message.service';
 
 @Component({
   selector: 'app-sign-in',
@@ -29,7 +29,6 @@ import { DeviceDetectorService, DeviceInfo } from 'ngx-device-detector';
 export class SignInComponent implements OnInit, OnDestroy {
   private title: string = 'Đăng nhập';
   private _unsubscribe: ReplaySubject<any> = new ReplaySubject<any>();
-  loading: boolean = false;
   login: Login;
   socialUser !: SocialUser;
   loginRemember: boolean = true;
@@ -49,6 +48,8 @@ export class SignInComponent implements OnInit, OnDestroy {
   responseOTP: string;
 
   deviceInfo: DeviceInfo;
+
+  clicked: boolean = false;
 
   constructor(
     private _appTitleService: AppTitleService,
@@ -82,17 +83,13 @@ export class SignInComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.deviceInfo = this._deviceDetectorService.getDeviceInfo();
+
     this.login = {
       username: '',
-      password: ''
+      password: '',
+      deviceInfo: this.deviceInfo.userAgent
     }
-
-    this._loadingService.loading$
-      .subscribe((response: boolean) => {
-        this.loading = response
-      });
-
-    this.deviceInfo = this._deviceDetectorService.getDeviceInfo();
 
     this._socialAuthService.authState.subscribe((user) => {
       this.socialUser = user;
@@ -102,7 +99,8 @@ export class SignInComponent implements OnInit, OnDestroy {
           if (response.status === HttpStatusCode.Ok) {
             this.login = {
               username: this.socialUser.email + "_user_bkland",
-              password: this.socialUser.email + "_password_bkland"
+              password: this.socialUser.email + "_password_bkland",
+              deviceInfo: this.deviceInfo.userAgent
             }
             this.loginRequest();
           } else if (response.status === HttpStatusCode.NoContent) {
@@ -199,7 +197,8 @@ export class SignInComponent implements OnInit, OnDestroy {
         if (response.status === HttpStatusCode.Ok) {
           this.login = {
             username: this.socialUser.email + "_user_bkland",
-            password: this.socialUser.email + "_password_bkland"
+            password: this.socialUser.email + "_password_bkland",
+            deviceInfo: this.deviceInfo.userAgent
           }
           this.loginRequest();
         } else {
@@ -213,6 +212,7 @@ export class SignInComponent implements OnInit, OnDestroy {
   }
 
   sendEmail(): void {
+    this.clicked = true;
     this._loadingService.loading(true);
     let emailVerify: EmailVerify = {
       email: this.emailVerify,
@@ -230,6 +230,7 @@ export class SignInComponent implements OnInit, OnDestroy {
           this.responseOTP = response.data;
         } else {
           this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+          this.clicked = false;
         }
       })
   }
@@ -254,7 +255,10 @@ export class SignInComponent implements OnInit, OnDestroy {
   }
 
   validOTP(): boolean {
-    if (this.verifyOTP === this.responseOTP) {
+    if (this.verifyOTP.length <= 0) {
+      return true;
+    }
+    if (this.verifyOTP === this.responseOTP && this.verifyOTP.length > 0) {
       return true;
     }
     return false;
@@ -279,5 +283,9 @@ export class SignInComponent implements OnInit, OnDestroy {
       return true;
     }
     return false;
+  }
+
+  register(): void {
+    this._router.navigate(['register']);
   }
 }

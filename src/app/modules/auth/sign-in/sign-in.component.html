@@ -1,7 +1,3 @@
-<div class="progress-spinner" *ngIf="loading">
-    <p-progressSpinner></p-progressSpinner>
-</div>
-<p-toast></p-toast>
 <div class="h-full bg-cover bg-no-repeat bg-login-bgr-img flex items-center justify-center">
     <div class="lg:w-1/3 bg-white lg:rounded-2xl flex flex-col p-8 space-y-4 md:w-full">
         <div class="flex justify-center items-center w-full h-16">
@@ -33,6 +29,10 @@
             </div>
             <button pButton pRipple label="Đăng nhập" class="w-full p-3 text-xl"
                 [disabled]="login.username.length <= 0 || login.password.length <= 0" (click)="loginRequest()"></button>
+            <div class="flex flex-row w-full justify-center items-center mt-4 space-x-2">
+                <span>Bạn chưa có tài khoản?</span>
+                <span class="underline text-blue-custom cursor-pointer" (click)="register()">Đăng ký</span>
+            </div>
         </div>
     </div>
 </div>
@@ -45,7 +45,7 @@
             [ngClass]="emailVerify.length <= 0 ? 'ng-invalid ng-dirty' : ''">
     </div>
     <ng-template pTemplate="footer">
-        <p-button (click)="sendEmail()" label="Gửi OTP" styleClass="p-button-text"></p-button>
+        <p-button (click)="sendEmail()" label="Gửi OTP" styleClass="p-button-text" [disabled]="clicked"></p-button>
     </ng-template>
 </p-dialog>
 <p-dialog header="Mật khẩu mới" [(visible)]="displayChangePassword" [style]="{width: innerWidth <= 640 ? '100vw' : '30vw'}" 

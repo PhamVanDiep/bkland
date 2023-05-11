@@ -24,6 +24,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { LoadingService } from './core/services/loading.service';
 import { LayoutModule } from './layout/layout.module';
 import { AuthService } from './core/services/auth.service';
+import { MessageService as MessageServiceCustomize } from './core/services/message.service';
 
 initializeApp(environment.FirebaseConfig);
 
@@ -62,7 +63,9 @@ initializeApp(environment.FirebaseConfig);
     { provide: JWT_OPTIONS, useValue: JWT_OPTIONS },
     JwtHelperService,
     AuthService,
-    LoadingService
+    LoadingService,
+    MessageServiceCustomize,
+    // MediaService
   ],
   bootstrap: [AppComponent]
 })

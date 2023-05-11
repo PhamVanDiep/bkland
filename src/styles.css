@@ -61,3 +61,7 @@ html {
 .p-sidebar-left {
     width: 16rem !important;
 }
+
+.p-inputnumber {
+    width: 100% !important;
+}

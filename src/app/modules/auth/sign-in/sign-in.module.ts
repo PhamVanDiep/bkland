@@ -10,8 +10,6 @@ import { FormsModule } from '@angular/forms';
 import { PasswordModule } from 'primeng/password';
 import { InputTextModule } from 'primeng/inputtext';
 import { CheckboxModule } from 'primeng/checkbox';
-import { LoadingService } from 'src/app/core/services/loading.service';
-import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { SocialLoginModule, SocialAuthServiceConfig, GoogleLoginProvider } from '@abacritt/angularx-social-login';
@@ -50,8 +48,6 @@ import { UserDeviceTokenService } from 'src/app/core/services/user-device-token.
     },
     AppTitleService,
     AuthService,
-    LoadingService,
-    MessageService,
     UserDeviceTokenService
   ]
 })

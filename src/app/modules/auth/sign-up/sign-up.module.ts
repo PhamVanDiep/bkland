@@ -12,7 +12,7 @@ import { PasswordModule } from 'primeng/password';
 import { ToastModule } from 'primeng/toast';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { AppTitleService } from 'src/app/core/services/app-title.service';
-import { LoadingService } from 'src/app/core/services/loading.service';
+// import { LoadingService } from 'src/app/core/services/loading.service';
 import { MessageService } from 'primeng/api';
 import { CalendarModule } from 'primeng/calendar';
 import { RadioButtonModule } from 'primeng/radiobutton';
@@ -39,7 +39,7 @@ import { DropdownModule } from 'primeng/dropdown';
   providers: [
     AppTitleService,
     AuthService,
-    LoadingService,
+    // LoadingService,
     MessageService
   ]
 })

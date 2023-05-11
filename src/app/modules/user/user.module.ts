@@ -8,6 +8,8 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextareaModule } from 'primeng/inputtextarea';
+import { DropdownModule } from 'primeng/dropdown';
+import { RippleModule } from 'primeng/ripple';
 
 @NgModule({
   declarations: [
@@ -20,7 +22,11 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
     ButtonModule,
     InputTextModule,
     InputNumberModule,
-    InputTextareaModule
+    InputTextareaModule,
+    DropdownModule,
+    RippleModule
+  ],
+  providers: [
   ]
 })
 export class UserModule { }

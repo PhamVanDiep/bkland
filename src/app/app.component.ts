@@ -7,6 +7,7 @@ import { UserToken } from './core/models/user-token.model';
 import { MessageService } from 'primeng/api';
 import { NotificationMessage } from './core/models/message.model';
 import { LoadingService } from './core/services/loading.service';
+import { MessageService as MessageServiceCustomize } from './core/services/message.service';
 
 @Component({
   selector: 'app-root',
@@ -39,7 +40,8 @@ export class AppComponent implements OnInit {
     private _pushNotificationService: PushNotificationService,
     private _deviceDetectorService: DeviceDetectorService,
     private _messageService: MessageService,
-    private _loadingService: LoadingService
+    private _messageServiceCustomize: MessageServiceCustomize,
+    public _loadingService: LoadingService
   ) {
     // this._appTitleService.setTitle("Hello world");
     // this._appUpdateService.update();
@@ -107,11 +109,15 @@ export class AppComponent implements OnInit {
     //   });
 
     // this.setAddress();
-    // this._loadingService.loading$
-    //   .subscribe((response: boolean) => {
-    //     console.log(this.loading);
-    //     this.loading = response
-    //   })
+    this._loadingService.loading$
+      .subscribe((response: boolean) => {
+        this.loading = response;
+      });
+
+    this._messageServiceCustomize.message$
+      .subscribe((response: any) => {
+        this._messageService.add(response);
+      })
   }
 
   reload(): void {
