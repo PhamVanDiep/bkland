@@ -86,8 +86,8 @@ export class CreateMainPostComponent implements OnInit, OnDestroy {
       },
       enable: true,
       id: '',
-      lat: 0,
-      lng: 0,
+      lat: 0.0,
+      lng: 0.0,
       ownerId: {
         id: _id,
         accountBalance: 0,
@@ -184,6 +184,13 @@ export class CreateMainPostComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((response: any) => {
+        this.realEstatePost.lat = response.coords.latitude;
+        this.realEstatePost.lng = response.coords.longitude;
+      });
+    }
+    
     this._noAuthService.getAllProvinces()
       .pipe(takeUntil(this._unsubscribe))
       .subscribe((response: APIResponse) => {
@@ -406,6 +413,13 @@ export class CreateMainPostComponent implements OnInit, OnDestroy {
       this.images = [];
 
       if (this.selectedFiles.length > 0) {
+        let deleteImagesResponse = await firstValueFrom(this._mediaService.deletePhotoByPostId(this.realEstatePost.id));
+        if (deleteImagesResponse.status === HttpStatusCode.Ok) {
+          
+        } else {
+          this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: deleteImagesResponse.message });
+          return;
+        }
         for (let index = 0; index < this.selectedFiles.length; index++) {
           const element = this.selectedFiles[index];
           let formData = new FormData();

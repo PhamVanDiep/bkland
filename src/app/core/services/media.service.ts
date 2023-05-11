@@ -29,4 +29,13 @@ export class MediaService {
     getImage(id: string): Observable<APIResponse> {
         return this._httpClient.get<APIResponse>(`${environment.BASE_URL_NO_AUTH}/photos/${id}`);
     }
+
+    deletePhotoByPostId(postId: string): Observable<APIResponse> {
+        this.accessToken = localStorage.getItem('accessToken') || '';
+        return this._httpClient.delete<APIResponse>(`${environment.BASE_URL_AUTH}/photos/${postId}`, {
+            headers: {
+                'Authorization': `Bearer ${this.accessToken}`
+            }
+        });
+    }
 }
