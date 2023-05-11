@@ -49,6 +49,8 @@ export class SignInComponent implements OnInit, OnDestroy {
 
   deviceInfo: DeviceInfo;
 
+  clicked: boolean = false;
+
   constructor(
     private _appTitleService: AppTitleService,
     private _loadingService: LoadingService,
@@ -81,12 +83,13 @@ export class SignInComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.deviceInfo = this._deviceDetectorService.getDeviceInfo();
+
     this.login = {
       username: '',
-      password: ''
+      password: '',
+      deviceInfo: this.deviceInfo.userAgent
     }
-
-    this.deviceInfo = this._deviceDetectorService.getDeviceInfo();
 
     this._socialAuthService.authState.subscribe((user) => {
       this.socialUser = user;
@@ -96,7 +99,8 @@ export class SignInComponent implements OnInit, OnDestroy {
           if (response.status === HttpStatusCode.Ok) {
             this.login = {
               username: this.socialUser.email + "_user_bkland",
-              password: this.socialUser.email + "_password_bkland"
+              password: this.socialUser.email + "_password_bkland",
+              deviceInfo: this.deviceInfo.userAgent
             }
             this.loginRequest();
           } else if (response.status === HttpStatusCode.NoContent) {
@@ -193,7 +197,8 @@ export class SignInComponent implements OnInit, OnDestroy {
         if (response.status === HttpStatusCode.Ok) {
           this.login = {
             username: this.socialUser.email + "_user_bkland",
-            password: this.socialUser.email + "_password_bkland"
+            password: this.socialUser.email + "_password_bkland",
+            deviceInfo: this.deviceInfo.userAgent
           }
           this.loginRequest();
         } else {
@@ -207,6 +212,7 @@ export class SignInComponent implements OnInit, OnDestroy {
   }
 
   sendEmail(): void {
+    this.clicked = true;
     this._loadingService.loading(true);
     let emailVerify: EmailVerify = {
       email: this.emailVerify,
@@ -224,6 +230,7 @@ export class SignInComponent implements OnInit, OnDestroy {
           this.responseOTP = response.data;
         } else {
           this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+          this.clicked = false;
         }
       })
   }
@@ -248,7 +255,10 @@ export class SignInComponent implements OnInit, OnDestroy {
   }
 
   validOTP(): boolean {
-    if (this.verifyOTP === this.responseOTP) {
+    if (this.verifyOTP.length <= 0) {
+      return true;
+    }
+    if (this.verifyOTP === this.responseOTP && this.verifyOTP.length > 0) {
       return true;
     }
     return false;
@@ -273,5 +283,9 @@ export class SignInComponent implements OnInit, OnDestroy {
       return true;
     }
     return false;
+  }
+
+  register(): void {
+    this._router.navigate(['register']);
   }
 }

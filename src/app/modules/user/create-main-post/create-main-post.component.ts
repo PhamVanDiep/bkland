@@ -1,6 +1,6 @@
 import { HttpStatusCode } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { response } from 'express';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ReplaySubject, firstValueFrom, takeUntil } from 'rxjs';
 import { DIRECTION, DIRECTION_DROPDOWN } from 'src/app/core/constants/direction.constant';
 import { PERIOD_DROPDOWN } from 'src/app/core/constants/period.constant';
@@ -44,22 +44,26 @@ export class CreateMainPostComponent implements OnInit, OnDestroy {
   priorities: any;
   periods: any;
   payValue: number;
-  selectedFiles: any;
+  selectedFiles: any[];
   images: PostMedia[];
+  selectedFileNames: string[];
+  isUpdate: boolean;
 
   constructor(
     private _noAuthService: NoAuthService,
     private _messageService: MessageService,
     public _loadingService: LoadingService,
     private _mediaService: MediaService,
-    private _realEstatePostService: RealEstatePostService
+    private _realEstatePostService: RealEstatePostService,
+    private _router: Router,
+    private _route: ActivatedRoute
   ) {
     this.realEstateTypes = TYPE_DROPDOWN;
     this.directions = DIRECTION_DROPDOWN;
     this.priorities = PRIORITY_DROPDOWN;
     this.periods = PERIOD_DROPDOWN;
     this.payValue = 0;
-    this.selectedFiles = null;
+    this.selectedFiles = [];
     let _id = JSON.parse(window.atob((localStorage.getItem('accessToken') || '').split('.')[1])).id;
     this.realEstatePost = {
       addressShow: '',
@@ -152,7 +156,7 @@ export class CreateMainPostComponent implements OnInit, OnDestroy {
       furniture: '',
       noBathroom: 0,
       noBedroom: 0,
-      realEsatatePost: this.realEstatePost
+      realEstatePost: this.realEstatePost
     }
     this.house = {
       id: 0,
@@ -165,6 +169,12 @@ export class CreateMainPostComponent implements OnInit, OnDestroy {
       noFloor: 0,
       realEstatePost: this.realEstatePost,
       streetWidth: 0
+    }
+    this.selectedFileNames = [];
+    if (this._router.url === '/user/create-post') {
+      this.isUpdate = false;
+    } else {
+      this.isUpdate = true;
     }
   }
 
@@ -183,6 +193,52 @@ export class CreateMainPostComponent implements OnInit, OnDestroy {
           this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
         }
       });
+
+    if (this.isUpdate) {
+      let postId = this._route.snapshot.paramMap.get('id') || '';
+      this._realEstatePostService.getPostById(postId)
+        .pipe(takeUntil(this._unsubscribe))
+        .subscribe((response: APIResponse) => {
+          if (response.status === HttpStatusCode.Ok) {
+            let postMediaDTOS = response.data.postMediaDTOS;
+            postMediaDTOS.forEach((e: any) => {
+              this.selectedFileNames.push(e.name);
+            });
+            let basePost = response.data.basePost;
+            this.realEstatePost = basePost.realEstatePost;
+            if (this.realEstatePost.type === TYPE.APARTMENT) {
+              this.apartment.id = basePost.id;
+              this.apartment.balconyDirection = basePost.balconyDirection;
+              this.apartment.construction = basePost.construction;
+              this.apartment.floorNo = basePost.floorNo;
+              this.apartment.furniture = basePost.furniture;
+              this.apartment.noBathroom = basePost.noBathroom;
+              this.apartment.noBedroom = basePost.noBedroom;
+              this.apartment.realEstatePost = basePost.realEstatePost;
+            } else if (this.realEstatePost.type === TYPE.HOUSE) {
+              this.house.balconyDirection = basePost.balconyDirection;
+              this.house.behindWidth = basePost.behindWidth;
+              this.house.frontWidth = basePost.frontWidth;
+              this.house.furniture = basePost.furniture;
+              this.house.id = basePost.id;
+              this.house.noBathroom = basePost.noBathroom;
+              this.house.noBedroom = basePost.noBedroom;
+              this.house.noFloor = basePost.noFloor;
+              this.house.streetWidth = basePost.streetWidth;
+              this.house.realEstatePost = basePost.realEstatePost;
+            } else if (this.realEstatePost.type === TYPE.PLOT) {
+              this.plot.id = basePost.id;
+              this.plot.behindWidth = basePost.behindWidth;
+              this.plot.frontWidth = basePost.frontWidth;
+              this.plot.realEstatePost = basePost.realEstatePost;
+            }
+            this.getDistrictsInProvince();
+            this.getWardsInDistrict();
+          } else {
+            this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+          }
+        })
+    }
   }
 
   nullable(field: string): boolean {
@@ -259,60 +315,127 @@ export class CreateMainPostComponent implements OnInit, OnDestroy {
         heSo = e.heSo;
       }
     });
-    this.payValue = price*heSo;
+    this.payValue = price * heSo;
   }
 
   onFileSelected(event: any) {
     this.selectedFiles = event.target.files;
-    console.log(this.selectedFiles);
-  }
-
-  async createPost() {
-    if (this.selectedFiles == undefined || this.selectedFiles == null || this.selectedFiles.length == 0) {
-      this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: 'Bạn chưa chọn ảnh' });
+    if (this.selectedFiles == null || this.selectedFiles == undefined) {
       return;
     }
-    // this._loadingService.loading(true);
-    this.realEstatePost.id = this.realEstatePost.type.toLowerCase() + '-' + uuid.v4();
-    this.images = [];
+
+    if (this.selectedFiles.length < 2) {
+      this._messageService.add({ severity: 'warn', summary: 'Thông báo', detail: 'Cần chọn tối thiểu 2 ảnh.' });
+      this.selectedFiles = [];
+      return;
+    }
+    if (this.selectedFiles.length > 6) {
+      this._messageService.add({ severity: 'warn', summary: 'Thông báo', detail: 'Chỉ được chọn tối đa 6 ảnh' });
+      this.selectedFiles = [];
+      return;
+    }
+
+    this.selectedFileNames = [];
     for (let index = 0; index < this.selectedFiles.length; index++) {
       const element = this.selectedFiles[index];
-      let formData = new FormData();
-      formData.append('title', element.type);
-      formData.append('image', element, element.name);
-      let response = await firstValueFrom(this._mediaService.postImage(formData).pipe(takeUntil(this._unsubscribe)));
-      let img: PostMedia = {
-        id: response.data,
-        mediaType: element.type,
-        postId: this.realEstatePost.id,
-        postType: 'REAL_ESTATE_POST'
+      if (Math.round(element.size/1048576) > 16) {
+        this.selectedFiles = [];
+        this.selectedFileNames = [];
+        return;
       }
-      this.images.push(img);
-      // this._mediaService.postImage(formData)
-      //   .pipe(takeUntil(this._unsubscribe))
-      //   .subscribe((response: APIResponse) => {
-      //     // console.log(response);
-      //     let img: PostMedia = {
-      //       id: response.data,
-      //       mediaType: element.type,
-      //       postId: this.realEstatePost.id,
-      //       postType: 'REAL_ESTATE_POST'
-      //     }
-      //     this.images.push(img);
-      //   });
+      this.selectedFileNames.push(element.name);
     }
-    let realEstatePostRequest: RealEstatePostRequest = {
-      apartment: this.apartment,
-      house: this.house,
-      images: this.images,
-      plot: this.plot,
-      realEstatePost: this.realEstatePost
+  }
+
+  removeImage(name: string): void {
+    // this.selectedFileNames.
+  }
+
+  async savePost() {
+    if (this.selectedFiles.length > 0) {
+      if (this.selectedFiles.length < 2) {
+        this._messageService.add({ severity: 'warn', summary: 'Thông báo', detail: 'Cần chọn tối thiểu 2 ảnh.' });
+        this.selectedFiles = [];
+        return;
+      }
+      if (this.selectedFiles.length > 6) {
+        this._messageService.add({ severity: 'warn', summary: 'Thông báo', detail: 'Chỉ được chọn tối đa 6 ảnh' });
+        this.selectedFiles = [];
+        return;
+      }
     }
-    this._realEstatePostService.createPost(realEstatePostRequest)
-      .pipe(takeUntil(this._unsubscribe))
-      .subscribe((response: APIResponse) => {
-        console.log(response);
-      })
-    this._loadingService.loading(false);
+    if (!this.isUpdate) {
+      if (this.selectedFiles == undefined || this.selectedFiles == null || this.selectedFiles.length == 0) {
+        this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: 'Bạn chưa chọn ảnh' });
+        return;
+      }
+      this._loadingService.loading(true);
+      this.realEstatePost.id = this.realEstatePost.type.toLowerCase() + '-' + uuid.v4();
+      this.images = [];
+      for (let index = 0; index < this.selectedFiles.length; index++) {
+        const element = this.selectedFiles[index];
+        let formData = new FormData();
+        formData.append('title', element.type);
+        formData.append('image', element, element.name);
+        let response = await firstValueFrom(this._mediaService.postImage(formData).pipe(takeUntil(this._unsubscribe)));
+        let img: PostMedia = {
+          id: response.data,
+          mediaType: element.type,
+          postId: this.realEstatePost.id,
+          postType: 'REAL_ESTATE_POST',
+          name: element.name
+        }
+        this.images.push(img);
+      }
+      let realEstatePostRequest: RealEstatePostRequest = {
+        apartment: this.apartment,
+        house: this.house,
+        images: this.images,
+        plot: this.plot,
+        realEstatePost: this.realEstatePost
+      }
+      let postResponse = await firstValueFrom(this._realEstatePostService.createPost(realEstatePostRequest).pipe(takeUntil(this._unsubscribe)));
+      if (postResponse.status === HttpStatusCode.Ok) {
+        this._messageService.add({ severity: 'success', summary: 'Thông báo', detail: postResponse.message });
+      } else {
+        this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: postResponse.message });
+      }
+      this._loadingService.loading(false);
+    } else {
+      this._loadingService.loading(true);
+      this.images = [];
+
+      if (this.selectedFiles.length > 0) {
+        for (let index = 0; index < this.selectedFiles.length; index++) {
+          const element = this.selectedFiles[index];
+          let formData = new FormData();
+          formData.append('title', element.type);
+          formData.append('image', element, element.name);
+          let response = await firstValueFrom(this._mediaService.postImage(formData).pipe(takeUntil(this._unsubscribe)));
+          let img: PostMedia = {
+            id: response.data,
+            mediaType: element.type,
+            postId: this.realEstatePost.id,
+            postType: 'REAL_ESTATE_POST',
+            name: element.name
+          }
+          this.images.push(img);
+        } 
+      }
+      let realEstatePostRequest: RealEstatePostRequest = {
+        apartment: this.apartment,
+        house: this.house,
+        images: this.images,
+        plot: this.plot,
+        realEstatePost: this.realEstatePost
+      }
+      let postResponse = await firstValueFrom(this._realEstatePostService.updatePost(realEstatePostRequest).pipe(takeUntil(this._unsubscribe)));
+      if (postResponse.status === HttpStatusCode.Ok) {
+        this._messageService.add({ severity: 'success', summary: 'Thông báo', detail: postResponse.message });
+      } else {
+        this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: postResponse.message });
+      }
+      this._loadingService.loading(false);
+    }
   }
 }

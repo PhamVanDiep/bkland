@@ -36,4 +36,19 @@ export class RealEstatePostService {
             }
         );
     }
+
+    getPostById(id: string): Observable<APIResponse> {
+        return this._httpClient.get<APIResponse>(`${environment.BASE_URL_NO_AUTH}/real-estate-post/${id}`);
+    }
+
+    updatePost(body: any): Observable<APIResponse> {
+        this.accessToken = localStorage.getItem('accessToken') || '';
+        return this._httpClient.put<APIResponse>(`${environment.BASE_URL_AUTH}/real-estate-post`, body,
+            {
+                headers: {
+                    'Authorization': `Bearer ${this.accessToken}`
+                }
+            }
+        );
+    }
 }

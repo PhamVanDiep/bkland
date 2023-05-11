@@ -3,4 +3,5 @@ export interface PostMedia {
     mediaType: string;
     postId: string;
     postType: string;
+    name: string;
 }

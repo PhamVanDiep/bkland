@@ -15,7 +15,7 @@
             <label class="text-sm">Loại bất động sản</label>
             <p-dropdown [options]="realEstateTypes" [style]="{'width': '100%'}" 
                 optionLabel="value" optionValue="key" [(ngModel)]="realEstatePost.type"
-                autoWidth="false"></p-dropdown>
+                autoWidth="false" [disabled]="isUpdate"></p-dropdown>
         </div>
         <div class="flex flex-col w-full space-y-4 lg:space-y-0 lg:flex-row lg:space-x-4">
             <div class="flex flex-col w-full">
@@ -89,13 +89,13 @@
         <span class="font-bold text-2xl">Thông tin bất động sản</span>
         <div class="flex flex-col w-full space-y-4 lg:space-y-0 lg:flex-row lg:space-x-4">
             <div class="flex flex-col w-full">
-                <label for="area" class="text-sm">Diện tích</label>
+                <label for="area" class="text-sm">Diện tích (m2)</label>
                 <p-inputNumber id="area" class="w-full" placeholder="Nhập diện tích: m2"
                     inputId="integeronly"
                     [(ngModel)]="realEstatePost.area"></p-inputNumber>
             </div>
             <div class="flex flex-col w-full">
-                <label for="price" class="text-sm">Giá</label>
+                <label for="price" class="text-sm">{{ realEstatePost.sell ? 'Giá (tỷ VNĐ)' : 'Giá (triệu VNĐ)' }}</label>
                 <p-inputNumber id="price" class="w-full" [(ngModel)]="realEstatePost.price"
                     inputId="minmaxfraction" mode="decimal" [minFractionDigits]="2" [maxFractionDigits]="2"
                     [placeholder]="realEstatePost.sell ? 'Nhập giá: tỷ VNĐ' : 'Nhập giá: triệu VNĐ'">
@@ -110,13 +110,13 @@
         </div>
         <div class="flex flex-col w-full space-y-4 lg:space-y-0 lg:flex-row lg:space-x-4" *ngIf="isPlot()">
             <div class="flex flex-col w-full">
-                <label for="frontWidth" class="text-sm">Mặt tiền</label>
+                <label for="frontWidth" class="text-sm">Mặt tiền (m)</label>
                 <p-inputNumber id="frontWidth" class="w-full" [(ngModel)]="plot.frontWidth"
                     inputId="minmaxfraction" mode="decimal" [minFractionDigits]="1" [maxFractionDigits]="1"
                     placeholder="Nhập chiều dài mặt tiền: m"></p-inputNumber>
             </div>
             <div class="flex flex-col w-full">
-                <label for="behindWidth" class="text-sm">Mặt hậu</label>
+                <label for="behindWidth" class="text-sm">Mặt hậu (m)</label>
                 <p-inputNumber id="behindWidth" class="w-full" [(ngModel)]="plot.behindWidth"
                     inputId="minmaxfraction" mode="decimal" [minFractionDigits]="1" [maxFractionDigits]="1"
                     placeholder="Nhập chiều dài mặt hậu: m"></p-inputNumber>
@@ -191,19 +191,19 @@
             </div>
             <div class="flex flex-col w-full space-y-4 lg:space-y-0 lg:flex-row lg:space-x-4">
                 <div class="flex flex-col w-full">
-                    <label for="frontWidth" class="text-sm">Mặt tiền</label>
+                    <label for="frontWidth" class="text-sm">Mặt tiền (m)</label>
                     <p-inputNumber id="frontWidth" [(ngModel)]="house.frontWidth"
                         mode="decimal" inputId="minmaxfraction" [minFractionDigits]="1" [maxFractionDigits]="1"
                         placeholder="Nhập chiều dài mặt tiền: m"></p-inputNumber>
                 </div>
                 <div class="flex flex-col w-full">
-                    <label for="behindWidth" class="text-sm">Mặt hậu</label>
+                    <label for="behindWidth" class="text-sm">Mặt hậu (m)</label>
                     <p-inputNumber id="behindWidth"  class="w-full" [(ngModel)]="house.behindWidth"
                         mode="decimal" inputId="minmaxfraction" [minFractionDigits]="1" [maxFractionDigits]="1"
                         placeholder="Nhập chiều dài mặt hậu: m"></p-inputNumber>
                 </div>
                 <div class="flex flex-col w-full">
-                    <label for="streetWidth" class="text-sm">Chiều rộng đường trước nhà</label>
+                    <label for="streetWidth" class="text-sm">Chiều rộng đường trước nhà (m)</label>
                     <p-inputNumber id="streetWidth" class="w-full" [(ngModel)]="house.streetWidth"
                         mode="decimal" inputId="minmaxfraction" [minFractionDigits]="1" [maxFractionDigits]="1"
                         placeholder="Nhập chiều rộng đường trước nhà: m"></p-inputNumber>
@@ -223,8 +223,21 @@
                     (change)="onFileSelected($event)" [multiple]="true">
             </div>
         </div>
+        <div class="w-full flex flex-col">
+            <span class="text-base">*Quy định về chọn ảnh:</span>
+            <span class="text-sm italic">- Ảnh có kích thước tối đa 16MB.</span>
+            <span class="text-sm italic">- Số lượng ảnh tối thiểu là 2 và tối đa 6 ảnh.</span>
+        </div>
+        <div class="w-full flex flex-col md:flex-row md:space-x-2 space-y-2 md:space-y-0">
+            <!-- <div class="w-full border border-gray-custom h-6 flex flex-row justify-between items-center" 
+                *ngFor="let item of selectedFileNames">
+                <span>{{ item }}</span>
+                <i class="pi pi-times" (click)="removeImage(item)"></i>
+            </div> -->
+            <span class="text-lg font-bold">{{ 'Đã có ' + selectedFileNames.length + ' ảnh được chọn.' }}</span>
+        </div>
     </div>
     <div class="w-full flex flex-col space-y-4 mt-4 pb-4 lg:justify-end">
-        <button pButton pRipple label="Đăng bài" (click)="createPost()"></button>
+        <button pButton pRipple [label]="isUpdate ? 'Cập nhật' : 'Đăng bài'" (click)="savePost()"></button>
     </div>
 </div>

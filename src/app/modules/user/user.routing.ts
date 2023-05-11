@@ -5,5 +5,9 @@ export const route: Route[] = [
     {
         path: 'create-post',
         component: CreateMainPostComponent
+    },
+    {
+        path: 'update-post/:id',
+        component: CreateMainPostComponent
     }
 ]

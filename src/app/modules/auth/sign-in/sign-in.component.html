@@ -29,6 +29,10 @@
             </div>
             <button pButton pRipple label="Đăng nhập" class="w-full p-3 text-xl"
                 [disabled]="login.username.length <= 0 || login.password.length <= 0" (click)="loginRequest()"></button>
+            <div class="flex flex-row w-full justify-center items-center mt-4 space-x-2">
+                <span>Bạn chưa có tài khoản?</span>
+                <span class="underline text-blue-custom cursor-pointer" (click)="register()">Đăng ký</span>
+            </div>
         </div>
     </div>
 </div>
@@ -41,7 +45,7 @@
             [ngClass]="emailVerify.length <= 0 ? 'ng-invalid ng-dirty' : ''">
     </div>
     <ng-template pTemplate="footer">
-        <p-button (click)="sendEmail()" label="Gửi OTP" styleClass="p-button-text"></p-button>
+        <p-button (click)="sendEmail()" label="Gửi OTP" styleClass="p-button-text" [disabled]="clicked"></p-button>
     </ng-template>
 </p-dialog>
 <p-dialog header="Mật khẩu mới" [(visible)]="displayChangePassword" [style]="{width: innerWidth <= 640 ? '100vw' : '30vw'}" 

@@ -9,7 +9,8 @@ module.exports = {
         'login-bgr-img': "url('assets/images/login-bgr.jpg')" 
       },
       colors: {
-        'gray-custom': "#CCD1D1"
+        'gray-custom': "#CCD1D1",
+        'blue-custom': "#1890FF"
       }
     },
   },
