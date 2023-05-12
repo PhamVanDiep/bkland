@@ -4,13 +4,17 @@ import { Router } from '@angular/router';
 import { DeviceDetectorService, DeviceInfo } from 'ngx-device-detector';
 import { MenuItem } from 'primeng/api';
 import { ReplaySubject, takeUntil } from 'rxjs';
+import { EMAIL_VERIFY_TYPE } from 'src/app/core/constants/email-verify.constant';
 import { ROLE } from 'src/app/core/constants/role.constant';
 import { APIResponse } from 'src/app/core/models/api-response.model';
+import { EmailVerify } from 'src/app/core/models/email-verify.model';
+import { ForgotPasswordChange } from 'src/app/core/models/forgot-password-change.model';
 import { SignUpRequest } from 'src/app/core/models/sign-up.model';
 import { UserDeviceToken } from 'src/app/core/models/user-device-token.model';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { LoadingService } from 'src/app/core/services/loading.service';
 import { MessageService } from 'src/app/core/services/message.service';
+import { NoAuthService } from 'src/app/core/services/no-auth.service';
 import { UserService } from 'src/app/core/services/user.service';
 
 @Component({
@@ -32,6 +36,13 @@ export class AdministrationLayoutComponent implements OnInit, OnDestroy {
   innerWidth: any;
   sidebarItems: MenuItem[];
   
+  emailVerify: string;
+  displayChangePassword: boolean;
+  newPassword: string;
+  newPasswordAgain: string;
+  verifyOTP: string;
+  responseOTP: string;
+
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     this.innerWidth = window.innerWidth;
@@ -49,6 +60,7 @@ export class AdministrationLayoutComponent implements OnInit, OnDestroy {
     private _messageService: MessageService,
     private _authService: AuthService,
     private _deviceDetectorService: DeviceDetectorService,
+    private _noAuthService: NoAuthService
   ) {
     this.avatarUrl = '/assets/images/user.png';
     this.roles = localStorage.getItem('roles')?.split(',') || [];
@@ -136,14 +148,18 @@ export class AdministrationLayoutComponent implements OnInit, OnDestroy {
         label: 'Quản lý tài khoản',
         icon: 'pi pi-list',
         command: () => {
-
+          if (this.roles.includes('ROLE_ADMIN')) {
+            this.navigatePage('admin');
+          } else {
+            this.navigatePage('user');
+          }
         }
       },
       {
         label: 'Đổi mật khẩu',
         icon: 'pi pi-lock',
         command: () => {
-
+          this.changePasswordFunc();
         }
       },
       {
@@ -203,7 +219,8 @@ export class AdministrationLayoutComponent implements OnInit, OnDestroy {
         },
         {
           label: 'Quản lý tài khoản',
-          icon: 'pi pi-user'
+          icon: 'pi pi-user',
+          routerLink: 'user/account-management'
         }
       ]
     }
@@ -250,6 +267,13 @@ export class AdministrationLayoutComponent implements OnInit, OnDestroy {
         }
       ]
     }
+    this.emailVerify = '';
+    
+    this.displayChangePassword = false;
+    this.newPassword = '';
+    this.newPasswordAgain = '';
+    this.verifyOTP = '';
+    this.responseOTP = '';
   }
 
   ngOnDestroy(): void {
@@ -259,18 +283,21 @@ export class AdministrationLayoutComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this._loadingService.loading(true);
     this._userService.getUserById()
       .pipe(takeUntil(this._unsubscribe))
       .subscribe((response: APIResponse) => {
         // console.log(response);
         if (response.status === HttpStatusCode.Ok) {
           this.user = response.data;
+          this.emailVerify = this.user.email;
           if (response.data.avatarUrl != undefined && response.data.avatarUrl != null && response.data.avatarUrl.length > 0) {
             this.avatarUrl = response.data.avatarUrl;
           }
         } else {
           this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
         }
+        this._loadingService.loading(false);
       });
 
     this.deviceInfo = this._deviceDetectorService.getDeviceInfo();
@@ -319,5 +346,77 @@ export class AdministrationLayoutComponent implements OnInit, OnDestroy {
           this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
         }
       });
+  }
+
+  changePasswordFunc(): void {
+    this.sendEmail();
+  }
+
+  sendEmail(): void {
+    this._loadingService.loading(true);
+    let emailVerify: EmailVerify = {
+      email: this.emailVerify,
+      title: "Mã OTP xác nhận đổi mật khẩu bkland",
+      type: EMAIL_VERIFY_TYPE.FORGOT_PASSWORD
+    }
+    this._noAuthService.sendVerifyOTP(emailVerify)
+      .pipe(takeUntil(this._unsubscribe))
+      .subscribe((response: APIResponse) => {
+        if (response.status === HttpStatusCode.Ok) {
+          this._messageService.add({ severity: 'success', summary: 'Thông báo', detail: response.message });
+          this.displayChangePassword = true;
+          this.responseOTP = response.data;
+        } else {
+          this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+        }
+        this._loadingService.loading(false);
+      });
+  }
+
+  changePassword(): void {
+    this._loadingService.loading(true);
+    let forgotPasswordChange: ForgotPasswordChange = {
+      email: this.emailVerify,
+      newPassword: this.newPassword
+    };
+    this._authService.forgotPasswordChange(forgotPasswordChange)
+      .pipe(takeUntil(this._unsubscribe))
+      .subscribe((response: APIResponse) => {
+        if (response.status === HttpStatusCode.Ok) {
+          this._messageService.add({ severity: 'success', summary: 'Thông báo', detail: response.message });
+          this.displayChangePassword = false;
+        } else {
+          this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+        }
+        this._loadingService.loading(false);
+      })
+  }
+
+  validOTP(): boolean {
+    if (this.verifyOTP === this.responseOTP) {
+      return true;
+    }
+    return false;
+  }
+
+  validPassword(): boolean {
+    if (this.newPassword.length > 0 
+      && this.newPasswordAgain.length > 0 
+      && this.newPassword != this.newPasswordAgain) {
+      return true;
+    }
+    return false;
+  }
+
+  validChangePassword(): boolean {
+    if (this.verifyOTP !== this.responseOTP) {
+      return true;
+    }
+    if (this.newPassword.length == 0
+      || this.newPasswordAgain.length == 0
+      || (this.newPassword !== this.newPasswordAgain)) {
+      return true;
+    }
+    return false;
   }
 }

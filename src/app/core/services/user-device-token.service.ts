@@ -27,4 +27,27 @@ export class UserDeviceTokenService {
                     }
                 });
     }
+
+    getUserDeviceToken(userId: string, deviceInfo: string): Observable<APIResponse> {
+        this.accessToken = localStorage.getItem('accessToken') || '';
+        return this._httpClient.post<APIResponse>(`${environment.BASE_URL_AUTH}/user-device-token/findByUserIdAndDeviceInfo`,
+        {
+            userId: userId,
+            deviceInfo: deviceInfo
+        },
+        {
+            headers: {
+                'Authorization': `Bearer ${this.accessToken}`
+            }
+        });
+    }
+
+    updateUserDeviceToken(userDeviceToken: UserDeviceToken): Observable<APIResponse> {
+        this.accessToken = localStorage.getItem('accessToken') || '';
+        return this._httpClient.put<APIResponse>(`${environment.BASE_URL_AUTH}/user-device-token`, userDeviceToken, {
+            headers: {
+                'Authorization': `Bearer ${this.accessToken}`
+            }
+        });
+    }
 }

@@ -8,11 +8,11 @@
         </ng-template>
         <ng-template pTemplate="content">
             <div class="w-full flex flex-col mb-4 space-y-2" *ngFor="let item of sidebarItems">
-                <div class="w-full flex flex-row space-x-4 items-center cursor-pointer">
+                <div class="w-full flex flex-row space-x-4 items-center cursor-pointer" (click)="navigatePage(item.routerLink)">
                     <i [ngClass]="item.icon"></i>
                     <span class="font-semibold">{{ item.label }}</span>
                 </div>
-                <div *ngFor="let it of item.items" class="ml-8 cursor-pointer">
+                <div *ngFor="let it of item.items" class="ml-8 cursor-pointer" (click)="navigatePage(item.routerLink)">
                     <span class="font-medium">{{ it.label }}</span>
                 </div>
             </div>
@@ -43,3 +43,35 @@
         </div>
     </div>
 </div>
+<p-dialog header="Mật khẩu mới" [(visible)]="displayChangePassword" [style]="{width: innerWidth <= 640 ? '100vw' : '30vw'}" 
+    [baseZIndex]="100" [modal]="true">
+    <div class="flex flex-col space-y-4 p-4">
+        <div>
+            <span class="italic">{{ 'Mã OTP đã được gửi về tài khoản email ' + emailVerify}}</span>
+            <label for="verifyOTP" class="text-sm">Nhập OTP</label>
+            <input id="verifyOTP" pInputText class="w-full" [(ngModel)]="verifyOTP"
+                placeholder="Nhập mã OTP được gửi về email" [autofocus]="true" ria-describedby="valid-otp"
+                [ngClass]="verifyOTP.length <= 0 ? 'ng-invalid ng-dirty' : ''">
+            <small id="valid-otp" *ngIf="!validOTP()" class="text-red-500">Mã OTP không chính xác</small>
+        </div>
+        <div class="flex flex-col w-full">
+            <label for="newPassword" class="text-sm">Mật khẩu mới</label>
+            <p-password id="newPassword" placeholder="Nhập mật khẩu mới" [toggleMask]="true"
+                inputStyleClass="block w-full p-3 md:w-30rem" [style]="{'width':'100%'}"
+                [ngClass]="newPassword.length <= 0 ? 'ng-invalid ng-dirty' : ''"
+                [inputStyle]="{'width':'100%'}" [(ngModel)]="newPassword"></p-password>
+        </div>
+        <div class="flex flex-col w-full">
+            <label for="newPasswordAgain" class="text-sm">Nhập lại mật khẩu</label>
+            <p-password id="newPasswordAgain" placeholder="Nhập lại mật khẩu" [toggleMask]="true"
+                inputStyleClass="block w-full p-3 md:w-30rem" [style]="{'width':'100%'}"
+                ria-describedby="valid-password"
+                [ngClass]="newPasswordAgain.length <= 0 ? 'ng-invalid ng-dirty' : ''"
+                [inputStyle]="{'width':'100%'}" [(ngModel)]="newPasswordAgain"></p-password>
+            <small id="valid-password" *ngIf="validPassword()" class="text-red-500">Mật khẩu không giống nhau</small>
+        </div>
+    </div>
+    <ng-template pTemplate="footer">
+        <p-button (click)="changePassword()" [disabled]="validChangePassword()" label="Đổi mật khẩu" styleClass="p-button-text"></p-button>
+    </ng-template>
+</p-dialog>

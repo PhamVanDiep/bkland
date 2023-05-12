@@ -1,4 +1,8 @@
-export interface SignUpRequest {
+import { District } from "./district.model";
+import { Province } from "./province.model";
+import { Ward } from "./ward.model";
+
+export interface UserInfo {
     id: string;
     firstName: string;
     lastName: string;
@@ -8,9 +12,9 @@ export interface SignUpRequest {
     password: string;
     identification: string;
     gender: string;
-    provinceCode: string;
-    districtCode: string;
-    wardCode: string;
+    province: Province;
+    district: District;
+    ward: Ward;
     address: string;
     phoneNumber: string;
     dateOfBirth: any;
