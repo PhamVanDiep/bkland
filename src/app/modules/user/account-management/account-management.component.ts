@@ -12,19 +12,25 @@ import { UserDeviceToken } from 'src/app/core/models/user-device-token.model';
 import { UserInfo } from 'src/app/core/models/user-info.model';
 import { Ward } from 'src/app/core/models/ward.model';
 import { LoadingService } from 'src/app/core/services/loading.service';
+import { MediaService } from 'src/app/core/services/media.service';
 import { MessageService } from 'src/app/core/services/message.service';
 import { NoAuthService } from 'src/app/core/services/no-auth.service';
 import { PushNotificationService } from 'src/app/core/services/push-notification.service';
 import { UserDeviceTokenService } from 'src/app/core/services/user-device-token.service';
 import { UserService } from 'src/app/core/services/user.service';
+import { environment } from 'src/environments/environment';
+import { DomSanitizer } from '@angular/platform-browser';
+import { AppTitleService } from 'src/app/core/services/app-title.service';
 
 @Component({
   selector: 'app-account-management',
   templateUrl: './account-management.component.html',
   styleUrls: ['./account-management.component.css']
 })
-export class AccountManagementComponent implements OnInit, OnDestroy{
+export class AccountManagementComponent implements OnInit, OnDestroy {
   private _unsubscribe: ReplaySubject<any> = new ReplaySubject<any>();
+  private title: string = 'Quản lý tài khoản';
+
   user: UserInfo;
   deviceInfo: DeviceInfo;
   userDeviceToken: UserDeviceToken;
@@ -42,16 +48,23 @@ export class AccountManagementComponent implements OnInit, OnDestroy{
   districts: District[];
   wards: Ward[];
   lstGenders: any;
+  dateOfBirth: Date;
+  selectedFile: any;
+  avatarUrlRetrive: any;
 
   constructor(
+    private _appTitleService: AppTitleService,
     private _userService: UserService,
     private _loadingService: LoadingService,
     private _messageService: MessageService,
     private _userDeviceTokenService: UserDeviceTokenService,
     private _deviceDetectorService: DeviceDetectorService,
     private _pushNotificationService: PushNotificationService,
-    private _noAuthService: NoAuthService
+    private _noAuthService: NoAuthService,
+    private _mediaService: MediaService,
+    private _domSanitizer: DomSanitizer
   ) {
+    this._appTitleService.setTitle(this.title);
     this.user = {
       id: '',
       accountBalance: 0,
@@ -149,6 +162,7 @@ export class AccountManagementComponent implements OnInit, OnDestroy{
     } else {
       this.selectedRole = 3;
     }
+    this.avatarUrlRetrive = '/assets/images/user.png';
   }
 
   ngOnDestroy(): void {
@@ -164,8 +178,20 @@ export class AccountManagementComponent implements OnInit, OnDestroy{
       .then((response: APIResponse) => {
         if (response.status === HttpStatusCode.Ok) {
           this.user = response.data;
-          if (this.user.avatarUrl == undefined || this.user.avatarUrl == null || this.user.avatarUrl.length == 0 ) {
+          if (this.user.avatarUrl == undefined || this.user.avatarUrl == null || this.user.avatarUrl.length == 0) {
             this.user.avatarUrl = '/assets/images/user.png'
+          } else if (this.user.avatarUrl.includes(environment.BASE_URL_NO_AUTH)) {
+            this._mediaService.retriveImage(this.user.avatarUrl)
+              .pipe(takeUntil(this._unsubscribe))
+              .subscribe((response: APIResponse) => {
+                if (response.status === HttpStatusCode.Ok) {
+                  this.avatarUrlRetrive = this._domSanitizer.bypassSecurityTrustResourceUrl(`data:${response.data.type};base64,${response.data.body}`);
+                } else {
+                  this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+                }
+              })
+          } else {
+            this.avatarUrlRetrive = this.user.avatarUrl;
           }
         } else {
           this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
@@ -208,7 +234,7 @@ export class AccountManagementComponent implements OnInit, OnDestroy{
       .then((response: APIResponse) => {
         if (response.status === HttpStatusCode.Ok) {
           this.user = response.data;
-          if (this.user.avatarUrl == undefined || this.user.avatarUrl == null || this.user.avatarUrl.length == 0 ) {
+          if (this.user.avatarUrl == undefined || this.user.avatarUrl == null || this.user.avatarUrl.length == 0) {
             this.user.avatarUrl = '/assets/images/user.png'
           }
         } else {
@@ -218,14 +244,14 @@ export class AccountManagementComponent implements OnInit, OnDestroy{
   }
 
   addressOutcome(): string {
-    if (this.user.province.code === 'NOT_FOUND' 
-      || this.user.district.code === 'NOT_FOUND' 
+    if (this.user.province.code === 'NOT_FOUND'
+      || this.user.district.code === 'NOT_FOUND'
       || this.user.ward.code === 'NOT_FOUND'
       || this.user.address.length == 0) {
       return 'Không xác định';
     }
-    return this.user.address + ', ' 
-      + this.user.ward.fullName + ', ' 
+    return this.user.address + ', '
+      + this.user.ward.fullName + ', '
       + this.user.district.fullName + ', '
       + this.user.province.fullName
   }
@@ -244,7 +270,7 @@ export class AccountManagementComponent implements OnInit, OnDestroy{
       .pipe(takeUntil(this._unsubscribe))
       .subscribe((response: APIResponse) => {
         if (response.status === HttpStatusCode.Ok) {
-          
+
         } else {
           this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
         }
@@ -302,21 +328,60 @@ export class AccountManagementComponent implements OnInit, OnDestroy{
           this.userUpdate = response.data;
           this.displayAccountUpdate = true;
           if (this.user.dateOfBirth == null) {
-            this.user.dateOfBirth = '';
+            this.dateOfBirth = new Date();
+          } else {
+            this.dateOfBirth = new Date(this.user.dateOfBirth);
           }
           this.getAllProvinces();
+          this.getDistrictsInProvince();
+          this.getWardsInDistrict();
         } else {
           this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
         }
       });
   }
 
+  onFileSelected(event: any): void {
+    this.selectedFile = event.target.files[0];
+    if (this.selectedFile == null || this.selectedFile == undefined) {
+      return;
+    }
+  }
+
+  cancelImage(): void {
+    this.selectedFile = null;
+  }
+
   updateUserInfo(): void {
     this._loadingService.loading(true);
+    if (this.selectedFile != null) {
+      if (Math.round(this.selectedFile.size / 1048576) > 16) {
+        this._loadingService.loading(false);
+        this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: 'Kích thước ảnh tối đa là 16MB' });
+        return;
+      }
+      let formData = new FormData();
+      formData.append('title', this.selectedFile.type);
+      formData.append('image', this.selectedFile, this.selectedFile.name);
+      this._mediaService.postImage(formData).pipe(takeUntil(this._unsubscribe))
+        .subscribe((response: APIResponse) => {
+          if (response.status === HttpStatusCode.Ok) {
+            this.userUpdate.avatarUrl = environment.BASE_URL_NO_AUTH + '/photos/' + response.data;
+            this.callUpdateApi();
+          } else {
+            this._loadingService.loading(false);
+            this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+          }
+        });
+    }
+  }
+
+  callUpdateApi(): void {
+    this.userUpdate.dateOfBirth = this.dateOfBirth
     this._userService.updateUser(this.userUpdate)
       .pipe(takeUntil(this._unsubscribe))
       .subscribe((response: APIResponse) => {
-        this._loadingService.loading(true);
+        this._loadingService.loading(false);
         if (response.status === HttpStatusCode.Ok) {
           this._messageService.add({ severity: 'success', summary: 'Thông báo', detail: response.message });
           this.displayAccountUpdate = false;

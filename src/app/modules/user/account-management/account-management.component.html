@@ -9,7 +9,7 @@
     </div>
     <div class="flex flex-col w-full space-y-4">
         <div class="flex w-full justify-center items-center">
-            <img [src]="user.avatarUrl" class="w-32 h-32 rounded-[50%] align-middle">
+            <img [src]="avatarUrlRetrive" class="w-32 h-32 rounded-[50%] align-middle">
         </div>
         <div class="flex flex-row items-center space-x-2">
             <span class="text-lg font-semibold">Mã người dùng:</span>
@@ -49,13 +49,26 @@
         </div>
         <div class="flex flex-row items-center space-x-2">
             <span class="text-lg font-semibold">Ngày sinh:</span>
-            <span class="text-base font-medium">{{ user.dateOfBirth ? user.dateOfBirth : 'Không xác định' }}</span>
+            <span class="text-base font-medium">{{ user.dateOfBirth ? (user.dateOfBirth | date:'dd/MM/yyyy') : 'Không xác định' }}</span>
         </div>
     </div>
 </div>
 <p-dialog header="Cập nhật thông tin" [(visible)]="displayAccountUpdate" [style]="{width: innerWidth <= 640 ? '100vw' : '50vw'}" 
     [baseZIndex]="100" [modal]="true">
     <div class="flex flex-col space-y-4 pb-8">
+        <div class="flex flex-row w-full justify-between items-center">
+            <span>Tải ảnh đại diện mới lên:</span>
+            <label for="uploadImage" class="cursor-pointer">
+                <i class="pi pi-cloud-upload" style="font-size: 2rem;"></i>
+            </label>
+            <input type="file" name="uploadImage" 
+                accept="image/png, image/gif, image/jpeg" id="uploadImage" [hidden]="true"
+                (change)="onFileSelected($event)" [multiple]="false">
+        </div>
+        <div *ngIf="selectedFile != null" class="w-full flex flex-row justify-between items-center">
+            <span class="italic">Đã tải ảnh đại diện mới.</span>
+            <i class="pi pi-times" (click)="cancelImage()"></i>
+        </div>
         <div>
             <label for="username" class="text-sm">Tên đăng nhập</label>
             <input id="username" pInputText class="w-full" [(ngModel)]="userUpdate.username"
@@ -95,8 +108,8 @@
             <div class="flex flex-row space-x-4">
                 <div class="flex flex-col w-full">
                     <label for="dateOfBirth" class="text-sm">Ngày sinh</label>
-                    <p-calendar id="dateOfBirth" class="w-full" [(ngModel)]="userUpdate.dateOfBirth"
-                        placeholder="dd/MM/YYYY"
+                    <p-calendar id="dateOfBirth" class="w-full" [(ngModel)]="dateOfBirth"
+                        placeholder="dd/MM/YYYY" dateFormat="dd/mm/yy"
                         [ngClass]="nullable(userUpdate.dateOfBirth) ? 'ng-invalid ng-dirty' : ''"></p-calendar>
                 </div>
                 <div class="w-full">

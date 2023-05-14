@@ -1,5 +1,6 @@
 import { HttpStatusCode } from '@angular/common/http';
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { DeviceDetectorService, DeviceInfo } from 'ngx-device-detector';
 import { MenuItem } from 'primeng/api';
@@ -14,9 +15,11 @@ import { UserDeviceToken } from 'src/app/core/models/user-device-token.model';
 import { AboutService } from 'src/app/core/services/about.service';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { LoadingService } from 'src/app/core/services/loading.service';
+import { MediaService } from 'src/app/core/services/media.service';
 import { MessageService } from 'src/app/core/services/message.service';
 import { NoAuthService } from 'src/app/core/services/no-auth.service';
 import { UserService } from 'src/app/core/services/user.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-main-layout',
@@ -30,7 +33,7 @@ export class MainLayoutComponent implements OnInit, OnDestroy{
   isAuth: boolean;
   avatarIcon: string;
   user: SignUpRequest;
-  avatarUrl: string;
+  avatarUrl: any;
   menuItems: MenuItem[];
   // loading: boolean = false;
   deviceInfo: DeviceInfo;
@@ -60,7 +63,9 @@ export class MainLayoutComponent implements OnInit, OnDestroy{
     private _loadingService: LoadingService,
     private _deviceDetectorService: DeviceDetectorService,
     private _aboutService: AboutService,
-    private _noAuthService: NoAuthService
+    private _noAuthService: NoAuthService,
+    private _mediaService: MediaService,
+    private _domSanitizer: DomSanitizer
   ) {
     let _roles = localStorage.getItem('roles') || '';
     this.roles = _roles.split(',');
@@ -203,7 +208,19 @@ export class MainLayoutComponent implements OnInit, OnDestroy{
             this.user = response.data;
             this.emailVerify = this.user.email;
             if (response.data.avatarUrl != undefined && response.data.avatarUrl != null && response.data.avatarUrl.length > 0) {
-              this.avatarUrl = response.data.avatarUrl; 
+              if (this.user.avatarUrl.includes(environment.BASE_URL_NO_AUTH)) {
+                this._mediaService.retriveImage(this.user.avatarUrl)
+                  .pipe(takeUntil(this._unsubscribe))
+                  .subscribe((response: APIResponse) => {
+                    if (response.status === HttpStatusCode.Ok) {
+                      this.avatarUrl = this._domSanitizer.bypassSecurityTrustResourceUrl(`data:${response.data.type};base64,${response.data.body}`);
+                    } else {
+                      this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+                    }
+                  })
+              } else {
+                this.avatarUrl = this.user.avatarUrl;
+              }
             }
           } else {
             this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });

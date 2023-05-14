@@ -1,5 +1,6 @@
 import { HttpStatusCode } from '@angular/common/http';
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { DeviceDetectorService, DeviceInfo } from 'ngx-device-detector';
 import { MenuItem } from 'primeng/api';
@@ -13,9 +14,11 @@ import { SignUpRequest } from 'src/app/core/models/sign-up.model';
 import { UserDeviceToken } from 'src/app/core/models/user-device-token.model';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { LoadingService } from 'src/app/core/services/loading.service';
+import { MediaService } from 'src/app/core/services/media.service';
 import { MessageService } from 'src/app/core/services/message.service';
 import { NoAuthService } from 'src/app/core/services/no-auth.service';
 import { UserService } from 'src/app/core/services/user.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-administration-layout',
@@ -28,7 +31,7 @@ export class AdministrationLayoutComponent implements OnInit, OnDestroy {
   // loading: boolean = false;
   items: MenuItem[];
   menuItems: MenuItem[];
-  avatarUrl: string;
+  avatarUrl: any;
   user: SignUpRequest;
   roles: string[];
   deviceInfo: DeviceInfo;
@@ -60,12 +63,14 @@ export class AdministrationLayoutComponent implements OnInit, OnDestroy {
     private _messageService: MessageService,
     private _authService: AuthService,
     private _deviceDetectorService: DeviceDetectorService,
-    private _noAuthService: NoAuthService
+    private _noAuthService: NoAuthService,
+    private _mediaService: MediaService,
+    private _domSanitizer: DomSanitizer
   ) {
     this.avatarUrl = '/assets/images/user.png';
     this.roles = localStorage.getItem('roles')?.split(',') || [];
     if (this.roles.length <= 0) {
-      this._router.navigate(['/home']);
+      this._router.navigate(['pages/forbidden']);
     }
     if (this.roles.includes(ROLE.ROLE_USER)
       || this.roles.includes(ROLE.ROLE_AGENCY)
@@ -180,42 +185,52 @@ export class AdministrationLayoutComponent implements OnInit, OnDestroy {
         {
           label: 'Bài đăng quan tâm',
           icon: 'pi pi-heart-fill',
+          routerLink: 'user/focus'
         },
         {
           label: 'Quản lý bài viết',
           icon: 'pi pi-list',
+          routerLink: 'user/post',
           items: [
             {
-              label: 'Bài viết bán/cho thuê'
+              label: 'Bài viết bán/cho thuê',
+              routerLink: 'user/post/main'
             },
             {
-              label: 'Bài viết cộng đồng'
+              label: 'Bài viết cộng đồng',
+              routerLink: 'user/post/forum'
             }
           ]
         },
         {
           label: 'Quản lý tài chính',
           icon: 'pi pi-chart-line',
+          routerLink: 'user/balance-fluctuation',
           items: [
             {
               label: 'Nạp tiền',
+              routerLink: 'user/recharge'
             },
             {
-              label: 'Lịch sử giao dịch'
+              label: 'Lịch sử giao dịch',
+              routerLink: 'user/balance-fluctuation'
             }
           ]
         },
         {
           label: 'Thông báo BĐ giá',
-          icon: 'pi pi-bell'
+          icon: 'pi pi-bell',
+          routerLink: 'user/price-fluctuation-notify'
         },
         {
           label: 'Nhắn tin',
-          icon: 'pi pi-comments'
+          icon: 'pi pi-comments',
+          routerLink: 'user/message'
         },
         {
           label: 'Liên kết môi giới',
-          icon: 'pi pi-users'
+          icon: 'pi pi-users',
+          routerLink: 'user/cooperate-agency'
         },
         {
           label: 'Quản lý tài khoản',
@@ -228,42 +243,52 @@ export class AdministrationLayoutComponent implements OnInit, OnDestroy {
       this.sidebarItems = [
         {
           label: 'Thống kê',
-          icon: 'pi pi-th-large'
+          icon: 'pi pi-th-large',
+          routerLink: 'admin/dashboard'
         },
         {
           label: 'Quản lý bài viết',
           icon: 'pi pi-list',
+          routerLink: 'admin/post',
           items: [
             {
-              label: 'Bài viết bán/cho thuê'
+              label: 'Bài viết bán/cho thuê',
+              routerLink: 'admin/post/main'
             },
             {
-              label: 'Bài viết cộng đồng'
+              label: 'Bài viết cộng đồng',
+              routerLink: 'admin/post/forum'
             },
             {
-              label: 'Bài viết tin tức'
+              label: 'Bài viết tin tức',
+              routerLink: 'admin/post/info'
             }
           ]
         },
         {
           label: 'Quản lý tài khoản người dùng',
-          icon: 'pi pi-user'
+          icon: 'pi pi-user',
+          routerLink: 'admin/manage-account'
         },
         {
           label: 'Quản lý báo cáo bài viết',
-          icon: 'pi pi-exclamation-triangle'
+          icon: 'pi pi-exclamation-triangle',
+          routerLink: 'admin/report'
         },
         {
           label: 'Quản lý giao dịch tài chính',
-          icon: 'pi pi-chart-line'
+          icon: 'pi pi-chart-line',
+          routerLink: 'admin/finance-transaction'
         },
         {
           label: 'Nhắn tin với người dùng',
-          icon: 'pi pi-comments'
+          icon: 'pi pi-comments',
+          routerLink: 'admin/message'
         },
         {
           label: 'Quản lý thông tin hệ thống',
-          icon: 'pi pi-info-circle'
+          icon: 'pi pi-info-circle',
+          routerLink: 'admin/about'
         }
       ]
     }
@@ -292,7 +317,19 @@ export class AdministrationLayoutComponent implements OnInit, OnDestroy {
           this.user = response.data;
           this.emailVerify = this.user.email;
           if (response.data.avatarUrl != undefined && response.data.avatarUrl != null && response.data.avatarUrl.length > 0) {
-            this.avatarUrl = response.data.avatarUrl;
+            if (this.user.avatarUrl.includes(environment.BASE_URL_NO_AUTH)) {
+              this._mediaService.retriveImage(this.user.avatarUrl)
+                .pipe(takeUntil(this._unsubscribe))
+                .subscribe((response: APIResponse) => {
+                  if (response.status === HttpStatusCode.Ok) {
+                    this.avatarUrl = this._domSanitizer.bypassSecurityTrustResourceUrl(`data:${response.data.type};base64,${response.data.body}`);
+                  } else {
+                    this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+                  }
+                })
+            } else {
+              this.avatarUrl = this.user.avatarUrl;
+            }
           }
         } else {
           this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });

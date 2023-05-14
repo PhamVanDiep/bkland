@@ -17,11 +17,16 @@ import { InputSwitchModule } from 'primeng/inputswitch';
 import { DialogModule } from 'primeng/dialog';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { CalendarModule } from 'primeng/calendar';
+import { ChargeComponent } from './charge/charge.component';
+import { BalanceFluctuationComponent } from './balance-fluctuation/balance-fluctuation.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
     CreateMainPostComponent,
     AccountManagementComponent,
+    ChargeComponent,
+    BalanceFluctuationComponent,
   ],
   imports: [
     CommonModule,
@@ -38,7 +43,8 @@ import { CalendarModule } from 'primeng/calendar';
     InputSwitchModule,
     DialogModule,
     RadioButtonModule,
-    CalendarModule
+    CalendarModule,
+    HttpClientModule
   ],
   providers: [
   ]

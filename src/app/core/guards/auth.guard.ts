@@ -59,7 +59,7 @@ export class AuthGuardService {
                 if (lstRoles.includes(expectedRole)) {
                     return true;
                 } else {
-                    this.router.navigate(['login'], { queryParams: {redirectUrl} });
+                    this.router.navigate(['pages/forbidden']);
                     return false;
                 }
             } else {

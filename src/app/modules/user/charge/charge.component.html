@@ -1,0 +1,27 @@
+<div class="w-full flex flex-col px-4 lg:px-6 space-y-6">
+    <span class="font-bold text-2xl">Nạp tiền</span>
+    <div class="w-full flex flex-col">
+        <label for="totalPay">Số tiền cần nạp</label>
+        <p-inputNumber id="totalPay" inputId="minmax" mode="decimal" [(ngModel)]="charge.soTien" [min]="10000" [max]="1000000"></p-inputNumber>
+    </div>
+    <div class="w-full flex flex-col">
+        <label for="payMethod">Phương thức nạp tiền</label>
+        <p-dropdown [(ngModel)]="charge.chargeType" [options]="payMethods" optionLabel="value" optionValue="key"></p-dropdown>
+    </div>
+    <div *ngIf="charge.chargeType === 'TRANSFER_CHARGE'" class="w-full flex flex-col space-y-4">
+        <span class="italic">*Chú ý: Nạp tiền bằng hình thức chuyển khoản cần cung cấp ảnh minh chứng. Bạn sẽ phải chờ quản trị viên xác nhận giao dịch.</span>
+        <div class="flex flex-row w-full justify-between items-center">
+            <span class="text-lg">Tải ảnh minh chứng lên:</span>
+            <label for="uploadImage" class="cursor-pointer">
+                <i class="pi pi-cloud-upload" style="font-size: 2rem;"></i>
+            </label>
+            <input type="file" name="uploadImage" 
+                accept="image/png, image/gif, image/jpeg" id="uploadImage" [hidden]="true"
+                (change)="onFileSelected($event)" [multiple]="false">
+        </div>
+        <span class="italic text-sm" *ngIf="selectedFile != null">Đã tải ảnh minh chứng lên</span>
+    </div>
+    <div class="w-full flex justify-end">
+        <button class="w-full md:w-32" pButton pRipple label="Nạp tiền" (click)="onSave()"></button>
+    </div>
+</div>

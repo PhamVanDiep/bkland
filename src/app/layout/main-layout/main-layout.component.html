@@ -64,8 +64,8 @@
 <p-dialog header="Mật khẩu mới" [(visible)]="displayChangePassword" [style]="{width: innerWidth <= 640 ? '100vw' : '30vw'}" 
     [baseZIndex]="100" [modal]="true">
     <div class="flex flex-col space-y-4 p-4">
+        <span class="italic">{{ 'Mã OTP đã được gửi về tài khoản email ' + emailVerify}}</span>
         <div>
-            <span class="italic">{{ 'Mã OTP đã được gửi về tài khoản email ' + emailVerify}}</span>
             <label for="verifyOTP" class="text-sm">Nhập OTP</label>
             <input id="verifyOTP" pInputText class="w-full" [(ngModel)]="verifyOTP"
                 placeholder="Nhập mã OTP được gửi về email" [autofocus]="true" ria-describedby="valid-otp"
