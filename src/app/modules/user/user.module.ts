@@ -20,6 +20,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { ChargeComponent } from './charge/charge.component';
 import { BalanceFluctuationComponent } from './balance-fluctuation/balance-fluctuation.component';
 import { HttpClientModule } from '@angular/common/http';
+import { TagModule } from 'primeng/tag';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { HttpClientModule } from '@angular/common/http';
     DialogModule,
     RadioButtonModule,
     CalendarModule,
-    HttpClientModule
+    HttpClientModule,
+    TagModule
   ],
   providers: [
   ]

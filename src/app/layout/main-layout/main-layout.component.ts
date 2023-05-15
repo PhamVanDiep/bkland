@@ -200,32 +200,24 @@ export class MainLayoutComponent implements OnInit, OnDestroy{
     this.isAuth = this._authService.isAuthenticated();
 
     if (this.isAuth) {
-      this._userService.getUserById()
-        .pipe(takeUntil(this._unsubscribe))
-        .subscribe((response: APIResponse) => {
-          // console.log(response);
-          if (response.status === HttpStatusCode.Ok) {
-            this.user = response.data;
-            this.emailVerify = this.user.email;
-            if (response.data.avatarUrl != undefined && response.data.avatarUrl != null && response.data.avatarUrl.length > 0) {
-              if (this.user.avatarUrl.includes(environment.BASE_URL_NO_AUTH)) {
-                this._mediaService.retriveImage(this.user.avatarUrl)
-                  .pipe(takeUntil(this._unsubscribe))
-                  .subscribe((response: APIResponse) => {
-                    if (response.status === HttpStatusCode.Ok) {
-                      this.avatarUrl = this._domSanitizer.bypassSecurityTrustResourceUrl(`data:${response.data.type};base64,${response.data.body}`);
-                    } else {
-                      this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
-                    }
-                  })
-              } else {
-                this.avatarUrl = this.user.avatarUrl;
-              }
-            }
-          } else {
-            this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
-          }
+      this.getUserInfo();
+    } else {
+      let refreshToken = localStorage.getItem('refreshToken');
+      if (refreshToken != null && refreshToken.length > 0) {
+        this._authService.loginByRefreshToken({
+          refreshToken: refreshToken
         })
+          .pipe(takeUntil(this._unsubscribe))
+          .subscribe((response: APIResponse) => {
+            if (response.status === HttpStatusCode.Ok) {
+              localStorage.setItem('accessToken', response.data.accessToken);
+              localStorage.setItem('refreshToken', response.data.refreshToken);
+              this.getUserInfo();
+            } else {
+              this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+            }
+          })
+      }
     }
 
     this.deviceInfo = this._deviceDetectorService.getDeviceInfo();
@@ -235,6 +227,35 @@ export class MainLayoutComponent implements OnInit, OnDestroy{
       .subscribe((response: APIResponse) => {
         if (response.status === HttpStatusCode.Ok) {
           this.about = response.data;
+        } else {
+          this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+        }
+      })
+  }
+
+  getUserInfo(): void {
+    this._userService.getUserById()
+      .pipe(takeUntil(this._unsubscribe))
+      .subscribe((response: APIResponse) => {
+        // console.log(response);
+        if (response.status === HttpStatusCode.Ok) {
+          this.user = response.data;
+          this.emailVerify = this.user.email;
+          if (response.data.avatarUrl != undefined && response.data.avatarUrl != null && response.data.avatarUrl.length > 0) {
+            if (this.user.avatarUrl.includes(environment.BASE_URL_NO_AUTH)) {
+              this._mediaService.retriveImage(this.user.avatarUrl)
+                .pipe(takeUntil(this._unsubscribe))
+                .subscribe((response: APIResponse) => {
+                  if (response.status === HttpStatusCode.Ok) {
+                    this.avatarUrl = this._domSanitizer.bypassSecurityTrustResourceUrl(`data:${response.data.type};base64,${response.data.body}`);
+                  } else {
+                    this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+                  }
+                })
+            } else {
+              this.avatarUrl = this.user.avatarUrl;
+            }
+          }
         } else {
           this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
         }

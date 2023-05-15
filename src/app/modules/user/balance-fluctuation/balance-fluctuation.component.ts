@@ -1,6 +1,8 @@
 import { HttpStatusCode } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ReplaySubject, takeUntil } from 'rxjs';
+import { CHARGE_STATUS } from 'src/app/core/constants/pay.constant';
+import { MONTHS } from 'src/app/core/constants/time-select.constant';
 import { APIResponse } from 'src/app/core/models/api-response.model';
 import { Charge } from 'src/app/core/models/charge.model';
 import { SignUpRequest } from 'src/app/core/models/sign-up.model';
@@ -21,6 +23,13 @@ export class BalanceFluctuationComponent implements OnInit, OnDestroy {
 
   user: SignUpRequest;
   charges: Charge[];
+  chargesFilter: Charge[];
+
+  months: any;
+  years: any[];
+
+  chargeMonth: number;
+  chargeYear: number;
 
   constructor(
     private _appTitleService: AppTitleService,
@@ -56,6 +65,20 @@ export class BalanceFluctuationComponent implements OnInit, OnDestroy {
       updateAt: null
     };
     this.charges = [];
+    this.chargesFilter = [];
+
+    this.years = [];
+    this.months = MONTHS;
+    let minYear = 2023;
+    let currYear = new Date().getFullYear();
+    for (let index = minYear; index <= currYear; index++) {
+      this.years.push({
+        key: index,
+        value: index
+      });
+    }
+    this.chargeMonth = 0;
+    this.chargeYear = currYear;
   }
 
   ngOnDestroy(): void {
@@ -83,11 +106,46 @@ export class BalanceFluctuationComponent implements OnInit, OnDestroy {
       .subscribe((response: APIResponse) => {
         if (response.status === HttpStatusCode.Ok) {
           this.charges = response.data;
-          console.log(this.charges);
+          this.chargesFilter = response.data;
         } else {
           this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
         }
-      })
+      });
   }
 
+  getStatusValue(statusCode: string): string {
+    if (statusCode === CHARGE_STATUS.CHO_XAC_NHAN) {
+      return 'Chờ xác nhận';
+    } else if (statusCode === CHARGE_STATUS.DA_TU_CHOI) {
+      return 'Đã từ chối';
+    } else {
+      return 'Đã xác nhận';
+    }
+  }
+
+  getStatusSeverity(statusCode: string): string {
+    if (statusCode === CHARGE_STATUS.CHO_XAC_NHAN) {
+      return 'warning'
+    } else if (statusCode === CHARGE_STATUS.DA_TU_CHOI) {
+      return 'danger'
+    } else {
+      return 'success'
+    }
+  }
+
+  filterChargeByMonth(): void {
+    if (this.chargeMonth > 0) {
+      this.chargesFilter = this.charges.filter(e => new Date(e.createAt).getMonth() + 1 === this.chargeMonth && new Date(e.createAt).getFullYear() === this.chargeYear); 
+    } else {
+      this.chargesFilter = this.charges.filter(e => new Date(e.createAt).getFullYear() === this.chargeYear);
+    }
+  }
+
+  filterChargeByYear(): void {
+    if (this.chargeMonth > 0) {
+      this.chargesFilter = this.charges.filter(e => new Date(e.createAt).getMonth() + 1 === this.chargeMonth && new Date(e.createAt).getFullYear() === this.chargeYear); 
+    } else {
+      this.chargesFilter = this.charges.filter(e => new Date(e.createAt).getFullYear() === this.chargeYear);
+    }
+  }
 }
