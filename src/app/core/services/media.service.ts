@@ -30,6 +30,10 @@ export class MediaService {
         return this._httpClient.get<APIResponse>(`${environment.BASE_URL_NO_AUTH}/photos/${id}`);
     }
 
+    retriveImage(path: string): Observable<APIResponse> {
+        return this._httpClient.get<APIResponse>(path);
+    }
+
     deletePhotoByPostId(postId: string): Observable<APIResponse> {
         this.accessToken = localStorage.getItem('accessToken') || '';
         return this._httpClient.delete<APIResponse>(`${environment.BASE_URL_AUTH}/photos/${postId}`, {

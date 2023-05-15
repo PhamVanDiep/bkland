@@ -1,5 +1,6 @@
 import { HttpStatusCode } from '@angular/common/http';
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { DeviceDetectorService, DeviceInfo } from 'ngx-device-detector';
 import { MenuItem } from 'primeng/api';
@@ -14,9 +15,11 @@ import { UserDeviceToken } from 'src/app/core/models/user-device-token.model';
 import { AboutService } from 'src/app/core/services/about.service';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { LoadingService } from 'src/app/core/services/loading.service';
+import { MediaService } from 'src/app/core/services/media.service';
 import { MessageService } from 'src/app/core/services/message.service';
 import { NoAuthService } from 'src/app/core/services/no-auth.service';
 import { UserService } from 'src/app/core/services/user.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-main-layout',
@@ -30,7 +33,7 @@ export class MainLayoutComponent implements OnInit, OnDestroy{
   isAuth: boolean;
   avatarIcon: string;
   user: SignUpRequest;
-  avatarUrl: string;
+  avatarUrl: any;
   menuItems: MenuItem[];
   // loading: boolean = false;
   deviceInfo: DeviceInfo;
@@ -45,6 +48,8 @@ export class MainLayoutComponent implements OnInit, OnDestroy{
   verifyOTP: string;
   responseOTP: string;
 
+  roles: string[];
+
   innerWidth: any;
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
@@ -58,8 +63,12 @@ export class MainLayoutComponent implements OnInit, OnDestroy{
     private _loadingService: LoadingService,
     private _deviceDetectorService: DeviceDetectorService,
     private _aboutService: AboutService,
-    private _noAuthService: NoAuthService
+    private _noAuthService: NoAuthService,
+    private _mediaService: MediaService,
+    private _domSanitizer: DomSanitizer
   ) {
+    let _roles = localStorage.getItem('roles') || '';
+    this.roles = _roles.split(',');
     this.items = [
       {
         label: "Mua bán",
@@ -138,7 +147,11 @@ export class MainLayoutComponent implements OnInit, OnDestroy{
         label: 'Quản lý tài khoản',
         icon: 'pi pi-list',
         command: () => {
-          
+          if (this.roles.includes('ROLE_ADMIN')) {
+            this.navigatePage('admin');
+          } else {
+            this.navigatePage('user');
+          }
         }
       },
       {
@@ -187,20 +200,24 @@ export class MainLayoutComponent implements OnInit, OnDestroy{
     this.isAuth = this._authService.isAuthenticated();
 
     if (this.isAuth) {
-      this._userService.getUserById()
-        .pipe(takeUntil(this._unsubscribe))
-        .subscribe((response: APIResponse) => {
-          // console.log(response);
-          if (response.status === HttpStatusCode.Ok) {
-            this.user = response.data;
-            this.emailVerify = this.user.email;
-            if (response.data.avatarUrl != undefined && response.data.avatarUrl != null && response.data.avatarUrl.length > 0) {
-              this.avatarUrl = response.data.avatarUrl; 
-            }
-          } else {
-            this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
-          }
+      this.getUserInfo();
+    } else {
+      let refreshToken = localStorage.getItem('refreshToken');
+      if (refreshToken != null && refreshToken.length > 0) {
+        this._authService.loginByRefreshToken({
+          refreshToken: refreshToken
         })
+          .pipe(takeUntil(this._unsubscribe))
+          .subscribe((response: APIResponse) => {
+            if (response.status === HttpStatusCode.Ok) {
+              localStorage.setItem('accessToken', response.data.accessToken);
+              localStorage.setItem('refreshToken', response.data.refreshToken);
+              this.getUserInfo();
+            } else {
+              this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+            }
+          })
+      }
     }
 
     this.deviceInfo = this._deviceDetectorService.getDeviceInfo();
@@ -210,6 +227,35 @@ export class MainLayoutComponent implements OnInit, OnDestroy{
       .subscribe((response: APIResponse) => {
         if (response.status === HttpStatusCode.Ok) {
           this.about = response.data;
+        } else {
+          this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+        }
+      })
+  }
+
+  getUserInfo(): void {
+    this._userService.getUserById()
+      .pipe(takeUntil(this._unsubscribe))
+      .subscribe((response: APIResponse) => {
+        // console.log(response);
+        if (response.status === HttpStatusCode.Ok) {
+          this.user = response.data;
+          this.emailVerify = this.user.email;
+          if (response.data.avatarUrl != undefined && response.data.avatarUrl != null && response.data.avatarUrl.length > 0) {
+            if (this.user.avatarUrl.includes(environment.BASE_URL_NO_AUTH)) {
+              this._mediaService.retriveImage(this.user.avatarUrl)
+                .pipe(takeUntil(this._unsubscribe))
+                .subscribe((response: APIResponse) => {
+                  if (response.status === HttpStatusCode.Ok) {
+                    this.avatarUrl = this._domSanitizer.bypassSecurityTrustResourceUrl(`data:${response.data.type};base64,${response.data.body}`);
+                  } else {
+                    this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+                  }
+                })
+            } else {
+              this.avatarUrl = this.user.avatarUrl;
+            }
+          }
         } else {
           this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
         }
@@ -252,7 +298,7 @@ export class MainLayoutComponent implements OnInit, OnDestroy{
   }
 
   sendEmail(): void {
-    // this._loadingService.loading(true);
+    this._loadingService.loading(true);
     let emailVerify: EmailVerify = {
       email: this.emailVerify,
       title: "Mã OTP xác nhận đổi mật khẩu bkland",
@@ -261,7 +307,6 @@ export class MainLayoutComponent implements OnInit, OnDestroy{
     this._noAuthService.sendVerifyOTP(emailVerify)
       .pipe(takeUntil(this._unsubscribe))
       .subscribe((response: APIResponse) => {
-        // this._loadingService.loading(false);
         if (response.status === HttpStatusCode.Ok) {
           this._messageService.add({ severity: 'success', summary: 'Thông báo', detail: response.message });
           this.displayChangePassword = true;
@@ -269,11 +314,12 @@ export class MainLayoutComponent implements OnInit, OnDestroy{
         } else {
           this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
         }
+        this._loadingService.loading(false);
       })
   }
 
   changePassword(): void {
-    // this._loadingService.loading(true);
+    this._loadingService.loading(true);
     let forgotPasswordChange: ForgotPasswordChange = {
       email: this.emailVerify,
       newPassword: this.newPassword
@@ -281,13 +327,13 @@ export class MainLayoutComponent implements OnInit, OnDestroy{
     this._authService.forgotPasswordChange(forgotPasswordChange)
       .pipe(takeUntil(this._unsubscribe))
       .subscribe((response: APIResponse) => {
-        // this._loadingService.loading(false);
         if (response.status === HttpStatusCode.Ok) {
           this._messageService.add({ severity: 'success', summary: 'Thông báo', detail: response.message });
           this.displayChangePassword = false;
         } else {
           this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
         }
+        this._loadingService.loading(false);
       })
   }
 

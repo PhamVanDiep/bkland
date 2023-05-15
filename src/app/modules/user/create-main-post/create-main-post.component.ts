@@ -16,6 +16,7 @@ import { PostMedia } from 'src/app/core/models/post-media.model';
 import { Province } from 'src/app/core/models/province.model';
 import { RealEstatePost, RealEstatePostRequest } from 'src/app/core/models/real-estate-post.model';
 import { Ward } from 'src/app/core/models/ward.model';
+import { AppTitleService } from 'src/app/core/services/app-title.service';
 import { LoadingService } from 'src/app/core/services/loading.service';
 import { MediaService } from 'src/app/core/services/media.service';
 import { MessageService } from 'src/app/core/services/message.service';
@@ -31,6 +32,7 @@ import * as uuid from 'uuid';
 export class CreateMainPostComponent implements OnInit, OnDestroy {
 
   private _unsubscribe: ReplaySubject<any> = new ReplaySubject<any>();
+  private title: string = 'Bài đăng bán/cho thuê';
 
   realEstatePost: RealEstatePost;
   plot: Plot;
@@ -50,6 +52,7 @@ export class CreateMainPostComponent implements OnInit, OnDestroy {
   isUpdate: boolean;
 
   constructor(
+    private _appTitleService: AppTitleService,
     private _noAuthService: NoAuthService,
     private _messageService: MessageService,
     public _loadingService: LoadingService,
@@ -58,6 +61,7 @@ export class CreateMainPostComponent implements OnInit, OnDestroy {
     private _router: Router,
     private _route: ActivatedRoute
   ) {
+    this._appTitleService.setTitle(this.title);
     this.realEstateTypes = TYPE_DROPDOWN;
     this.directions = DIRECTION_DROPDOWN;
     this.priorities = PRIORITY_DROPDOWN;

@@ -1,0 +1,53 @@
+<p-confirmDialog [style]="{width: '50vw'}"></p-confirmDialog>
+<div class="w-full flex flex-col px-4 lg:px-6 space-y-6">
+    <span class="font-bold text-2xl mt-4">Danh sách người dùng nạp tiền</span>
+    <p-table
+        [value]="charges"
+        [paginator]="true"
+        [rows]="10"
+        [rowsPerPageOptions]="[10, 25, 50]"
+        currentPageReportTemplate="{first} đến {last} trên {totalRecords} bản ghi"
+    >
+        <ng-template pTemplate="header">
+            <tr>
+                <th pFrozenColumn>#</th>
+                <th>Số tiền nạp</th>
+                <th>Tên người nạp</th>
+                <th>Thời điểm</th>
+                <th>Hình thức</th>
+                <th>Ảnh minh chứng</th>
+                <th>Trạng thái</th>
+                <th></th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-charge let-index="rowIndex">
+            <tr>
+                <th>{{ index + 1}}</th>
+                <th>{{ charge.soTien | currency:'VND' }}</th>
+                <th>{{ charge.user.firstName + ' ' + charge.user.middleName + ' ' + charge.user.lastName }}</th>
+                <th>{{ charge.createAt | date:'short' }}</th>
+                <th>{{ charge.chargeType == 'VNPAY' ? 'Vnpay' : 'Chuyển khoản' }}</th>
+                <th>
+                    <p-image [src]="charge.src" [preview]="true" [imageStyle]="{'height': '100px'}">
+                        <ng-template pTemplate="indicator">
+                            <i class="pi pi-check"></i>
+                        </ng-template>
+                    </p-image>
+                </th>
+                <th>
+                    <p-tag [value]="getStatusValue(charge.status)" [severity]="getStatusSeverity(charge.status)"></p-tag>
+                </th>
+                <th>
+                    <button pButton pRipple type="button" icon="pi pi-pencil" 
+                        *ngIf="charge.chargeType === 'TRANSFER_CHARGE' && charge.status === 'CHO_XAC_NHAN'"
+                        (click)="onRowEditClick(charge)" class="p-button-rounded p-button-text"></button>
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td>Không có dữ liệu.</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

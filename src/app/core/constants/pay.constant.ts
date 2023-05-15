@@ -1,0 +1,10 @@
+export const PAY_METHOD = {
+    VNPAY: 'VNPAY',
+    TRANSFER_CHARGE: 'TRANSFER_CHARGE'
+}
+
+export const CHARGE_STATUS = {
+    DA_XAC_NHAN: 'DA_XAC_NHAN',
+    CHO_XAC_NHAN: 'CHO_XAC_NHAN',
+    DA_TU_CHOI: 'DA_TU_CHOI'
+}

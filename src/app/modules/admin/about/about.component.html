@@ -1,0 +1,56 @@
+<div class="w-full flex flex-col px-4 lg:px-6 space-y-6">
+    <div class="w-full flex justify-between flex-row items-center mt-4">
+        <span class="font-bold text-2xl">Thông tin về  chúng tôi</span>
+        <button pButton pRipple label="Cập nhật" (click)="updateFunc()"></button>
+    </div>
+    <div class="flex flex-col w-full space-y-4">
+        <div class="flex flex-row items-center space-x-2">
+            <span class="text-lg font-semibold">Tên doanh nghiệp:</span>
+            <span class="text-base font-medium">{{ about.name }}</span>
+        </div>
+        <div class="flex flex-row items-center space-x-2">
+            <span class="text-lg font-semibold">Email:</span>
+            <span class="text-base font-medium">{{ about.email }}</span>
+        </div>
+        <div class="flex flex-row items-center space-x-2">
+            <span class="text-lg font-semibold">Địa chỉ:</span>
+            <span class="text-base font-medium">{{ about.address }}</span>
+        </div>
+        <div class="flex flex-row items-center space-x-2">
+            <span class="text-lg font-semibold">Số điện thoại:</span>
+            <span class="text-base font-medium">{{ about.phoneNumber }}</span>
+        </div>
+    </div>
+</div>
+<p-dialog header="Cập nhật thông tin" [(visible)]="displayAboutUpdate" [style]="{width: innerWidth <= 640 ? '100vw' : '50vw'}" 
+    [baseZIndex]="100" [modal]="true">
+    <div class="flex flex-col space-y-4 pb-8">
+        <div>
+            <label for="name" class="text-sm">Tên doanh nghiệp</label>
+            <input id="name" pInputText class="w-full" [(ngModel)]="aboutUpdate.name"
+                placeholder="Nhập tên doanh nghiệp" 
+                [ngClass]="nullable(aboutUpdate.name) ? 'ng-invalid ng-dirty' : ''">
+        </div>
+        <div>
+            <label for="email" class="text-sm">Email</label>
+            <input id="email" pInputText class="w-full" [(ngModel)]="aboutUpdate.email" type="email"
+                placeholder="Nhập địa chỉ email" 
+                [ngClass]="nullable(aboutUpdate.email) ? 'ng-invalid ng-dirty' : ''">
+        </div>
+        <div>
+            <label for="address" class="text-sm">Địa chỉ</label>
+            <input id="address" pInputText class="w-full" [(ngModel)]="aboutUpdate.address"
+                placeholder="Nhập địa chỉ doanh nghiệp" 
+                [ngClass]="nullable(aboutUpdate.address) ? 'ng-invalid ng-dirty' : ''">
+        </div>
+        <div>
+            <label for="phoneNumber" class="text-sm">Số điện thoại</label>
+            <input id="phoneNumber" pInputText class="w-full" [(ngModel)]="aboutUpdate.phoneNumber"
+                placeholder="Nhập số điện thoại doanh nghiệp" 
+                [ngClass]="nullable(aboutUpdate.phoneNumber) ? 'ng-invalid ng-dirty' : ''">
+        </div>
+    </div>
+    <ng-template pTemplate="footer">
+        <p-button (click)="updateAboutInfo()" [disabled]="saveDisableCheck()" label="Lưu thông tin" styleClass="p-button-text"></p-button>
+    </ng-template>
+</p-dialog>

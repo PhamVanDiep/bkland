@@ -20,6 +20,8 @@ import { NoAuthService } from '../core/services/no-auth.service';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ToastModule } from 'primeng/toast';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { ChargeService } from '../core/services/charge.service';
+import { InputTextModule } from 'primeng/inputtext';
 
 @NgModule({
   declarations: [
@@ -42,7 +44,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     FormsModule,
     ProgressSpinnerModule,
     ToastModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    InputTextModule
   ],
   exports: [
     MainLayoutComponent,
@@ -51,7 +54,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
   providers: [
     UserService,
     AboutService,
-    NoAuthService
+    NoAuthService,
+    ChargeService
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA

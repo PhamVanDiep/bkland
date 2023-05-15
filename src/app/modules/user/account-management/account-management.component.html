@@ -1,0 +1,170 @@
+<div class="w-full flex flex-col px-4 lg:px-6 space-y-6">
+    <div class="w-full flex flex-row justify-between items-center px-2 py-2 border border-gray-custom rounded-lg shadow-lg">
+        <span>Nhận thông báo trên thiết bị: </span>
+        <p-inputSwitch [(ngModel)]="userDeviceToken.enable" (ngModelChange)="updateUserDeviceToken()"></p-inputSwitch>
+    </div>
+    <div class="w-full flex justify-between flex-row items-center mt-4">
+        <span class="font-bold text-2xl">Thông tin tài khoản</span>
+        <button pButton pRipple label="Cập nhật" (click)="updateFunc()"></button>
+    </div>
+    <div class="flex flex-col w-full space-y-4">
+        <div class="flex w-full justify-center items-center">
+            <img [src]="avatarUrlRetrive" class="w-32 h-32 rounded-[50%] align-middle">
+        </div>
+        <div class="flex flex-row items-center space-x-2">
+            <span class="text-lg font-semibold">Mã người dùng:</span>
+            <span class="text-base font-medium">{{ user.id }}</span>
+        </div>
+        <div class="flex flex-row items-center space-x-2">
+            <span class="text-lg font-semibold">Họ và tên:</span>
+            <span class="text-base font-medium">{{ user.firstName + ' ' + user.middleName + ' ' + user.lastName }}</span>
+        </div>
+        <div class="flex flex-row items-center space-x-2">
+            <span class="text-lg font-semibold">Tên đăng nhập:</span>
+            <span class="text-base font-medium break-all">{{ user.username }}</span>
+        </div>
+        <div class="flex flex-row items-center space-x-2">
+            <span class="text-lg font-semibold">Email:</span>
+            <span class="text-base font-medium">{{ user.email }}</span>
+        </div>
+        <div class="flex flex-row items-center space-x-2">
+            <span class="text-lg font-semibold">Số CMND/CCCD:</span>
+            <span class="text-base font-medium">{{ user.identification ? user.identification : 'Không xác định' }}</span>
+        </div>
+        <div class="flex flex-row items-center space-x-2">
+            <span class="text-lg font-semibold">Giới tính:</span>
+            <span class="text-base font-medium">{{ genderOutcome() }}</span>
+        </div>
+        <div class="flex flex-row items-center space-x-2">
+            <span class="text-lg font-semibold">Địa chỉ:</span>
+            <span class="text-base font-medium">{{ addressOutcome() }}</span>
+        </div>
+        <div class="flex flex-row items-center space-x-2">
+            <span class="text-lg font-semibold">Số điện thoại:</span>
+            <span class="text-base font-medium">{{ user.phoneNumber ? user.phoneNumber : 'Không xác định' }}</span>
+        </div>
+        <div class="flex flex-row items-center space-x-2">
+            <span class="text-lg font-semibold">Số dư tài khoản:</span>
+            <span class="text-base font-medium">{{ user.accountBalance | currency:'VND' }}</span>
+        </div>
+        <div class="flex flex-row items-center space-x-2">
+            <span class="text-lg font-semibold">Ngày sinh:</span>
+            <span class="text-base font-medium">{{ user.dateOfBirth ? (user.dateOfBirth | date:'dd/MM/yyyy') : 'Không xác định' }}</span>
+        </div>
+    </div>
+</div>
+<p-dialog header="Cập nhật thông tin" [(visible)]="displayAccountUpdate" [style]="{width: innerWidth <= 640 ? '100vw' : '50vw'}" 
+    [baseZIndex]="100" [modal]="true">
+    <div class="flex flex-col space-y-4 pb-8">
+        <div class="flex flex-row w-full justify-between items-center">
+            <span>Tải ảnh đại diện mới lên:</span>
+            <label for="uploadImage" class="cursor-pointer">
+                <i class="pi pi-cloud-upload" style="font-size: 2rem;"></i>
+            </label>
+            <input type="file" name="uploadImage" 
+                accept="image/png, image/gif, image/jpeg" id="uploadImage" [hidden]="true"
+                (change)="onFileSelected($event)" [multiple]="false">
+        </div>
+        <div *ngIf="selectedFile != null" class="w-full flex flex-row justify-between items-center">
+            <span class="italic">Đã tải ảnh đại diện mới.</span>
+            <i class="pi pi-times" (click)="cancelImage()"></i>
+        </div>
+        <div>
+            <label for="username" class="text-sm">Tên đăng nhập</label>
+            <input id="username" pInputText class="w-full" [(ngModel)]="userUpdate.username"
+                placeholder="Tên đăng nhập" [autofocus]="true" [disabled]="true"
+                [ngClass]="nullable(userUpdate.username) ? 'ng-invalid ng-dirty' : ''">
+        </div>
+        <div>
+            <label for="email" class="text-sm">Email</label>
+            <input id="email" pInputText class="w-full" [(ngModel)]="userUpdate.email" type="email" [disabled]="true"
+                placeholder="Email" [ngClass]="nullable(userUpdate.email) ? 'ng-invalid ng-dirty' : ''">
+        </div>
+        <div *ngIf="selectedRole == 1" class="flex flex-col space-y-4">
+            <div class="flex flex-row space-x-2 justify-between">
+                <div>
+                    <label for="firstName" class="text-sm">Họ</label>
+                    <input id="firstName" pInputText class="w-full" [(ngModel)]="userUpdate.firstName"
+                        placeholder="Họ" [ngClass]="nullable(userUpdate.firstName) ? 'ng-invalid ng-dirty' : ''">
+                </div>
+                <div>
+                    <label for="middleName" class="text-sm">Tên đệm</label>
+                    <input id="middleName" pInputText class="w-full" [(ngModel)]="userUpdate.middleName"
+                        placeholder="Tên đệm"
+                        [ngClass]="nullable(userUpdate.middleName) ? 'ng-invalid ng-dirty' : ''">
+                </div>
+                <div>
+                    <label for="lastName" class="text-sm">Tên</label>
+                    <input id="lastName" pInputText class="w-full" [(ngModel)]="userUpdate.lastName"
+                        placeholder="Tên" [ngClass]="nullable(userUpdate.lastName) ? 'ng-invalid ng-dirty' : ''">
+                </div>
+            </div>
+            <div>
+                <label for="identification" class="text-sm">CCCD</label>
+                <input id="identification" pInputText class="w-full" [(ngModel)]="userUpdate.identification"
+                    placeholder="Nhập số căn cước công dân" minlength="12" maxlength="12"
+                    [ngClass]="nullable(userUpdate.identification) ? 'ng-invalid ng-dirty' : ''">
+            </div>
+            <div class="flex flex-row space-x-4">
+                <div class="flex flex-col w-full">
+                    <label for="dateOfBirth" class="text-sm">Ngày sinh</label>
+                    <p-calendar id="dateOfBirth" class="w-full" [(ngModel)]="dateOfBirth"
+                        placeholder="dd/MM/YYYY" dateFormat="dd/mm/yy"
+                        [ngClass]="nullable(userUpdate.dateOfBirth) ? 'ng-invalid ng-dirty' : ''"></p-calendar>
+                </div>
+                <div class="w-full">
+                    <label for="gender" class="text-sm">Giới tính</label>
+                    <div class="flex flex-row space-x-4">
+                        <div *ngFor="let item of lstGenders" class="field-checkbox">
+                            <p-radioButton [inputId]="item.key" name="category" [value]="item.key"
+                                [(ngModel)]="userUpdate.gender"></p-radioButton>
+                            <label [for]="item.key" class="ml-2">{{ item.value }}</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="selectedRole == 3">
+            <label for="firstName" class="text-sm">Tên doanh nghiệp</label>
+            <input id="firstName" pInputText class="w-full" [(ngModel)]="userUpdate.firstName"
+                placeholder="Tên doanh nghiệp"
+                [ngClass]="nullable(userUpdate.firstName) ? 'ng-invalid ng-dirty' : ''">
+        </div>
+        <div class="flex flex-col space-y-4 justify-between w-full">
+            <div class="flex flex-col w-full">
+                <label for="provinceCode" class="text-sm">Tỉnh/Thành phố</label>
+                <p-dropdown [options]="provinces" [(ngModel)]="userUpdate.provinceCode"
+                    [style]="{'width': '100%'}" optionLabel="fullName" (ngModelChange)="getDistrictsInProvince()"
+                    optionValue="code" [filter]="true" filterBy="fullName" autoWidth="false"></p-dropdown>
+            </div>
+            <div class="flex flex-col w-full">
+                <label for="districtCode" class="text-sm">Quận/Huyện/Thị xã</label>
+                <p-dropdown [options]="districts" [(ngModel)]="userUpdate.districtCode"
+                    [style]="{'width': '100%'}" optionLabel="fullName"
+                    [disabled]="userUpdate.provinceCode.length <= 0" (ngModelChange)="getWardsInDistrict()"
+                    optionValue="code" [filter]="true" filterBy="fullName"></p-dropdown>
+            </div>
+            <div class="flex flex-col w-full">
+                <label for="wardCode" class="text-sm">Xã/Phường/Thị trấn</label>
+                <p-dropdown [options]="wards" [(ngModel)]="userUpdate.wardCode" [style]="{'width': '100%'}"
+                    optionLabel="fullName" [disabled]="userUpdate.provinceCode.length <= 0" optionValue="code"
+                    [filter]="true" filterBy="fullName"></p-dropdown>
+            </div>
+        </div>
+        <div class="flex flex-col w-full">
+            <label for="address" class="text-sm">Địa chỉ</label>
+            <input id="address" pInputText class="w-full" [(ngModel)]="userUpdate.address"
+                placeholder="Nhập địa chỉ cụ thể"
+                [ngClass]="nullable(userUpdate.address) ? 'ng-invalid ng-dirty' : ''">
+        </div>
+        <div class="flex flex-col w-full">
+            <label for="phoneNumber" class="text-sm">Số điện thoại</label>
+            <input id="phoneNumber" pInputText class="w-full" [(ngModel)]="userUpdate.phoneNumber"
+                placeholder="Nhập số điện thoại" minlength="10" maxlength="10"
+                [ngClass]="nullable(userUpdate.phoneNumber) ? 'ng-invalid ng-dirty' : ''">
+        </div>
+    </div>
+    <ng-template pTemplate="footer">
+        <p-button (click)="updateUserInfo()" label="Lưu thông tin" styleClass="p-button-text"></p-button>
+    </ng-template>
+</p-dialog>

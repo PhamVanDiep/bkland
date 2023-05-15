@@ -10,10 +10,24 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { DropdownModule } from 'primeng/dropdown';
 import { RippleModule } from 'primeng/ripple';
+import { AccountManagementComponent } from './account-management/account-management.component';
+import { AvatarModule } from 'primeng/avatar';
+import { CardModule } from 'primeng/card';
+import { InputSwitchModule } from 'primeng/inputswitch';
+import { DialogModule } from 'primeng/dialog';
+import { RadioButtonModule } from 'primeng/radiobutton';
+import { CalendarModule } from 'primeng/calendar';
+import { ChargeComponent } from './charge/charge.component';
+import { BalanceFluctuationComponent } from './balance-fluctuation/balance-fluctuation.component';
+import { HttpClientModule } from '@angular/common/http';
+import { TagModule } from 'primeng/tag';
 
 @NgModule({
   declarations: [
     CreateMainPostComponent,
+    AccountManagementComponent,
+    ChargeComponent,
+    BalanceFluctuationComponent,
   ],
   imports: [
     CommonModule,
@@ -24,7 +38,15 @@ import { RippleModule } from 'primeng/ripple';
     InputNumberModule,
     InputTextareaModule,
     DropdownModule,
-    RippleModule
+    RippleModule,
+    AvatarModule,
+    CardModule,
+    InputSwitchModule,
+    DialogModule,
+    RadioButtonModule,
+    CalendarModule,
+    HttpClientModule,
+    TagModule
   ],
   providers: [
   ]

@@ -1,0 +1,10 @@
+<div class="flex flex-col justify-center items-center w-full h-full space-y-4" *ngIf="isSuccess">
+    <img src="/assets/images/success.png" alt="" class="h-[30%]">
+    <span class="text-2xl">Nạp tiền thành công</span>
+    <button pButton pRipple label="Về trang chủ" icon="pi pi-home" (click)="backHome()"></button>
+</div>
+<div class="flex flex-col justify-center items-center w-full h-full space-y-4" *ngIf="!isSuccess">
+    <img src="/assets/images/error.png" alt="" class="h-[30%]">
+    <span class="text-2xl">Đã xảy ra lỗi khi nạp tiền.</span>
+    <button pButton pRipple label="Về trang chủ" icon="pi pi-home" (click)="backHome()"></button>
+</div>
