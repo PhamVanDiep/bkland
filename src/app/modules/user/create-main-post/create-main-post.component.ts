@@ -406,12 +406,13 @@ export class CreateMainPostComponent implements OnInit, OnDestroy {
         realEstatePost: this.realEstatePost
       }
       let postResponse = await firstValueFrom(this._realEstatePostService.createPost(realEstatePostRequest).pipe(takeUntil(this._unsubscribe)));
+      this._loadingService.loading(false);
       if (postResponse.status === HttpStatusCode.Ok) {
         this._messageService.add({ severity: 'success', summary: 'Thông báo', detail: postResponse.message });
+        this._router.navigate(['user/post/main']);
       } else {
         this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: postResponse.message });
       }
-      this._loadingService.loading(false);
     } else {
       this._loadingService.loading(true);
       this.images = [];
@@ -448,12 +449,13 @@ export class CreateMainPostComponent implements OnInit, OnDestroy {
         realEstatePost: this.realEstatePost
       }
       let postResponse = await firstValueFrom(this._realEstatePostService.updatePost(realEstatePostRequest).pipe(takeUntil(this._unsubscribe)));
+      this._loadingService.loading(false);
       if (postResponse.status === HttpStatusCode.Ok) {
         this._messageService.add({ severity: 'success', summary: 'Thông báo', detail: postResponse.message });
+        this._router.navigate(['user/post/main']);
       } else {
         this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: postResponse.message });
       }
-      this._loadingService.loading(false);
     }
   }
 }

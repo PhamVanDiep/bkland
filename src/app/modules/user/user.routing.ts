@@ -3,6 +3,7 @@ import { CreateMainPostComponent } from "./create-main-post/create-main-post.com
 import { AccountManagementComponent } from "./account-management/account-management.component";
 import { ChargeComponent } from "./charge/charge.component";
 import { BalanceFluctuationComponent } from "./balance-fluctuation/balance-fluctuation.component";
+import { ManageMainPostComponent } from "./manage-main-post/manage-main-post.component";
 
 export const route: Route[] = [
     {
@@ -24,5 +25,19 @@ export const route: Route[] = [
     {
         path: 'balance-fluctuation',
         component: BalanceFluctuationComponent
+    },
+    {
+        path: 'post',
+        children: [
+            {
+                path: '',
+                redirectTo: 'main',
+                pathMatch: 'full'
+            },
+            {
+                path: 'main',
+                component: ManageMainPostComponent
+            }
+        ]
     }
 ]

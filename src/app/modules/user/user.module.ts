@@ -21,6 +21,8 @@ import { ChargeComponent } from './charge/charge.component';
 import { BalanceFluctuationComponent } from './balance-fluctuation/balance-fluctuation.component';
 import { HttpClientModule } from '@angular/common/http';
 import { TagModule } from 'primeng/tag';
+import { ManageMainPostComponent } from './manage-main-post/manage-main-post.component';
+import { TableModule } from 'primeng/table';
 
 @NgModule({
   declarations: [
@@ -28,6 +30,7 @@ import { TagModule } from 'primeng/tag';
     AccountManagementComponent,
     ChargeComponent,
     BalanceFluctuationComponent,
+    ManageMainPostComponent,
   ],
   imports: [
     CommonModule,
@@ -46,7 +49,8 @@ import { TagModule } from 'primeng/tag';
     RadioButtonModule,
     CalendarModule,
     HttpClientModule,
-    TagModule
+    TagModule,
+    TableModule
   ],
   providers: [
   ]

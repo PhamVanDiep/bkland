@@ -51,4 +51,14 @@ export class RealEstatePostService {
             }
         );
     }
+
+    getPostdByOwnerId(): Observable<APIResponse> {
+        this.accessToken = localStorage.getItem('accessToken') || '';
+        let _id = JSON.parse(window.atob((localStorage.getItem('accessToken') || '').split('.')[1])).id;
+        return this._httpClient.get<APIResponse>(`${environment.BASE_URL_AUTH}/real-estate-post/user/${_id}`, {
+            headers: {
+                'Authorization': `Bearer ${this.accessToken}`
+            }
+        });
+    }
 }
