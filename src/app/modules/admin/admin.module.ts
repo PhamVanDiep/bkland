@@ -16,12 +16,16 @@ import { TagModule } from 'primeng/tag';
 import { ImageModule } from 'primeng/image';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
+import { MainPostComponent } from './main-post/main-post.component';
+import { UserAccountComponent } from './user-account/user-account.component';
 
 @NgModule({
   declarations: [
     AdminComponent,
     AboutComponent,
-    FinanceTransactionComponent
+    FinanceTransactionComponent,
+    MainPostComponent,
+    UserAccountComponent
   ],
   imports: [
     CommonModule,

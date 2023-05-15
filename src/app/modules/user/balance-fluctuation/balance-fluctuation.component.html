@@ -29,8 +29,8 @@
                         <span>{{ 'Phương thức thanh toán: ' + (charge.chargeType === 'VNPAY' ? 'Ví VNPay' : 'Chuyển khoản')}}</span>
                     </div>
                     <div class="flex flex-col space-y-1 w-1/4">
-                        <span>{{ 'Số tiền nạp: ' + charge.soTien }}</span>
-                        <span *ngIf="charge.status === 'DA_XAC_NHAN'">{{ 'Số dư khả dụng: ' + charge.accountBalance}}</span>
+                        <span>{{ 'Số tiền nạp: ' + (charge.soTien  | currency:'VND') }}</span>
+                        <span *ngIf="charge.status === 'DA_XAC_NHAN'">{{ 'Số dư khả dụng: ' + (charge.accountBalance | currency:'VND')}}</span>
                     </div>
                     <div class="flex w-1/4 items-center justify-end">
                         <p-tag [value]="getStatusValue(charge.status)" [severity]="getStatusSeverity(charge.status)"></p-tag>

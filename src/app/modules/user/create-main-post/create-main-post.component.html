@@ -67,13 +67,13 @@
                 <label for="direction" class="text-sm">Độ ưu tiên</label>
                 <p-dropdown [options]="priorities" [(ngModel)]="realEstatePost.priority" 
                     [style]="{'width': '100%'}" (ngModelChange)="calcPayVal()"
-                    optionLabel="value" optionValue="key"></p-dropdown>
+                    optionLabel="value" optionValue="key" [disabled]="isUpdate"></p-dropdown>
             </div>
             <div class="flex flex-col w-full">
                 <label for="direction" class="text-sm">Thời gian tồn tại</label>
                 <p-dropdown [options]="periods" [(ngModel)]="realEstatePost.period" 
                     [style]="{'width': '100%'}" (ngModelChange)="calcPayVal()"
-                    optionLabel="value" optionValue="key"></p-dropdown>
+                    optionLabel="value" optionValue="key" [disabled]="isUpdate"></p-dropdown>
             </div>
         </div>
         <div class="w-full">

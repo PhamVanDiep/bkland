@@ -23,6 +23,9 @@ import { HttpClientModule } from '@angular/common/http';
 import { TagModule } from 'primeng/tag';
 import { ManageMainPostComponent } from './manage-main-post/manage-main-post.component';
 import { TableModule } from 'primeng/table';
+import { MenuModule } from 'primeng/menu';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService } from 'primeng/api';
 
 @NgModule({
   declarations: [
@@ -50,9 +53,12 @@ import { TableModule } from 'primeng/table';
     CalendarModule,
     HttpClientModule,
     TagModule,
-    TableModule
+    TableModule,
+    MenuModule,
+    ConfirmDialogModule
   ],
   providers: [
+    ConfirmationService
   ]
 })
 export class UserModule { }

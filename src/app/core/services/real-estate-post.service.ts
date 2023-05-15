@@ -61,4 +61,13 @@ export class RealEstatePostService {
             }
         });
     }
+
+    disablePost(postId: string): Observable<APIResponse> {
+        this.accessToken = localStorage.getItem('accessToken') || '';
+        return this._httpClient.put<APIResponse>(`${environment.BASE_URL_AUTH}/real-estate-post/disable/${postId}`, null, {
+            headers: {
+                'Authorization': `Bearer ${this.accessToken}`
+            }
+        })
+    }
 }

@@ -1,6 +1,7 @@
 import { HttpStatusCode } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ConfirmEventType, ConfirmationService, MenuItem } from 'primeng/api';
 import { ReplaySubject, takeUntil } from 'rxjs';
 import { STATUS } from 'src/app/core/constants/status.constant';
 import { APIResponse } from 'src/app/core/models/api-response.model';
@@ -21,17 +22,35 @@ export class ManageMainPostComponent implements OnInit, OnDestroy {
   private title: string  = 'Quản lý bài đăng bán/cho thuê';
 
   realEstatePosts: RealEstatePost[];
+  items: MenuItem[];
+  selectedREP: RealEstatePost;
 
   constructor(
     private _appTitleService: AppTitleService,
     private _loadingService: LoadingService,
     private _messageService: MessageService,
     private _realEsatePostService: RealEstatePostService,
-    private _router: Router
+    private _router: Router,
+    private _confirmationService: ConfirmationService
   ) {
     this._appTitleService.setTitle(this.title);
     this.realEstatePosts = [];
-    
+    this.items = [
+      {
+        label: 'Cập nhật',
+        icon: 'pi pi-fw pi-pencil',
+        command: () => {
+          this.redirectToPost(this.selectedREP.id);
+        }
+      },
+      {
+        label: 'Ẩn bài viết',
+        icon: 'pi pi-fw pi-eye-slash',
+        command: () => {
+          this.hidePost();
+        }
+      }
+    ]
   }
 
   ngOnInit(): void {
@@ -88,11 +107,81 @@ export class ManageMainPostComponent implements OnInit, OnDestroy {
   }
 
   redirectToPost(id: string): void {
+    if (this.isExpire(this.selectedREP.createAt, this.selectedREP.period)) {
+      this._messageService.add({ severity: 'warn', summary: 'Thông báo', detail: 'Bài viết đã hết hạn, bạn không thể  thao tác thêm.' });
+      return;
+    }
+    if (!this.selectedREP.enable) {
+      this._messageService.add({ severity: 'warn', summary: 'Thông báo', detail: 'Bài viết đã bị ẩn, bạn không thể  thao tác thêm.' });
+      return;
+    }
     this._router.navigate([`user/update-post/${id}`]);
   }
 
   createPost(): void {
     this._router.navigate(['user/create-post']);
+  }
+
+  calculateDiff(dateSent: any): number{
+    let currentDate = new Date();
+    dateSent = new Date(dateSent);
+    return Math.floor((Date.UTC(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()) - 
+      Date.UTC(dateSent.getFullYear(), dateSent.getMonth(), dateSent.getDate()) ) /(1000 * 60 * 60 * 24));
+  }
+
+  isExpire(createAt: any, period: number): boolean {
+    if (this.calculateDiff(createAt) > period) {
+      return true;
+    } 
+    return false;
+  }
+
+  hidePost(): void {
+    if (this.isExpire(this.selectedREP.createAt, this.selectedREP.period)) {
+      this._messageService.add({ severity: 'warn', summary: 'Thông báo', detail: 'Bài viết đã hết hạn, bạn không thể  thao tác thêm.' });
+      return;
+    }
+    if (!this.selectedREP.enable) {
+      this._messageService.add({ severity: 'warn', summary: 'Thông báo', detail: 'Bài viết đã bị ẩn, bạn không thể  thao tác thêm.' });
+      return;
+    }
+
+    this._confirmationService.confirm(
+      {
+        message: `Bạn có thực sự muốn ẩn bài viết [ ${this.selectedREP.title} ]? Sau khi ẩn, bài viết sẽ không thể  hiện lại được nữa.`,
+        header: 'Xác nhận ẩn bài viết',
+        acceptButtonStyleClass: 'p-button-success',
+        rejectButtonStyleClass: 'p-button-outlined p-button-danger',
+        acceptLabel: 'Đồng ý',
+        rejectLabel: 'Hủy',
+        accept: () => {
+          this.hidePostCallAPI();
+        },
+        reject: (type: any) => {
+          switch(type) {
+            case ConfirmEventType.REJECT:
+              break;
+            case ConfirmEventType.CANCEL:
+              break;
+          }
+        }
+      }
+    )
+  }
+
+  hidePostCallAPI(): void {
+    this._loadingService.loading(true);
+    this._realEsatePostService.disablePost(this.selectedREP.id)
+      .pipe(takeUntil(this._unsubscribe))
+      .subscribe((response: APIResponse) => {
+        this._loadingService.loading(false);
+        if (response.status === HttpStatusCode.Ok) {
+          this._messageService.add({ severity: 'success', summary: 'Thông báo', detail: response.message });
+          this.selectedREP.enable = false;
+        } else {
+          this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+        }
+      })
   }
 
   ngOnDestroy(): void {
