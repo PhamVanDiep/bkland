@@ -70,4 +70,24 @@ export class RealEstatePostService {
             }
         })
     }
+
+    getAllPost(): Observable<APIResponse> {
+        this.accessToken = localStorage.getItem('accessToken') || '';
+        return this._httpClient.get<APIResponse>(`${environment.BASE_URL_AUTH}/real-estate-post/all`, {
+            headers: {
+                'Authorization': `Bearer ${this.accessToken}`
+            }
+        })
+    }
+
+    disableOrEnablePost(id: string): Observable<APIResponse> {
+        this.accessToken = localStorage.getItem('accessToken') || '';
+        return this._httpClient.put<APIResponse>(`${environment.BASE_URL_AUTH}/real-estate-post/enable/${id}`, null,
+            {
+                headers: {
+                    'Authorization': `Bearer ${this.accessToken}`
+                }
+            }
+        );
+    }
 }

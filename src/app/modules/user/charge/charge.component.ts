@@ -113,7 +113,7 @@ export class ChargeComponent implements OnInit, OnDestroy{
     if (this.charge.chargeType === PAY_METHOD.TRANSFER_CHARGE) {
       if (this.selectedFile == null) {
         this._loadingService.loading(false);
-        this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: 'Bạn chưa tải ảnh minh chứng lên.' });
+        this._messageService.errorMessage('Bạn chưa tải ảnh minh chứng lên.');
         return;
       }
       let formData = new FormData();
@@ -126,7 +126,7 @@ export class ChargeComponent implements OnInit, OnDestroy{
             this.callApiCharge();
           } else {
             this._loadingService.loading(false);
-            this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+            this._messageService.errorMessage(response.message);
           }
         });
     } else {
@@ -145,9 +145,9 @@ export class ChargeComponent implements OnInit, OnDestroy{
       .subscribe((response: APIResponse) => {
         if (response.status === HttpStatusCode.Ok) {
           this._loadingService.loading(false);
-          this._messageService.add({ severity: 'success', summary: 'Thông báo', detail: response.message });
+          this._messageService.successMessage(response.message);
         } else {
-          this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+          this._messageService.errorMessage(response.message);
         }
       })
   }

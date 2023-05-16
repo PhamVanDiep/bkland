@@ -92,7 +92,7 @@ export class SignUpComponent implements OnInit, OnDestroy {
         if (response.status === HttpStatusCode.Ok) {
           this.provinces = response.data.filter((e: any) => e.code != "NOT_FOUND");
         } else {
-          this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+          this._messageService.errorMessage(response.message);
         }
       });
   }
@@ -104,7 +104,7 @@ export class SignUpComponent implements OnInit, OnDestroy {
         if (response.status === HttpStatusCode.Ok) {
           this.districts = response.data.filter((e: any) => e.code != "NOT_FOUND");
         } else {
-          this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+          this._messageService.errorMessage(response.message);
         }
       })
   }
@@ -116,7 +116,7 @@ export class SignUpComponent implements OnInit, OnDestroy {
         if (response.status === HttpStatusCode.Ok) {
           this.wards = response.data.filter((e: any) => e.code != "NOT_FOUND");
         } else {
-          this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+          this._messageService.errorMessage(response.message);
         }
       })
   }
@@ -185,7 +185,7 @@ export class SignUpComponent implements OnInit, OnDestroy {
         if (response.status === HttpStatusCode.Ok) {
           if (this.selectedRole === 1) {
             this._loadingService.loading(false);
-            this._messageService.add({ severity: 'success', summary: 'Thông báo', detail: response.message });
+            this._messageService.successMessage(response.message);
             setTimeout(() => {
               this._router.navigate(['login']);
             }, 2000);
@@ -201,18 +201,18 @@ export class SignUpComponent implements OnInit, OnDestroy {
               .subscribe((response1: APIResponse) => {
                 if (response1.status === HttpStatusCode.Ok) {
                   this._loadingService.loading(false);
-                  this._messageService.add({ severity: 'success', summary: 'Thông báo', detail: response.message });
+                  this._messageService.successMessage(response1.message);
                   setTimeout(() => {
                     this._router.navigate(['login']);
                   }, 2000);
                 } else {
-                  this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response1.message });
+                  this._messageService.errorMessage(response1.message);
                 }
               })
           }
         } else {
           this._loadingService.loading(false);
-          this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+          this._messageService.errorMessage(response.message);
         }
       })
   }

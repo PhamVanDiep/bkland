@@ -4,6 +4,7 @@ import { AccountManagementComponent } from "./account-management/account-managem
 import { ChargeComponent } from "./charge/charge.component";
 import { BalanceFluctuationComponent } from "./balance-fluctuation/balance-fluctuation.component";
 import { ManageMainPostComponent } from "./manage-main-post/manage-main-post.component";
+import { CooperateAgencyComponent } from "./cooperate-agency/cooperate-agency.component";
 
 export const route: Route[] = [
     {
@@ -39,5 +40,9 @@ export const route: Route[] = [
                 component: ManageMainPostComponent
             }
         ]
+    },
+    {
+        path: 'cooperate-agency',
+        component: CooperateAgencyComponent
     }
 ]

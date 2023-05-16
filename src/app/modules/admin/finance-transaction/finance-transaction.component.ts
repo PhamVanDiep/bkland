@@ -1,5 +1,5 @@
 import { HttpStatusCode } from '@angular/common/http';
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ConfirmEventType, ConfirmationService } from 'primeng/api';
 import { ReplaySubject, firstValueFrom, takeUntil } from 'rxjs';
@@ -22,6 +22,12 @@ export class FinanceTransactionComponent implements AfterViewInit, OnDestroy {
   private title: string = 'Giao dịch tài chính';
 
   charges: any[];
+
+  innerWidth: any;
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.innerWidth = window.innerWidth;
+  }
 
   constructor(
     private _appTitleService: AppTitleService,
@@ -63,7 +69,7 @@ export class FinanceTransactionComponent implements AfterViewInit, OnDestroy {
             }
           })
         } else {
-          this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message })
+          this._messageService.errorMessage(response.message);
         }
       })
   }
@@ -126,9 +132,9 @@ export class FinanceTransactionComponent implements AfterViewInit, OnDestroy {
       .pipe(takeUntil(this._unsubscribe))
       .subscribe((response: APIResponse) => {
         if (response.status === HttpStatusCode.Ok) {
-          this._messageService.add({ severity: 'success', summary: 'Thông báo', detail: response.message })
+          this._messageService.successMessage(response.message);
         } else {
-          this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message })
+          this._messageService.errorMessage(response.message);
         }
       })
   }

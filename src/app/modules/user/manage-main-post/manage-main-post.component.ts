@@ -1,5 +1,5 @@
 import { HttpStatusCode } from '@angular/common/http';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmEventType, ConfirmationService, MenuItem } from 'primeng/api';
 import { ReplaySubject, takeUntil } from 'rxjs';
@@ -24,6 +24,12 @@ export class ManageMainPostComponent implements OnInit, OnDestroy {
   realEstatePosts: RealEstatePost[];
   items: MenuItem[];
   selectedREP: RealEstatePost;
+
+  innerWidth: any;
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.innerWidth = window.innerWidth;
+  }
 
   constructor(
     private _appTitleService: AppTitleService,
@@ -63,7 +69,7 @@ export class ManageMainPostComponent implements OnInit, OnDestroy {
         if (response.status === HttpStatusCode.Ok) {
           this.realEstatePosts = response.data;
         } else {
-          this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message })
+          this._messageService.errorMessage(response.message);
         }
       });
   }
@@ -108,11 +114,11 @@ export class ManageMainPostComponent implements OnInit, OnDestroy {
 
   redirectToPost(id: string): void {
     if (this.isExpire(this.selectedREP.createAt, this.selectedREP.period)) {
-      this._messageService.add({ severity: 'warn', summary: 'Thông báo', detail: 'Bài viết đã hết hạn, bạn không thể  thao tác thêm.' });
+      this._messageService.warningMessage('Bài viết đã hết hạn, bạn không thể  thao tác thêm.');
       return;
     }
     if (!this.selectedREP.enable) {
-      this._messageService.add({ severity: 'warn', summary: 'Thông báo', detail: 'Bài viết đã bị ẩn, bạn không thể  thao tác thêm.' });
+      this._messageService.warningMessage('Bài viết đã bị ẩn, bạn không thể  thao tác thêm.');
       return;
     }
     this._router.navigate([`user/update-post/${id}`]);
@@ -138,11 +144,11 @@ export class ManageMainPostComponent implements OnInit, OnDestroy {
 
   hidePost(): void {
     if (this.isExpire(this.selectedREP.createAt, this.selectedREP.period)) {
-      this._messageService.add({ severity: 'warn', summary: 'Thông báo', detail: 'Bài viết đã hết hạn, bạn không thể  thao tác thêm.' });
+      this._messageService.warningMessage('Bài viết đã hết hạn, bạn không thể  thao tác thêm.' );
       return;
     }
     if (!this.selectedREP.enable) {
-      this._messageService.add({ severity: 'warn', summary: 'Thông báo', detail: 'Bài viết đã bị ẩn, bạn không thể  thao tác thêm.' });
+      this._messageService.warningMessage('Bài viết đã bị ẩn, bạn không thể  thao tác thêm.');
       return;
     }
 
@@ -176,10 +182,10 @@ export class ManageMainPostComponent implements OnInit, OnDestroy {
       .subscribe((response: APIResponse) => {
         this._loadingService.loading(false);
         if (response.status === HttpStatusCode.Ok) {
-          this._messageService.add({ severity: 'success', summary: 'Thông báo', detail: response.message });
+          this._messageService.successMessage(response.message);
           this.selectedREP.enable = false;
         } else {
-          this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+          this._messageService.errorMessage(response.message);
         }
       })
   }

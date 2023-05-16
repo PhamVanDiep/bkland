@@ -1,4 +1,4 @@
-<p-confirmDialog [style]="{width: '50vw'}"></p-confirmDialog>
+<p-confirmDialog [style]="{width: innerWidth > 640 ? '50vw' : '100vh'}"></p-confirmDialog>
 <p-menu #menu [model]="items" [popup]="true"></p-menu>
 <div class="w-full flex flex-col px-4 lg:px-6 space-y-6">
     <div class="flex flex-row w-full justify-between items-center mt-4">

@@ -212,9 +212,11 @@ export class MainLayoutComponent implements OnInit, OnDestroy{
             if (response.status === HttpStatusCode.Ok) {
               localStorage.setItem('accessToken', response.data.accessToken);
               localStorage.setItem('refreshToken', response.data.refreshToken);
-              this.getUserInfo();
+              setTimeout(() => {
+                this.getUserInfo();
+              }, 500);
             } else {
-              this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+              this._messageService.errorMessage(response.message);
             }
           })
       }
@@ -228,7 +230,7 @@ export class MainLayoutComponent implements OnInit, OnDestroy{
         if (response.status === HttpStatusCode.Ok) {
           this.about = response.data;
         } else {
-          this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+          this._messageService.errorMessage(response.message);
         }
       })
   }
@@ -249,7 +251,7 @@ export class MainLayoutComponent implements OnInit, OnDestroy{
                   if (response.status === HttpStatusCode.Ok) {
                     this.avatarUrl = this._domSanitizer.bypassSecurityTrustResourceUrl(`data:${response.data.type};base64,${response.data.body}`);
                   } else {
-                    this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+                    this._messageService.errorMessage(response.message);
                   }
                 })
             } else {
@@ -257,7 +259,7 @@ export class MainLayoutComponent implements OnInit, OnDestroy{
             }
           }
         } else {
-          this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+          this._messageService.errorMessage(response.message);
         }
       })
   }
@@ -288,7 +290,7 @@ export class MainLayoutComponent implements OnInit, OnDestroy{
           localStorage.clear();
           this.navigatePage('/login');
         } else {
-          this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+          this._messageService.errorMessage(response.message);
         }
       });
   }
@@ -308,11 +310,11 @@ export class MainLayoutComponent implements OnInit, OnDestroy{
       .pipe(takeUntil(this._unsubscribe))
       .subscribe((response: APIResponse) => {
         if (response.status === HttpStatusCode.Ok) {
-          this._messageService.add({ severity: 'success', summary: 'Thông báo', detail: response.message });
+          this._messageService.successMessage(response.message);
           this.displayChangePassword = true;
           this.responseOTP = response.data;
         } else {
-          this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+          this._messageService.errorMessage(response.message);
         }
         this._loadingService.loading(false);
       })
@@ -328,10 +330,10 @@ export class MainLayoutComponent implements OnInit, OnDestroy{
       .pipe(takeUntil(this._unsubscribe))
       .subscribe((response: APIResponse) => {
         if (response.status === HttpStatusCode.Ok) {
-          this._messageService.add({ severity: 'success', summary: 'Thông báo', detail: response.message });
+          this._messageService.successMessage(response.message);
           this.displayChangePassword = false;
         } else {
-          this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+          this._messageService.errorMessage(response.message);
         }
         this._loadingService.loading(false);
       })

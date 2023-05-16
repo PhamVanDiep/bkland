@@ -18,6 +18,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { MainPostComponent } from './main-post/main-post.component';
 import { UserAccountComponent } from './user-account/user-account.component';
+import { MenuModule } from 'primeng/menu';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { UserAccountComponent } from './user-account/user-account.component';
     TableModule,
     TagModule,
     ImageModule,
-    ConfirmDialogModule
+    ConfirmDialogModule,
+    MenuModule
   ],
   providers: [
     ConfirmationService

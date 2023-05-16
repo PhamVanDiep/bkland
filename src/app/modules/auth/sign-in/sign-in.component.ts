@@ -106,7 +106,7 @@ export class SignInComponent implements OnInit, OnDestroy {
           } else if (response.status === HttpStatusCode.NoContent) {
             this.registerGoogleAccount();
           } else if (response.status === HttpStatusCode.BadRequest) {
-            this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+            this._messageService.errorMessage(response.message);
           }
         })
     });
@@ -146,11 +146,11 @@ export class SignInComponent implements OnInit, OnDestroy {
                 const redirectUrl = this._route.snapshot.queryParamMap.get('redirectUrl') || '/signed-in-redirect';
                 this._router.navigateByUrl(redirectUrl); 
               } else {
-                this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response1.message });
+                this._messageService.errorMessage(response1.message);
               }
             });
         } else {
-          this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+          this._messageService.errorMessage(response.message);
         }
         this._loadingService.loading(false);
       })
@@ -202,7 +202,7 @@ export class SignInComponent implements OnInit, OnDestroy {
           }
           this.loginRequest();
         } else {
-          this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+          this._messageService.errorMessage(response.message);
         }
       })
   }
@@ -224,12 +224,12 @@ export class SignInComponent implements OnInit, OnDestroy {
       .subscribe((response: APIResponse) => {
         this._loadingService.loading(false);
         if (response.status === HttpStatusCode.Ok) {
-          this._messageService.add({ severity: 'success', summary: 'Thông báo', detail: response.message });
+          this._messageService.successMessage(response.message);
           this.displayEmailVerify = false;
           this.displayChangePassword = true;
           this.responseOTP = response.data;
         } else {
-          this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+          this._messageService.errorMessage(response.message);
           this.clicked = false;
         }
       })
@@ -246,10 +246,10 @@ export class SignInComponent implements OnInit, OnDestroy {
       .subscribe((response: APIResponse) => {
         this._loadingService.loading(false);
         if (response.status === HttpStatusCode.Ok) {
-          this._messageService.add({ severity: 'success', summary: 'Thông báo', detail: response.message });
+          this._messageService.successMessage(response.message);
           this.displayChangePassword = false;
         } else {
-          this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+          this._messageService.errorMessage(response.message);
         }
       })
   }

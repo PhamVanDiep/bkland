@@ -201,7 +201,7 @@ export class CreateMainPostComponent implements OnInit, OnDestroy {
         if (response.status === HttpStatusCode.Ok) {
           this.provinces = response.data.filter((e: any) => e.code != "NOT_FOUND");
         } else {
-          this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+          this._messageService.errorMessage(response.message);
         }
       });
 
@@ -246,7 +246,7 @@ export class CreateMainPostComponent implements OnInit, OnDestroy {
             this.getDistrictsInProvince();
             this.getWardsInDistrict();
           } else {
-            this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+            this._messageService.errorMessage(response.message);
           }
         })
     }
@@ -266,7 +266,7 @@ export class CreateMainPostComponent implements OnInit, OnDestroy {
         if (response.status === HttpStatusCode.Ok) {
           this.districts = response.data.filter((e: any) => e.code != "NOT_FOUND");
         } else {
-          this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+          this._messageService.errorMessage(response.message);
         }
       })
   }
@@ -278,7 +278,7 @@ export class CreateMainPostComponent implements OnInit, OnDestroy {
         if (response.status === HttpStatusCode.Ok) {
           this.wards = response.data.filter((e: any) => e.code != "NOT_FOUND");
         } else {
-          this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+          this._messageService.errorMessage(response.message);
         }
       })
   }
@@ -336,12 +336,12 @@ export class CreateMainPostComponent implements OnInit, OnDestroy {
     }
 
     if (this.selectedFiles.length < 2) {
-      this._messageService.add({ severity: 'warn', summary: 'Thông báo', detail: 'Cần chọn tối thiểu 2 ảnh.' });
+      this._messageService.warningMessage('Cần chọn tối thiểu 2 ảnh.');
       this.selectedFiles = [];
       return;
     }
     if (this.selectedFiles.length > 6) {
-      this._messageService.add({ severity: 'warn', summary: 'Thông báo', detail: 'Chỉ được chọn tối đa 6 ảnh' });
+      this._messageService.warningMessage('Chỉ được chọn tối đa 6 ảnh');
       this.selectedFiles = [];
       return;
     }
@@ -365,19 +365,19 @@ export class CreateMainPostComponent implements OnInit, OnDestroy {
   async savePost() {
     if (this.selectedFiles.length > 0) {
       if (this.selectedFiles.length < 2) {
-        this._messageService.add({ severity: 'warn', summary: 'Thông báo', detail: 'Cần chọn tối thiểu 2 ảnh.' });
+        this._messageService.warningMessage('Cần chọn tối thiểu 2 ảnh.');
         this.selectedFiles = [];
         return;
       }
       if (this.selectedFiles.length > 6) {
-        this._messageService.add({ severity: 'warn', summary: 'Thông báo', detail: 'Chỉ được chọn tối đa 6 ảnh' });
+        this._messageService.warningMessage('Chỉ được chọn tối đa 6 ảnh');
         this.selectedFiles = [];
         return;
       }
     }
     if (!this.isUpdate) {
       if (this.selectedFiles == undefined || this.selectedFiles == null || this.selectedFiles.length == 0) {
-        this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: 'Bạn chưa chọn ảnh' });
+        this._messageService.errorMessage('Bạn chưa chọn ảnh');
         return;
       }
       this._loadingService.loading(true);
@@ -408,10 +408,10 @@ export class CreateMainPostComponent implements OnInit, OnDestroy {
       let postResponse = await firstValueFrom(this._realEstatePostService.createPost(realEstatePostRequest).pipe(takeUntil(this._unsubscribe)));
       this._loadingService.loading(false);
       if (postResponse.status === HttpStatusCode.Ok) {
-        this._messageService.add({ severity: 'success', summary: 'Thông báo', detail: postResponse.message });
+        this._messageService.successMessage(postResponse.message);
         this._router.navigate(['user/post/main']);
       } else {
-        this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: postResponse.message });
+        this._messageService.errorMessage(postResponse.message);
       }
     } else {
       this._loadingService.loading(true);
@@ -422,7 +422,7 @@ export class CreateMainPostComponent implements OnInit, OnDestroy {
         if (deleteImagesResponse.status === HttpStatusCode.Ok) {
           
         } else {
-          this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: deleteImagesResponse.message });
+          this._messageService.errorMessage(deleteImagesResponse.message);
           return;
         }
         for (let index = 0; index < this.selectedFiles.length; index++) {
@@ -451,10 +451,10 @@ export class CreateMainPostComponent implements OnInit, OnDestroy {
       let postResponse = await firstValueFrom(this._realEstatePostService.updatePost(realEstatePostRequest).pipe(takeUntil(this._unsubscribe)));
       this._loadingService.loading(false);
       if (postResponse.status === HttpStatusCode.Ok) {
-        this._messageService.add({ severity: 'success', summary: 'Thông báo', detail: postResponse.message });
+        this._messageService.successMessage(postResponse.message);
         this._router.navigate(['user/post/main']);
       } else {
-        this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: postResponse.message });
+        this._messageService.successMessage(postResponse.message);
       }
     }
   }

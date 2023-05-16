@@ -97,7 +97,7 @@ export class BalanceFluctuationComponent implements OnInit, OnDestroy {
         if (response.status === HttpStatusCode.Ok) {
           this.user = response.data;
         } else {
-          this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+          this._messageService.errorMessage(response.message);
         }
       });
 
@@ -108,7 +108,7 @@ export class BalanceFluctuationComponent implements OnInit, OnDestroy {
           this.charges = response.data;
           this.chargesFilter = response.data;
         } else {
-          this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+          this._messageService.errorMessage(response.message);
         }
       });
   }
