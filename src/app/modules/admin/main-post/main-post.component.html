@@ -42,7 +42,7 @@
                     <span class="text-sm font-normal">{{ rep.ownerId.phoneNumber }}</span>
                 </th>
                 <th class="text-start">
-                    <span class="text-sm font-normal">{{ (rep.price | currency:'VND') + rep.sell ? ' tỷ VNĐ' : ' triệu VNĐ' }}</span>
+                    <span class="text-sm font-normal">{{ rep.price + (rep.sell ? ' tỷ VNĐ' : ' triệu VNĐ') }}</span>
                 </th>
                 <th>
                     <span class="text-sm font-normal">{{ rep.area }}</span>

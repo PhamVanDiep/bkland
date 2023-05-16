@@ -121,7 +121,7 @@ export class MainPostComponent implements OnInit, OnDestroy {
     }
     this._confirmationService.confirm(
       {
-        message: this.selectedRep.enable ? 'Bạn có chắc chắn ẩn bài viết này?' : 'Tài khoản này đã bị ẩn. Bạn có muốn hiện bài viết này?',
+        message: this.selectedRep.enable ? 'Bạn có chắc chắn ẩn bài viết này?' : 'Bài viết này đã bị ẩn. Bạn có muốn hiện bài viết này?',
         header: 'Cập nhật trạng thái',
         acceptButtonStyleClass: 'p-button-success',
         rejectButtonStyleClass: 'p-button-outlined',
@@ -174,17 +174,22 @@ export class MainPostComponent implements OnInit, OnDestroy {
         rejectLabel: this.selectedRep.status === STATUS.CHO_KIEM_DUYET ? 'Từ chối' : 'Hủy',
         accept: () => {
           this._loadingService.loading(true);
+          let statusReq = '';
           if (this.selectedRep.status === STATUS.CHO_KIEM_DUYET || this.selectedRep.status === STATUS.BI_TU_CHOI) {
-            this.selectedRep.status = STATUS.DA_KIEM_DUYET;
+            statusReq = STATUS.DA_KIEM_DUYET;
           } else {
-            this.selectedRep.status = STATUS.BI_TU_CHOI;
+            statusReq = STATUS.BI_TU_CHOI;
           }
-          this._realEstatePostService.updatePost(this.selectedRep)
+          this._realEstatePostService.updatePostStatus({
+            postId: this.selectedRep.id,
+            status: statusReq
+          })
             .pipe(takeUntil(this._unsubscribe))
             .subscribe((response: APIResponse) => {
               this._loadingService.loading(false);
               if (response.status === HttpStatusCode.Ok) {
                 this._messageService.successMessage(response.message);
+                this.selectedRep.status = response.data;
               } else {
                 this._messageService.errorMessage(response.message);
               }
@@ -194,14 +199,17 @@ export class MainPostComponent implements OnInit, OnDestroy {
           switch(type) {
             case ConfirmEventType.REJECT:
               if (this.selectedRep.status === STATUS.CHO_KIEM_DUYET) {
-                this.selectedRep.status = STATUS.BI_TU_CHOI;
                 this._loadingService.loading(true);
-                this._realEstatePostService.updatePost(this.selectedRep)
+                this._realEstatePostService.updatePostStatus({
+                  postId: this.selectedRep.id,
+                  status: STATUS.BI_TU_CHOI
+                })
                   .pipe(takeUntil(this._unsubscribe))
                   .subscribe((response: APIResponse) => {
                     this._loadingService.loading(false);
                     if (response.status === HttpStatusCode.Ok) {
                       this._messageService.successMessage(response.message);
+                      this.selectedRep.status = response.data;
                     } else {
                       this._messageService.errorMessage(response.message);
                     }

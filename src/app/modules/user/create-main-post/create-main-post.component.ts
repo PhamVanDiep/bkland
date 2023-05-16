@@ -245,6 +245,7 @@ export class CreateMainPostComponent implements OnInit, OnDestroy {
             }
             this.getDistrictsInProvince();
             this.getWardsInDistrict();
+            this.calcPayVal();
           } else {
             this._messageService.errorMessage(response.message);
           }

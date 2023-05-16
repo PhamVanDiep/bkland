@@ -90,4 +90,15 @@ export class RealEstatePostService {
             }
         );
     }
+
+    updatePostStatus(body: any): Observable<any> {
+        this.accessToken = localStorage.getItem('accessToken') || '';
+        return this._httpClient.put<APIResponse>(`${environment.BASE_URL_AUTH}/real-estate-post/status`, body,
+            {
+                headers: {
+                    'Authorization': `Bearer ${this.accessToken}`
+                }
+            }
+        );
+    }
 }
