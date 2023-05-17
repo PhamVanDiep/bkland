@@ -27,6 +27,7 @@ import { MenuModule } from 'primeng/menu';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { CooperateAgencyComponent } from './cooperate-agency/cooperate-agency.component';
+import { RegisterComponent } from './cooperate-agency/register/register.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { CooperateAgencyComponent } from './cooperate-agency/cooperate-agency.co
     BalanceFluctuationComponent,
     ManageMainPostComponent,
     CooperateAgencyComponent,
+    RegisterComponent,
   ],
   imports: [
     CommonModule,

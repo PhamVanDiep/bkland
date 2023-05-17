@@ -12,6 +12,7 @@ import { UserService } from 'src/app/core/services/user.service';
 })
 export class CooperateAgencyComponent implements OnInit, OnDestroy {
   private _unsubscribe: ReplaySubject<any> = new ReplaySubject<any>();
+  private title: string = 'Liên kết môi giới';
 
   isAgency: boolean;
 
@@ -21,6 +22,7 @@ export class CooperateAgencyComponent implements OnInit, OnDestroy {
     private _messageServie: MessageService,
     private _userService: UserService
   ) {
+    this._appTitleService.setTitle(this.title);
     this.isAgency = this._userService.isAgency();
   }
 
