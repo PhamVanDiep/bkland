@@ -28,6 +28,9 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { CooperateAgencyComponent } from './cooperate-agency/cooperate-agency.component';
 import { RegisterComponent } from './cooperate-agency/register/register.component';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { SpecialAccountService } from 'src/app/core/services/special-account.service';
+import { PaymentService } from 'src/app/core/services/payment.service';
 
 @NgModule({
   declarations: [
@@ -59,10 +62,13 @@ import { RegisterComponent } from './cooperate-agency/register/register.componen
     TagModule,
     TableModule,
     MenuModule,
-    ConfirmDialogModule
+    ConfirmDialogModule,
+    MultiSelectModule
   ],
   providers: [
-    ConfirmationService
+    ConfirmationService,
+    SpecialAccountService,
+    PaymentService
   ]
 })
 export class UserModule { }

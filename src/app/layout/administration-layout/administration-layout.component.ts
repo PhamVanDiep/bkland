@@ -1,10 +1,10 @@
 import { HttpStatusCode } from '@angular/common/http';
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { DeviceDetectorService, DeviceInfo } from 'ngx-device-detector';
 import { MenuItem } from 'primeng/api';
-import { ReplaySubject, takeUntil } from 'rxjs';
+import { ReplaySubject, filter, takeUntil } from 'rxjs';
 import { EMAIL_VERIFY_TYPE } from 'src/app/core/constants/email-verify.constant';
 import { ROLE } from 'src/app/core/constants/role.constant';
 import { APIResponse } from 'src/app/core/models/api-response.model';
@@ -338,6 +338,14 @@ export class AdministrationLayoutComponent implements OnInit, OnDestroy {
       });
 
     this.deviceInfo = this._deviceDetectorService.getDeviceInfo();
+
+    this._router.events
+      .pipe(filter(e => e instanceof NavigationEnd))
+      .subscribe(e => {
+        if (this.innerWidth < 640) {
+          this.sidebarVisible = false; 
+        }
+      })
   }
 
   navigatePage(path: string): void {

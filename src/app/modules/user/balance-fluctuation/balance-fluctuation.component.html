@@ -1,4 +1,4 @@
-<div class="w-full flex flex-col px-4 lg:px-6 space-y-6">
+<div class="w-full flex flex-col px-4 lg:px-6 space-y-6 pb-4">
     <div class="flex flex-row w-full mt-4 space-x-4">
         <span class="font-bold text-lg">Số dư chính: </span>
         <span class="font-bold text-lg">{{ user.accountBalance | currency:'VND' }}</span>
@@ -40,6 +40,42 @@
         </div>
         <ng-template #noCharge>
             <span>Không có hoạt động nạp tiền nào được tìm thấy.</span>
+        </ng-template>
+    </div>
+    <div class="flex flex-col w-full space-y-4">
+        <div class="flex flex-col space-y-2 md:space-y-0 md:flex-row items-center">
+            <span class="font-bold text-lg w-full">Lịch sử thanh toán: </span>
+            <div class="w-full flex flex-row space-x-2">
+                <div class="flex flex-col w-full">
+                    <label for="month">Tháng</label>
+                    <p-dropdown [options]="months" [(ngModel)]="paidMonth" 
+                        optionLabel="value" optionValue="key"
+                        (ngModelChange)="filterPaidByMonth()"></p-dropdown>
+                </div>
+                <div class="flex flex-col w-full">
+                    <label for="year">Năm</label>
+                    <p-dropdown [options]="years" [(ngModel)]="paidYear" 
+                        optionLabel="value" optionValue="key"
+                        (ngModelChange)="filterPaidByYear()"></p-dropdown>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="paidsFilter.length > 0;else noPaid">
+            <div *ngFor="let paid of paidsFilter">
+                <div class="w-full flex flex-row justify-between border border-gray-custom px-4 py-2 rounded-lg space-x-2 mb-1">
+                    <div class="flex flex-col space-y-1 w-1/2">
+                        <span>{{ 'Thời điểm: ' + (paid.createAt | date:'short') }}</span>
+                        <span>{{ 'Nội dung: ' + paid.content}}</span>
+                    </div>
+                    <div class="flex flex-col space-y-1 w-1/2">
+                        <span class="md:text-end">{{ 'Số tiền thanh toán: ' + (paid.amount  | currency:'VND') }}</span>
+                        <span class="md:text-end">{{ 'Số dư khả dụng: ' + (paid.accountBalance | currency:'VND')}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <ng-template #noPaid>
+            <span>Không có hoạt động thanh toán nào được tìm thấy.</span>
         </ng-template>
     </div>
 </div>

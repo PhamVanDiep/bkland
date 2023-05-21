@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { ReplaySubject } from 'rxjs';
 import { AppTitleService } from 'src/app/core/services/app-title.service';
 import { LoadingService } from 'src/app/core/services/loading.service';
@@ -20,7 +21,8 @@ export class CooperateAgencyComponent implements OnInit, OnDestroy {
     private _appTitleService: AppTitleService,
     private _loadingService: LoadingService,
     private _messageServie: MessageService,
-    private _userService: UserService
+    private _userService: UserService,
+    private _router: Router
   ) {
     this._appTitleService.setTitle(this.title);
     this.isAgency = this._userService.isAgency();
@@ -29,9 +31,13 @@ export class CooperateAgencyComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     // throw new Error('Method not implemented.');
     if (this.isAgency) {
-      this._loadingService.loading(true);
+      // this._loadingService.loading(true);
       
     }
+  }
+
+  register(): void {
+    this._router.navigate(['user/cooperate-agency/register']);
   }
 
   ngOnDestroy(): void {

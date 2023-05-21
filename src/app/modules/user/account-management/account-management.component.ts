@@ -73,7 +73,7 @@ export class AccountManagementComponent implements OnInit, OnDestroy {
       dateOfBirth: "",
       district: {
         code: 'NOT_FOUND',
-        administrativeUnitId: '',
+        administrativeUnitId: 7,
         codeName: '',
         fullName: '',
         fullNameEn: '',
@@ -163,6 +163,7 @@ export class AccountManagementComponent implements OnInit, OnDestroy {
       this.selectedRole = 3;
     }
     this.avatarUrlRetrive = '/assets/images/user.png';
+    this.innerWidth = window.innerWidth;
   }
 
   ngOnDestroy(): void {

@@ -19,6 +19,8 @@ import { ConfirmationService } from 'primeng/api';
 import { MainPostComponent } from './main-post/main-post.component';
 import { UserAccountComponent } from './user-account/user-account.component';
 import { MenuModule } from 'primeng/menu';
+import { CardModule } from 'primeng/card';
+import { PaymentService } from 'src/app/core/services/payment.service';
 
 @NgModule({
   declarations: [
@@ -41,10 +43,12 @@ import { MenuModule } from 'primeng/menu';
     TagModule,
     ImageModule,
     ConfirmDialogModule,
-    MenuModule
+    MenuModule,
+    CardModule
   ],
   providers: [
-    ConfirmationService
+    ConfirmationService,
+    PaymentService
   ]
 })
 export class AdminModule { }

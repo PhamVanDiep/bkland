@@ -80,7 +80,7 @@ export class CreateMainPostComponent implements OnInit, OnDestroy {
       direction: '',
       district: {
         code: '',
-        administrativeUnitId: '',
+        administrativeUnitId: 7,
         codeName: '',
         fullName: '',
         fullNameEn: '',

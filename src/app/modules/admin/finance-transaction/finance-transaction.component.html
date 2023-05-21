@@ -1,53 +1,206 @@
 <p-confirmDialog [style]="{width: innerWidth > 640 ? '50vw' : '100vh'}"></p-confirmDialog>
 <div class="w-full flex flex-col px-4 lg:px-6 space-y-6">
-    <span class="font-bold text-2xl mt-4">Danh sách người dùng nạp tiền</span>
-    <p-table
-        [value]="charges"
-        [paginator]="true"
-        [rows]="10"
-        [rowsPerPageOptions]="[10, 25, 50]"
-        currentPageReportTemplate="{first} đến {last} trên {totalRecords} bản ghi"
-    >
-        <ng-template pTemplate="header">
-            <tr>
-                <th pFrozenColumn>#</th>
-                <th>Số tiền nạp</th>
-                <th>Tên người nạp</th>
-                <th>Thời điểm</th>
-                <th>Hình thức</th>
-                <th>Ảnh minh chứng</th>
-                <th>Trạng thái</th>
-                <th></th>
-            </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-charge let-index="rowIndex">
-            <tr>
-                <th>{{ index + 1}}</th>
-                <th>{{ charge.soTien | currency:'VND' }}</th>
-                <th>{{ charge.user.firstName + ' ' + charge.user.middleName + ' ' + charge.user.lastName }}</th>
-                <th>{{ charge.createAt | date:'short' }}</th>
-                <th>{{ charge.chargeType == 'VNPAY' ? 'Vnpay' : 'Chuyển khoản' }}</th>
-                <th>
-                    <p-image [src]="charge.src" [preview]="true" [imageStyle]="{'height': '100px'}">
-                        <ng-template pTemplate="indicator">
-                            <i class="pi pi-check"></i>
-                        </ng-template>
-                    </p-image>
-                </th>
-                <th>
-                    <p-tag [value]="getStatusValue(charge.status)" [severity]="getStatusSeverity(charge.status)"></p-tag>
-                </th>
-                <th>
-                    <button pButton pRipple type="button" icon="pi pi-pencil" 
-                        *ngIf="charge.chargeType === 'TRANSFER_CHARGE' && charge.status === 'CHO_XAC_NHAN'"
-                        (click)="onRowEditClick(charge)" class="p-button-rounded p-button-text"></button>
-                </th>
-            </tr>
-        </ng-template>
-        <ng-template pTemplate="emptymessage">
-            <tr>
-                <td>Không có dữ liệu.</td>
-            </tr>
-        </ng-template>
-    </p-table>
+    <div class="flex flex-col space-y-4 md:flex-row md:space-x-4 md:space-y-0 mt-4">
+        <p-card header="Tổng số tiền người dùng đã nạp" class="w-full">
+            <span class="text-xl font-bold">{{ totalCharge | currency:'VND' }}</span>
+        </p-card>
+        <p-card header="Tổng số tiền thanh toán đăng bài" class="w-full">
+            <span class="text-xl font-bold">{{ totalPostPaid | currency:'VND' }}</span>
+        </p-card>
+        <p-card header="Tổng số tiền thanh toán định kỳ" class="w-full">
+            <span class="text-xl font-bold">{{ totalMonthlyPaid | currency:'VND' }}</span>
+        </p-card>
+    </div>
+    <div class="flex flex-col w-full space-y-4">
+        <span class="font-bold text-2xl">Danh sách nạp tiền</span>
+        <p-table
+            [value]="charges"
+            [paginator]="true"
+            [rows]="10"
+            [rowsPerPageOptions]="[10, 25, 50]"
+            currentPageReportTemplate="{first} đến {last} trên {totalRecords} bản ghi"
+        >
+            <ng-template pTemplate="header">
+                <tr>
+                    <th pFrozenColumn>#</th>
+                    <th>Số tiền nạp</th>
+                    <th>Tên người nạp</th>
+                    <th>Thời điểm</th>
+                    <th>Hình thức</th>
+                    <th>Ảnh minh chứng</th>
+                    <th>Trạng thái</th>
+                    <th></th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-charge let-index="rowIndex">
+                <tr>
+                    <th>
+                        <span class="text-sm font-normal">
+                            {{ index + 1}}
+                        </span>
+                    </th>
+                    <th>
+                        <span class="text-sm font-normal">
+                            {{ charge.soTien | currency:'VND' }}
+                        </span>
+                    </th>
+                    <th>
+                        <span class="text-sm font-normal">
+                            {{ charge.user.firstName + ' ' + charge.user.middleName + ' ' + charge.user.lastName }}
+                        </span>
+                    </th>
+                    <th>
+                        <span class="text-sm font-normal">
+                            {{ charge.createAt | date:'short' }}
+                        </span>
+                    </th>
+                    <th>
+                        <span class="text-sm font-normal">
+                            {{ charge.chargeType == 'VNPAY' ? 'Vnpay' : 'Chuyển khoản' }}
+                        </span>
+                    </th>
+                    <th>
+                        <p-image [src]="charge.src" [preview]="true" [imageStyle]="{'height': '100px'}">
+                            <ng-template pTemplate="indicator">
+                                <i class="pi pi-check"></i>
+                            </ng-template>
+                        </p-image>
+                    </th>
+                    <th>
+                        <p-tag [value]="getStatusValue(charge.status)" [severity]="getStatusSeverity(charge.status)"></p-tag>
+                    </th>
+                    <th>
+                        <button pButton pRipple type="button" icon="pi pi-pencil" 
+                            *ngIf="charge.chargeType === 'TRANSFER_CHARGE' && charge.status === 'CHO_XAC_NHAN'"
+                            (click)="onRowEditClick(charge)" class="p-button-rounded p-button-text"></button>
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td>Không có dữ liệu.</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+    <div class="flex flex-col w-full space-y-4">
+        <span class="font-bold text-2xl">Danh sách thanh toán bài đăng</span>
+        <p-table
+            [value]="postPaids"
+            [paginator]="true"
+            [rows]="10"
+            [rowsPerPageOptions]="[10, 25, 50]"
+            currentPageReportTemplate="{first} đến {last} trên {totalRecords} bản ghi"
+        >
+            <ng-template pTemplate="header">
+                <tr>
+                    <th pFrozenColumn>#</th>
+                    <th>Mã bài đăng</th>
+                    <th>Tên người đăng</th>
+                    <th>Số điện thoại</th>
+                    <th>Thời điểm</th>
+                    <th>Số tiền trả</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-postPaid let-index="rowIndex">
+                <tr>
+                    <th>
+                        <span class="text-sm font-normal">
+                            {{ index + 1}}
+                        </span>
+                    </th>
+                    <th>
+                        <span class="text-sm font-normal">
+                            {{ postPaid.realEstatePost.id }}
+                        </span>
+                    </th>
+                    <th>
+                        <span class="text-sm font-normal">
+                            {{ postPaid.user.firstName + ' ' + postPaid.user.middleName + ' ' + postPaid.user.lastName }}
+                        </span>
+                    </th>
+                    <th>
+                        <span class="text-sm font-normal">
+                            {{ postPaid.user.phoneNumber }}
+                        </span>
+                    </th>
+                    <th>
+                        <span class="text-sm font-normal">
+                            {{ postPaid.createAt | date:'short' }}
+                        </span>
+                    </th>
+                    <th>
+                        <span class="text-sm font-normal">
+                            {{ postPaid.price | currency:'VND' }}
+                        </span>
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td>Không có dữ liệu.</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+    <div class="flex flex-col w-full space-y-4">
+        <span class="font-bold text-2xl">Danh sách thanh toán định kỳ</span>
+        <p-table
+            [value]="monthlyPaids"
+            [paginator]="true"
+            [rows]="10"
+            [rowsPerPageOptions]="[10, 25, 50]"
+            currentPageReportTemplate="{first} đến {last} trên {totalRecords} bản ghi"
+        >
+            <ng-template pTemplate="header">
+                <tr>
+                    <th pFrozenColumn>#</th>
+                    <th>Tên</th>
+                    <th>Số điện thoại</th>
+                    <th>Số tiền</th>
+                    <th>Nội dung</th>
+                    <th>Thời điểm</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-monthlyPaid let-index="rowIndex">
+                <tr>
+                    <th>
+                        <span class="text-sm font-normal">
+                            {{ index + 1}}
+                        </span>
+                    </th>
+                    <th>
+                        <span class="text-sm font-normal">
+                            {{ monthlyPaid.user.firstName + ' ' + monthlyPaid.user.middleName + ' ' + monthlyPaid.user.lastName }}
+                        </span>
+                    </th>
+                    <th>
+                        <span class="text-sm font-normal">
+                            {{ monthlyPaid.user.phoneNumber }}
+                        </span>
+                    </th>
+                    <th>
+                        <span class="text-sm font-normal">
+                            {{ monthlyPaid.amount | currency:'VND' }}
+                        </span>
+                    </th>
+                    <th>
+                        <span class="text-sm font-normal">
+                            {{ monthlyPaid.content }}
+                        </span>
+                    </th>
+                    <th>
+                        <span class="text-sm font-normal">
+                            {{ monthlyPaid.createAt | date:'short' }}
+                        </span>
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td>Không có dữ liệu.</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
 </div>

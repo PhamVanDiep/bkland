@@ -75,7 +75,7 @@ export class UserAccountComponent implements OnInit, OnDestroy {
       dateOfBirth: "",
       district: {
         code: 'NOT_FOUND',
-        administrativeUnitId: '',
+        administrativeUnitId: 7,
         codeName: '',
         fullName: '',
         fullNameEn: '',

@@ -22,14 +22,32 @@
         </ng-template>
         <ng-template pTemplate="body" let-user let-index="rowIndex">
             <tr>
-                <th>{{ index + 1 }}</th>
-                <th class="text-start">
-                    <span>{{ user.firstName + ' ' + user.middleName + ' ' + user.lastName }}</span>
+                <th>
+                    <span class="text-sm font-normal">
+                        {{ index + 1 }}
+                    </span>
                 </th>
-                <th class="text-start">{{ user.email }}</th>
-                <th class="text-start">{{ user.phoneNumber }}</th>
-                <th class="text-start">{{ genRole(user.roles) }}</th>
-                <th class="text-start">
+                <th>
+                    <span class="text-sm font-normal">
+                        {{ user.firstName + ' ' + user.middleName + ' ' + user.lastName }}
+                    </span>
+                </th>
+                <th>
+                    <span class="text-sm font-normal">
+                        {{ user.email }}
+                    </span>
+                </th>
+                <th>
+                    <span class="text-sm font-normal">
+                        {{ user.phoneNumber }}
+                    </span>
+                </th>
+                <th>
+                    <span class="text-sm font-normal">
+                        {{ genRole(user.roles) }}
+                    </span>
+                </th>
+                <th>
                     <p-tag [value]="user.enable ? 'Đang hoạt động' : 'Đã khóa'" 
                         [severity]="user.enable ? 'success' : 'warning'"></p-tag>
                 </th>
