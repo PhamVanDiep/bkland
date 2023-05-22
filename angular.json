@@ -28,11 +28,17 @@
               "src/firebase-messaging-sw.js"
             ],
             "styles": [
+              "./node_modules/quill/dist/quill.core.css",
+              "./node_modules/quill/dist/quill.bubble.css",
+              "./node_modules/quill/dist/quill.snow.css",
               "src/styles.css"
             ],
             "scripts": [],
             "serviceWorker": false,
-            "ngswConfigPath": "ngsw-config.json"
+            "ngswConfigPath": "ngsw-config.json",
+            "allowedCommonJsDependencies": [
+              "quill"
+            ]
           },
           "configurations": {
             "production": {

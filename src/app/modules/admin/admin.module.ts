@@ -23,6 +23,9 @@ import { CardModule } from 'primeng/card';
 import { PaymentService } from 'src/app/core/services/payment.service';
 import { InfoComponent } from './info/info.component';
 import { CreateInfoPostComponent } from './info/create-info-post/create-info-post.component';
+import { DropdownModule } from 'primeng/dropdown';
+import { InfoPostService } from 'src/app/core/services/info-post.service';
+import { EditorModule } from 'primeng/editor';
 
 @NgModule({
   declarations: [
@@ -48,11 +51,14 @@ import { CreateInfoPostComponent } from './info/create-info-post/create-info-pos
     ImageModule,
     ConfirmDialogModule,
     MenuModule,
-    CardModule
+    CardModule,
+    DropdownModule,
+    EditorModule
   ],
   providers: [
     ConfirmationService,
-    PaymentService
+    PaymentService,
+    InfoPostService
   ]
 })
 export class AdminModule { }
