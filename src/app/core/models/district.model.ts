@@ -5,6 +5,6 @@ export interface District {
     fullName: string;
     fullNameEn: string;
     codeName: string;
-    administrativeUnitId: string;
+    administrativeUnitId: number;
     provinceCode: string;
 }

@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { APIResponse } from '../models/api-response.model';
 import { environment } from 'src/environments/environment';
 import { SignUpRequest } from '../models/sign-up.model';
+import { ROLE } from '../constants/role.constant';
 
 @Injectable({
     providedIn: 'root'
@@ -43,6 +44,17 @@ export class UserService {
         );
     }
 
+    getUserInfo(userId: string): Observable<APIResponse> {
+        this.accessToken = localStorage.getItem('accessToken') || '';
+        return this._httpClient.get<APIResponse>(`${environment.BASE_URL_AUTH}/user/info/${userId}`,
+            {
+                headers: {
+                    'Authorization': `Bearer ${this.accessToken}`
+                }
+            }
+        );
+    }
+
     updateUser(body: SignUpRequest): Observable<APIResponse> {
         this.accessToken = localStorage.getItem('accessToken') || '';
         return this._httpClient.put<APIResponse>(`${environment.BASE_URL_AUTH}/user`, body, {
@@ -50,5 +62,32 @@ export class UserService {
                 'Authorization': `Bearer ${this.accessToken}`
             }
         });
+    }
+
+    getAllUsers(): Observable<APIResponse> {
+        this.accessToken = localStorage.getItem('accessToken') || '';
+        return this._httpClient.get<APIResponse>(`${environment.BASE_URL_AUTH}/user`, {
+            headers: {
+                'Authorization': `Bearer ${this.accessToken}`
+            }
+        })
+    }
+
+    updateAccountStatus(id: string): Observable<APIResponse> {
+        this.accessToken = localStorage.getItem('accessToken') || '';
+        return this._httpClient.put<APIResponse>(`${environment.BASE_URL_AUTH}/user/lock/${id}`, null, {
+            headers: {
+                'Authorization': `Bearer ${this.accessToken}`
+            }
+        });
+    }
+
+    isAgency(): boolean {
+        let roleStorage = localStorage.getItem('roles') || '';
+        let roles = roleStorage.split(',');
+        if (roles.includes(ROLE.ROLE_AGENCY)) {
+            return true;
+        }
+        return false;
     }
 }

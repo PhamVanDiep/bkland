@@ -74,7 +74,7 @@ export class AboutComponent implements OnInit, OnDestroy {
           this.about = response.data;
           this.aboutUpdate = response.data;
         } else {
-          this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+          this._messageService.errorMessage(response.message);
         }
       });
   }
@@ -113,11 +113,11 @@ export class AboutComponent implements OnInit, OnDestroy {
       .subscribe((response: APIResponse) => {
         this._loadingService.loading(false);
         if (response.status === HttpStatusCode.Ok) {
-          this._messageService.add({ severity: 'success', summary: 'Thông báo', detail: response.message });
+          this._messageService.successMessage(response.message);
           this.displayAboutUpdate = false;
           this.getAboutData();
         } else {
-          this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+          this._messageService.errorMessage(response.message);
         }
       })
   }

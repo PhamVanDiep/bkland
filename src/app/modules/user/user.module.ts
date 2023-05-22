@@ -21,6 +21,16 @@ import { ChargeComponent } from './charge/charge.component';
 import { BalanceFluctuationComponent } from './balance-fluctuation/balance-fluctuation.component';
 import { HttpClientModule } from '@angular/common/http';
 import { TagModule } from 'primeng/tag';
+import { ManageMainPostComponent } from './manage-main-post/manage-main-post.component';
+import { TableModule } from 'primeng/table';
+import { MenuModule } from 'primeng/menu';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService } from 'primeng/api';
+import { CooperateAgencyComponent } from './cooperate-agency/cooperate-agency.component';
+import { RegisterComponent } from './cooperate-agency/register/register.component';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { SpecialAccountService } from 'src/app/core/services/special-account.service';
+import { PaymentService } from 'src/app/core/services/payment.service';
 
 @NgModule({
   declarations: [
@@ -28,6 +38,9 @@ import { TagModule } from 'primeng/tag';
     AccountManagementComponent,
     ChargeComponent,
     BalanceFluctuationComponent,
+    ManageMainPostComponent,
+    CooperateAgencyComponent,
+    RegisterComponent,
   ],
   imports: [
     CommonModule,
@@ -46,9 +59,16 @@ import { TagModule } from 'primeng/tag';
     RadioButtonModule,
     CalendarModule,
     HttpClientModule,
-    TagModule
+    TagModule,
+    TableModule,
+    MenuModule,
+    ConfirmDialogModule,
+    MultiSelectModule
   ],
   providers: [
+    ConfirmationService,
+    SpecialAccountService,
+    PaymentService
   ]
 })
 export class UserModule { }

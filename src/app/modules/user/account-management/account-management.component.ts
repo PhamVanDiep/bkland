@@ -73,7 +73,7 @@ export class AccountManagementComponent implements OnInit, OnDestroy {
       dateOfBirth: "",
       district: {
         code: 'NOT_FOUND',
-        administrativeUnitId: '',
+        administrativeUnitId: 7,
         codeName: '',
         fullName: '',
         fullNameEn: '',
@@ -163,6 +163,7 @@ export class AccountManagementComponent implements OnInit, OnDestroy {
       this.selectedRole = 3;
     }
     this.avatarUrlRetrive = '/assets/images/user.png';
+    this.innerWidth = window.innerWidth;
   }
 
   ngOnDestroy(): void {
@@ -187,14 +188,14 @@ export class AccountManagementComponent implements OnInit, OnDestroy {
                 if (response.status === HttpStatusCode.Ok) {
                   this.avatarUrlRetrive = this._domSanitizer.bypassSecurityTrustResourceUrl(`data:${response.data.type};base64,${response.data.body}`);
                 } else {
-                  this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+                  this._messageService.errorMessage(response.message);
                 }
               })
           } else {
             this.avatarUrlRetrive = this.user.avatarUrl;
           }
         } else {
-          this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+          this._messageService.errorMessage(response.message);
         }
       });
 
@@ -206,7 +207,7 @@ export class AccountManagementComponent implements OnInit, OnDestroy {
         if (response.status === HttpStatusCode.Ok) {
           this.userDeviceToken = response.data;
         } else {
-          this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+          this._messageService.errorMessage(response.message);
         }
       });
 
@@ -238,7 +239,7 @@ export class AccountManagementComponent implements OnInit, OnDestroy {
             this.user.avatarUrl = '/assets/images/user.png'
           }
         } else {
-          this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+          this._messageService.errorMessage(response.message);
         }
       });
   }
@@ -272,7 +273,7 @@ export class AccountManagementComponent implements OnInit, OnDestroy {
         if (response.status === HttpStatusCode.Ok) {
 
         } else {
-          this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+          this._messageService.errorMessage(response.message);
         }
       })
   }
@@ -291,7 +292,7 @@ export class AccountManagementComponent implements OnInit, OnDestroy {
         if (response.status === HttpStatusCode.Ok) {
           this.provinces = response.data.filter((e: any) => e.code != "NOT_FOUND");
         } else {
-          this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+          this._messageService.errorMessage(response.message);
         }
       });
   }
@@ -303,7 +304,7 @@ export class AccountManagementComponent implements OnInit, OnDestroy {
         if (response.status === HttpStatusCode.Ok) {
           this.districts = response.data.filter((e: any) => e.code != "NOT_FOUND");
         } else {
-          this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+          this._messageService.errorMessage(response.message);
         }
       })
   }
@@ -315,7 +316,7 @@ export class AccountManagementComponent implements OnInit, OnDestroy {
         if (response.status === HttpStatusCode.Ok) {
           this.wards = response.data.filter((e: any) => e.code != "NOT_FOUND");
         } else {
-          this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+          this._messageService.errorMessage(response.message);
         }
       })
   }
@@ -336,7 +337,7 @@ export class AccountManagementComponent implements OnInit, OnDestroy {
           this.getDistrictsInProvince();
           this.getWardsInDistrict();
         } else {
-          this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+          this._messageService.errorMessage(response.message);
         }
       });
   }
@@ -357,7 +358,7 @@ export class AccountManagementComponent implements OnInit, OnDestroy {
     if (this.selectedFile != null) {
       if (Math.round(this.selectedFile.size / 1048576) > 16) {
         this._loadingService.loading(false);
-        this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: 'Kích thước ảnh tối đa là 16MB' });
+        this._messageService.errorMessage('Kích thước ảnh tối đa là 16MB');
         return;
       }
       let formData = new FormData();
@@ -370,7 +371,7 @@ export class AccountManagementComponent implements OnInit, OnDestroy {
             this.callUpdateApi();
           } else {
             this._loadingService.loading(false);
-            this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+            this._messageService.errorMessage(response.message);
           }
         });
     }
@@ -383,11 +384,11 @@ export class AccountManagementComponent implements OnInit, OnDestroy {
       .subscribe((response: APIResponse) => {
         this._loadingService.loading(false);
         if (response.status === HttpStatusCode.Ok) {
-          this._messageService.add({ severity: 'success', summary: 'Thông báo', detail: response.message });
+          this._messageService.successMessage(response.message);
           this.displayAccountUpdate = false;
           this.getUserInfoDisplay();
         } else {
-          this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+          this._messageService.errorMessage(response.message);
         }
       })
   }

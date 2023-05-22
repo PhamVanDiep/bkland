@@ -21,6 +21,10 @@ export class NoAuthService  {
     return this._httpClient.get<APIResponse>(`${environment.BASE_URL_NO_AUTH}/province`);
   }
 
+  getProvinceByCode(code: string): Observable<APIResponse> {
+    return this._httpClient.get<APIResponse>(`${environment.BASE_URL_NO_AUTH}/province/${code}`);
+  }
+
   getAllDistrictsInProvince(provinceCode: string): Observable<APIResponse> {
     return this._httpClient.get<APIResponse>(`${environment.BASE_URL_NO_AUTH}/district/province/${provinceCode}`);
   }

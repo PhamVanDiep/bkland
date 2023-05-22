@@ -5,11 +5,13 @@ import { CHARGE_STATUS } from 'src/app/core/constants/pay.constant';
 import { MONTHS } from 'src/app/core/constants/time-select.constant';
 import { APIResponse } from 'src/app/core/models/api-response.model';
 import { Charge } from 'src/app/core/models/charge.model';
+import { Payment } from 'src/app/core/models/payment.model';
 import { SignUpRequest } from 'src/app/core/models/sign-up.model';
 import { AppTitleService } from 'src/app/core/services/app-title.service';
 import { ChargeService } from 'src/app/core/services/charge.service';
 import { LoadingService } from 'src/app/core/services/loading.service';
 import { MessageService } from 'src/app/core/services/message.service';
+import { PaymentService } from 'src/app/core/services/payment.service';
 import { UserService } from 'src/app/core/services/user.service';
 
 @Component({
@@ -31,12 +33,18 @@ export class BalanceFluctuationComponent implements OnInit, OnDestroy {
   chargeMonth: number;
   chargeYear: number;
 
+  paids: Payment[];
+  paidsFilter: Payment[];
+  paidMonth: number;
+  paidYear: number;
+
   constructor(
     private _appTitleService: AppTitleService,
     private _loadingService: LoadingService,
     private _messageService: MessageService,
     private _userService: UserService,
-    private _chargeService: ChargeService
+    private _chargeService: ChargeService,
+    private _paymentService: PaymentService
   ) {
     this._appTitleService.setTitle(this.title);
     this.user = {
@@ -79,6 +87,11 @@ export class BalanceFluctuationComponent implements OnInit, OnDestroy {
     }
     this.chargeMonth = 0;
     this.chargeYear = currYear;
+
+    this.paidMonth = 0;
+    this.paidYear = currYear;
+    this.paids = [];
+    this.paidsFilter = [];
   }
 
   ngOnDestroy(): void {
@@ -97,7 +110,7 @@ export class BalanceFluctuationComponent implements OnInit, OnDestroy {
         if (response.status === HttpStatusCode.Ok) {
           this.user = response.data;
         } else {
-          this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+          this._messageService.errorMessage(response.message);
         }
       });
 
@@ -108,9 +121,21 @@ export class BalanceFluctuationComponent implements OnInit, OnDestroy {
           this.charges = response.data;
           this.chargesFilter = response.data;
         } else {
-          this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+          this._messageService.errorMessage(response.message);
         }
       });
+
+    let _id = JSON.parse(window.atob((localStorage.getItem('accessToken') || '').split('.')[1])).id;
+    this._paymentService.getAllPaidByUserId(_id)
+      .pipe(takeUntil(this._unsubscribe))
+      .subscribe((response: APIResponse) => {
+        if (response.status === HttpStatusCode.Ok) {
+          this.paids = response.data;
+          this.paidsFilter = response.data;
+        } else {
+          this._messageService.errorMessage(response.message);
+        }
+      })
   }
 
   getStatusValue(statusCode: string): string {
@@ -146,6 +171,22 @@ export class BalanceFluctuationComponent implements OnInit, OnDestroy {
       this.chargesFilter = this.charges.filter(e => new Date(e.createAt).getMonth() + 1 === this.chargeMonth && new Date(e.createAt).getFullYear() === this.chargeYear); 
     } else {
       this.chargesFilter = this.charges.filter(e => new Date(e.createAt).getFullYear() === this.chargeYear);
+    }
+  }
+
+  filterPaidByMonth(): void {
+    if (this.paidMonth > 0) {
+      this.paidsFilter = this.paids.filter(e => new Date(e.createAt).getMonth() + 1 === this.paidMonth && new Date(e.createAt).getFullYear() === this.paidYear); 
+    } else {
+      this.paidsFilter = this.paids.filter(e => new Date(e.createAt).getFullYear() === this.paidYear);
+    }
+  }
+
+  filterPaidByYear(): void {
+    if (this.paidMonth > 0) {
+      this.paidsFilter = this.paids.filter(e => new Date(e.createAt).getMonth() + 1 === this.paidMonth && new Date(e.createAt).getFullYear() === this.paidYear); 
+    } else {
+      this.paidsFilter = this.paids.filter(e => new Date(e.createAt).getFullYear() === this.paidYear);
     }
   }
 }

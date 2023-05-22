@@ -1,0 +1,65 @@
+<p-confirmDialog [style]="{width: innerWidth > 640 ? '50vw' : '100vh'}"></p-confirmDialog>
+<p-menu #menu [model]="items" [popup]="true"></p-menu>
+<div class="w-full flex flex-col px-4 lg:px-6 space-y-6">
+    <span class="text-xl font-bold mt-4">Danh sách bài đăng bán/cho thuê</span>
+    <p-table
+        [value]="realEstatePosts"
+        [paginator]="true"
+        [rows]="10"
+        [rowsPerPageOptions]="[10, 25, 50]"
+        currentPageReportTemplate="{first} đến {last} trên {totalRecords} bản ghi"
+    >
+        <ng-template pTemplate="header">
+            <tr>
+                <th pFrozenColumn>#</th>
+                <th>Bán/Cho thuê</th>
+                <th>Loại</th>
+                <th>Người bán</th>
+                <th>Số điện thoại</th>
+                <th>Giá</th>
+                <th>Diện tích (m2)</th>
+                <th>Trạng thái</th>
+                <th></th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rep let-index="rowIndex">
+            <tr>
+                <th>
+                    <span class="text-sm font-normal">{{ index + 1 }}</span>
+                </th>
+                <th>
+                    <span class="text-sm font-normal">{{ rep.sell ? 'Bán' : 'Cho thuê' }}</span>
+                </th>
+                <th>
+                    <span class="text-sm font-normal">{{ genType(rep.type) }}</span>
+                </th>
+                <th class="text-start">
+                    <span class="text-sm font-normal">
+                        {{ rep.ownerId.firstName + ' ' + rep.ownerId.middleName + ' ' + rep.ownerId.lastName }}
+                    </span>
+                </th>
+                <th class="text-start">
+                    <span class="text-sm font-normal">{{ rep.ownerId.phoneNumber }}</span>
+                </th>
+                <th class="text-start">
+                    <span class="text-sm font-normal">{{ rep.price + (rep.sell ? ' tỷ VNĐ' : ' triệu VNĐ') }}</span>
+                </th>
+                <th>
+                    <span class="text-sm font-normal">{{ rep.area }}</span>
+                </th>
+                <th class="text-start">
+                    <p-tag [value]="getStatusValue(rep.status)" [severity]="getStatusSeverity(rep.status)"></p-tag>
+                </th>
+                <th>
+                    <button pButton pRipple class="p-button-rounded p-button-text" icon="pi pi-ellipsis-v"
+                        (click)="menu.toggle($event); selectedRep = rep"></button>
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td>Không có dữ liệu.</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

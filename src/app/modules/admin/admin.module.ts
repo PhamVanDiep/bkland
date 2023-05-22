@@ -16,12 +16,23 @@ import { TagModule } from 'primeng/tag';
 import { ImageModule } from 'primeng/image';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
+import { MainPostComponent } from './main-post/main-post.component';
+import { UserAccountComponent } from './user-account/user-account.component';
+import { MenuModule } from 'primeng/menu';
+import { CardModule } from 'primeng/card';
+import { PaymentService } from 'src/app/core/services/payment.service';
+import { InfoComponent } from './info/info.component';
+import { CreateInfoPostComponent } from './info/create-info-post/create-info-post.component';
 
 @NgModule({
   declarations: [
     AdminComponent,
     AboutComponent,
-    FinanceTransactionComponent
+    FinanceTransactionComponent,
+    MainPostComponent,
+    UserAccountComponent,
+    InfoComponent,
+    CreateInfoPostComponent
   ],
   imports: [
     CommonModule,
@@ -35,10 +46,13 @@ import { ConfirmationService } from 'primeng/api';
     TableModule,
     TagModule,
     ImageModule,
-    ConfirmDialogModule
+    ConfirmDialogModule,
+    MenuModule,
+    CardModule
   ],
   providers: [
-    ConfirmationService
+    ConfirmationService,
+    PaymentService
   ]
 })
 export class AdminModule { }

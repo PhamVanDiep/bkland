@@ -69,3 +69,31 @@ html {
 .p-dropdown {
     width: 100% !important;
 }
+
+.p-multiselect {
+    width: 100% !important;
+}
+
+.p-card {
+    width: 100% !important;
+}
+
+.p-card-title {
+    font-size: larger !important;
+    font-weight: bold !important;
+    text-align: center !important;
+}
+
+.p-card-content {
+    padding: 0 !important;
+    text-align: center;
+}
+
+th {
+    text-align: left !important;
+}
+
+tbody th {
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+}

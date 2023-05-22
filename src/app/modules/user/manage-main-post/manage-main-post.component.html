@@ -1,0 +1,28 @@
+<p-confirmDialog [style]="{width: innerWidth > 640 ? '50vw' : '100vh'}"></p-confirmDialog>
+<p-menu #menu [model]="items" [popup]="true"></p-menu>
+<div class="w-full flex flex-col px-4 lg:px-6 space-y-6">
+    <div class="flex flex-row w-full justify-between items-center mt-4">
+        <span class="font-bold text-2xl">Danh sách bài đăng đã tạo</span>
+        <button pButton class="p-button-success" icon="pi pi-plus" label="Tạo bài đăng" (click)="createPost()"></button>
+    </div>
+    <div class="w-full flex flex-col space-y-4">
+        <div class="w-full flex flex-col space-y-4" *ngIf="realEstatePosts.length > 0; else emptyREPs">
+            <div class="flex flex-col w-full border border-gray-custom cursor-pointer px-2 py-2 rounded-lg" 
+                *ngFor="let item of realEstatePosts" (click)="menu.toggle($event); selectedREP=item">
+                <div class="w-full flex flex-col md:flex-row md:items-center justify-between">
+                    <span class="font-bold text-lg md:w-2/3">{{ item.title }}</span>
+                    <span class="md:w-1/6">{{ item.sell ? 'Bán' : 'Cho thuê' }}</span>
+                    <span class="text-sm md:w-1/6 md:text-end">{{ genPrice(item) }}</span>
+                </div>
+                <div class="w-full flex flex-col md:flex-row md:items-center justify-between">
+                    <span class="text-sm md:w-2/3">{{ genDesc(item.description) }}</span>
+                    <span class="text-red-600 text-sm md:w-1/6">{{ !item.enable ? 'Đã ẩn' : '' }}</span>
+                    <p-tag class="md:w-1/6 text-end" [value]="getStatusValue(item.status)" [severity]="getStatusSeverity(item.status)"></p-tag>
+                </div>
+            </div>
+        </div>
+        <ng-template #emptyREPs>
+            <span class="italic">Bạn chưa có bài đăng nào.</span>
+        </ng-template>
+    </div>
+</div>

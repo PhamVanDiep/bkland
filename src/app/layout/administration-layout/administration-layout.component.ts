@@ -1,10 +1,10 @@
 import { HttpStatusCode } from '@angular/common/http';
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { DeviceDetectorService, DeviceInfo } from 'ngx-device-detector';
 import { MenuItem } from 'primeng/api';
-import { ReplaySubject, takeUntil } from 'rxjs';
+import { ReplaySubject, filter, takeUntil } from 'rxjs';
 import { EMAIL_VERIFY_TYPE } from 'src/app/core/constants/email-verify.constant';
 import { ROLE } from 'src/app/core/constants/role.constant';
 import { APIResponse } from 'src/app/core/models/api-response.model';
@@ -324,7 +324,7 @@ export class AdministrationLayoutComponent implements OnInit, OnDestroy {
                   if (response.status === HttpStatusCode.Ok) {
                     this.avatarUrl = this._domSanitizer.bypassSecurityTrustResourceUrl(`data:${response.data.type};base64,${response.data.body}`);
                   } else {
-                    this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+                    this._messageService.errorMessage(response.message);
                   }
                 })
             } else {
@@ -332,12 +332,20 @@ export class AdministrationLayoutComponent implements OnInit, OnDestroy {
             }
           }
         } else {
-          this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+          this._messageService.errorMessage(response.message);
         }
         this._loadingService.loading(false);
       });
 
     this.deviceInfo = this._deviceDetectorService.getDeviceInfo();
+
+    this._router.events
+      .pipe(filter(e => e instanceof NavigationEnd))
+      .subscribe(e => {
+        if (this.innerWidth < 640) {
+          this.sidebarVisible = false; 
+        }
+      })
   }
 
   navigatePage(path: string): void {
@@ -380,7 +388,7 @@ export class AdministrationLayoutComponent implements OnInit, OnDestroy {
           localStorage.clear();
           this.navigatePage('/login');
         } else {
-          this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+          this._messageService.errorMessage(response.message);
         }
       });
   }
@@ -400,11 +408,11 @@ export class AdministrationLayoutComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this._unsubscribe))
       .subscribe((response: APIResponse) => {
         if (response.status === HttpStatusCode.Ok) {
-          this._messageService.add({ severity: 'success', summary: 'Thông báo', detail: response.message });
+          this._messageService.successMessage(response.message);
           this.displayChangePassword = true;
           this.responseOTP = response.data;
         } else {
-          this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+          this._messageService.errorMessage(response.message);
         }
         this._loadingService.loading(false);
       });
@@ -420,10 +428,10 @@ export class AdministrationLayoutComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this._unsubscribe))
       .subscribe((response: APIResponse) => {
         if (response.status === HttpStatusCode.Ok) {
-          this._messageService.add({ severity: 'success', summary: 'Thông báo', detail: response.message });
+          this._messageService.successMessage(response.message);
           this.displayChangePassword = false;
         } else {
-          this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response.message });
+          this._messageService.errorMessage(response.message);
         }
         this._loadingService.loading(false);
       })

@@ -85,7 +85,7 @@ export class VnpaySuccessComponent implements OnInit, OnDestroy {
             if (response1.status === HttpStatusCode.Ok) {
               this.isSuccess = true;
             } else {
-              this._messageService.add({ severity: 'error', summary: 'Thông báo', detail: response1.message });
+              this._messageService.errorMessage(response1.message);
             }
           })
       })

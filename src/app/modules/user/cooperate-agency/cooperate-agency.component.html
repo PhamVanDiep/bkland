@@ -1,0 +1,9 @@
+<div class="w-full flex flex-col px-4 lg:px-6 space-y-6">
+    <div class="flex flex-row w-full justify-between items-center mt-4 px-2 py-2 border border-gray-custom rounded-lg shadow-lg">
+        <span class="text-base font-bold">{{ isAgency ? 'Cập nhật thông tin đăng ký' : 'Bạn chưa là môi giới?' }}</span>
+        <button pButton pRipple [ngClass]="isAgency ? 'p-button-primary' : 'p-button-success'" 
+            [label]="isAgency ? 'Cập nhật' : 'Đăng ký'" 
+            (click)="register()"></button>
+    </div>
+    <span class="text-xl font-bold"></span>
+</div>
