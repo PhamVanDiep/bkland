@@ -21,6 +21,8 @@ import { UserAccountComponent } from './user-account/user-account.component';
 import { MenuModule } from 'primeng/menu';
 import { CardModule } from 'primeng/card';
 import { PaymentService } from 'src/app/core/services/payment.service';
+import { InfoComponent } from './info/info.component';
+import { CreateInfoPostComponent } from './info/create-info-post/create-info-post.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +30,9 @@ import { PaymentService } from 'src/app/core/services/payment.service';
     AboutComponent,
     FinanceTransactionComponent,
     MainPostComponent,
-    UserAccountComponent
+    UserAccountComponent,
+    InfoComponent,
+    CreateInfoPostComponent
   ],
   imports: [
     CommonModule,

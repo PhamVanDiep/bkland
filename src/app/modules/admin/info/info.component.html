@@ -1,0 +1,75 @@
+<div class="w-full flex flex-col px-4 lg:px-6 space-y-6">
+    <div class="flex flex-col space-y-4 mt-4">
+        <span class="text-xl font-bold">Danh mục tin tức</span>
+        <p-card header="Thêm mới danh mục">
+            <div class="w-full flex flex-row space-x-4">
+                <input pInputText [(ngModel)]="newInfoTypeName" class="w-full">
+                <button pButton pRipple icon="pi pi-plus"
+                    class="p-button-rounded p-button-success"
+                    (click)="createInfoType()"></button>
+            </div>
+        </p-card>
+        <p-table
+            [value]="lstInfoTypeSkips"
+            [paginator]="true"
+            [rows]="10"
+            dataKey="id"
+            editMode="row"
+            [rowsPerPageOptions]="[10, 25, 50]"
+            currentPageReportTemplate="{first} đến {last} trên {totalRecords} bản ghi"
+        >
+            <ng-template pTemplate="header">
+                <tr>
+                    <th pFrozenColumn>#</th>
+                    <th>Tên danh mục</th>
+                    <th>Thời điểm tạo</th>
+                    <th>Thời điểm cập nhật</th>
+                    <th></th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-infoTypeSkip let-editing="editing" let-index="rowIndex">
+                <tr [pEditableRow]="infoTypeSkip">
+                    <th>
+                        <span class="text-sm font-normal">
+                            {{ index + 1}}
+                        </span>
+                    </th>
+                    <th>
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <input pInputText [(ngModel)]="infoTypeSkip.name">
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                                <span class="text-sm font-normal">
+                                    {{ infoTypeSkip.name }}
+                                </span>
+                            </ng-template>
+                        </p-cellEditor>
+                    </th>
+                    <th>
+                        <span class="text-sm font-normal">
+                            {{ infoTypeSkip.createAt | date:'short' }}
+                        </span>
+                    </th>
+                    <th>
+                        <span class="text-sm font-normal">
+                            {{ infoTypeSkip.updateAt | date:'short' }}
+                        </span>
+                    </th>
+                    <th>
+                        <div class="flex align-items-center justify-content-center gap-2">
+                            <button *ngIf="!editing" pButton pRipple type="button" pInitEditableRow icon="pi pi-pencil" (click)="onRowEditInit(infoTypeSkip)" class="p-button-rounded p-button-text"></button>
+                            <button *ngIf="editing" pButton pRipple type="button" pSaveEditableRow icon="pi pi-check" (click)="onRowEditSave(infoTypeSkip)" class="p-button-rounded p-button-text p-button-success mr-2"></button>
+                            <button *ngIf="editing" pButton pRipple type="button" pCancelEditableRow icon="pi pi-times" (click)="onRowEditCancel(infoTypeSkip, index)" class="p-button-rounded p-button-text p-button-danger"></button>
+                        </div>
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td>Không có dữ liệu.</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>

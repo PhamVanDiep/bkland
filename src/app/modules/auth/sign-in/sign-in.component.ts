@@ -69,7 +69,7 @@ export class SignInComponent implements OnInit, OnDestroy {
     }
     this.innerWidth = window.innerWidth;
     this.emailVerify = '';
-    
+
     this.displayChangePassword = false;
     this.newPassword = '';
     this.newPasswordAgain = '';
@@ -91,25 +91,31 @@ export class SignInComponent implements OnInit, OnDestroy {
       deviceInfo: this.deviceInfo.userAgent
     }
 
-    this._socialAuthService.authState.subscribe((user) => {
-      this.socialUser = user;
-      // console.log(this.socialUser);
-      this._authService.checkEmailExist(this.socialUser.email)
-        .subscribe((response: APIResponse) => {
-          if (response.status === HttpStatusCode.Ok) {
-            this.login = {
-              username: this.socialUser.email + "_user_bkland",
-              password: this.socialUser.email + "_password_bkland",
-              deviceInfo: this.deviceInfo.userAgent
-            }
-            this.loginRequest();
-          } else if (response.status === HttpStatusCode.NoContent) {
-            this.registerGoogleAccount();
-          } else if (response.status === HttpStatusCode.BadRequest) {
-            this._messageService.errorMessage(response.message);
-          }
-        })
-    });
+    this._socialAuthService.signOut();
+
+    this._socialAuthService.authState
+      .pipe(takeUntil(this._unsubscribe))
+      .subscribe((user) => {
+        if (user != null) {
+          this.socialUser = user;
+          // console.log(this.socialUser);
+          this._authService.checkEmailExist(this.socialUser.email)
+            .subscribe((response: APIResponse) => {
+              if (response.status === HttpStatusCode.Ok) {
+                this.login = {
+                  username: this.socialUser.email + "_user_bkland",
+                  password: this.socialUser.email + "_password_bkland",
+                  deviceInfo: this.deviceInfo.userAgent
+                }
+                this.loginRequest();
+              } else if (response.status === HttpStatusCode.NoContent) {
+                this.registerGoogleAccount();
+              } else if (response.status === HttpStatusCode.BadRequest) {
+                this._messageService.errorMessage(response.message);
+              }
+            })
+        }
+      });
   }
 
   loginRequest(): void {
@@ -144,7 +150,7 @@ export class SignInComponent implements OnInit, OnDestroy {
             .subscribe((response1: APIResponse) => {
               if (response1.status === HttpStatusCode.Ok) {
                 const redirectUrl = this._route.snapshot.queryParamMap.get('redirectUrl') || '/signed-in-redirect';
-                this._router.navigateByUrl(redirectUrl); 
+                this._router.navigateByUrl(redirectUrl);
               } else {
                 this._messageService.errorMessage(response1.message);
               }
@@ -156,9 +162,9 @@ export class SignInComponent implements OnInit, OnDestroy {
       })
   }
 
-  loginWithGoogle(): void {
-    this._socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID);
-  }
+  // loginWithGoogle(): void {
+  //   this._socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID);
+  // }
 
   registerGoogleAccount(): void {
     let _id = uuid.v4()
@@ -265,8 +271,8 @@ export class SignInComponent implements OnInit, OnDestroy {
   }
 
   validPassword(): boolean {
-    if (this.newPassword.length > 0 
-      && this.newPasswordAgain.length > 0 
+    if (this.newPassword.length > 0
+      && this.newPasswordAgain.length > 0
       && this.newPassword != this.newPasswordAgain) {
       return true;
     }
