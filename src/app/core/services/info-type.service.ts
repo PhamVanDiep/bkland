@@ -48,4 +48,13 @@ export class InfoTypeService {
             }
         });
     }
+
+    delete(id: number): Observable<any> {
+        let accessToken = localStorage.getItem('accessToken') || '';
+        return this._httpClient.delete<APIResponse>(`${environment.BASE_URL_AUTH}/info-type/${id}`, {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        });
+    }
 }

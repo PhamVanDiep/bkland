@@ -91,6 +91,45 @@ export class CreateInfoPostComponent implements OnInit, OnDestroy{
     }
   }
 
+  onSave(): void {
+    // console.log(this.infoPost);
+    if (!this.isUpdate) {
+      this._loadingService.loading(true);
+      let _id = JSON.parse(window.atob((localStorage.getItem('accessToken') || '').split('.')[1])).id;
+      this.infoPost.createBy = _id;
+      this._infoPostService.create(this.infoPost)
+        .pipe(takeUntil(this._unsubscibe))
+        .subscribe((response: APIResponse) => {
+          this._loadingService.loading(false);
+          if (response.status === HttpStatusCode.Ok) {
+            this._messageService.successMessage(response.message);
+            setTimeout(() => {
+              this._router.navigate(['../'], { relativeTo: this._route });
+            }, 500);
+          } else {
+            this._messageService.errorMessage(response.message);
+          }
+        });
+    } else {
+      this._loadingService.loading(true);
+      let _id = JSON.parse(window.atob((localStorage.getItem('accessToken') || '').split('.')[1])).id;
+      this.infoPost.updateBy = _id;
+      this._infoPostService.update(this.infoPost)
+        .pipe(takeUntil(this._unsubscibe))
+        .subscribe((response: APIResponse) => {
+          this._loadingService.loading(false);
+          if (response.status === HttpStatusCode.Ok) {
+            this._messageService.successMessage(response.message);
+            setTimeout(() => {
+              this._router.navigate(['../../'], { relativeTo: this._route });
+            }, 500);
+          } else {
+            this._messageService.errorMessage(response.message);
+          }
+        });
+    }
+  }
+
   ngOnDestroy(): void {
     // throw new Error('Method not implemented.');
     this._unsubscibe.next(null);

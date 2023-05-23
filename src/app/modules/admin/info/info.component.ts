@@ -1,12 +1,18 @@
 import { HttpStatusCode } from '@angular/common/http';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ReplaySubject, takeUntil } from 'rxjs';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ConfirmEventType, ConfirmationService } from 'primeng/api';
+import { ReplaySubject, firstValueFrom, takeUntil } from 'rxjs';
+import { ROLE } from 'src/app/core/constants/role.constant';
 import { APIResponse } from 'src/app/core/models/api-response.model';
+import { InfoPost } from 'src/app/core/models/info-post.model';
 import { InfoType } from 'src/app/core/models/info-type.model';
 import { AppTitleService } from 'src/app/core/services/app-title.service';
+import { InfoPostService } from 'src/app/core/services/info-post.service';
 import { InfoTypeService } from 'src/app/core/services/info-type.service';
 import { LoadingService } from 'src/app/core/services/loading.service';
 import { MessageService } from 'src/app/core/services/message.service';
+import { UserService } from 'src/app/core/services/user.service';
 
 @Component({
   selector: 'app-info',
@@ -19,18 +25,42 @@ export class InfoComponent implements OnInit, OnDestroy {
 
   lstInfoTypeSkips: InfoType[];
   clonedInfoTypeSkips: { [s: number]: InfoType } = {};
-
   newInfoTypeName: string;
+
+  lstInfoPosts: InfoPost[];
+
+  innerWidth: any;
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.innerWidth = window.innerWidth;
+  }
+
+  isAdmin: boolean;
 
   constructor(
     private _appTitleService: AppTitleService,
     private _loadingService: LoadingService,
     private _messageService: MessageService,
-    private _infoTypeService: InfoTypeService
+    private _infoTypeService: InfoTypeService,
+    private _infoPostService: InfoPostService,
+    private _userService: UserService,
+    private _router: Router,
+    private _route: ActivatedRoute,
+    private _confirmationService: ConfirmationService
   ) {
     this._appTitleService.setTitle(this.title);
     this.lstInfoTypeSkips = [];
+    this.lstInfoPosts = [];
     this.newInfoTypeName = '';
+    this.innerWidth = window.innerWidth;
+    let roles = (localStorage.getItem('roles') || '').split(',');
+    if (roles.includes(ROLE.ROLE_ADMIN)) {
+      this.isAdmin = true;
+    } else if (roles.includes(ROLE.ROLE_ENTERPRISE)) {
+      this.isAdmin = false;
+    } else {
+      this._router.navigate(['pages/forbidden']);
+    }
   }
 
   ngOnDestroy(): void {
@@ -41,17 +71,48 @@ export class InfoComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     // throw new Error('Method not implemented.');
+    if (this.isAdmin) {
+      this._loadingService.loading(true);
+      this._infoTypeService.getAllSkip()
+        .pipe(takeUntil(this._unsubscribe))
+        .subscribe((response: APIResponse) => {
+          this._loadingService.loading(false);
+          if (response.status === HttpStatusCode.Ok) {
+            this.lstInfoTypeSkips = response.data;
+          } else {
+            this._messageService.errorMessage(response.message);
+          }
+        });
+    }
+    this.getLstPosts();
+  }
+
+  getLstPosts(): void {
     this._loadingService.loading(true);
-    this._infoTypeService.getAllSkip()
-      .pipe(takeUntil(this._unsubscribe))
-      .subscribe((response: APIResponse) => {
-        this._loadingService.loading(false);
-        if (response.status === HttpStatusCode.Ok) {
-          this.lstInfoTypeSkips = response.data;
-        } else {
-          this._messageService.errorMessage(response.message);
-        }
-      })
+    if (this.isAdmin) {
+      this._infoPostService.getAll()
+        .pipe(takeUntil(this._unsubscribe))
+        .subscribe((response: APIResponse) => {
+          this._loadingService.loading(false);
+          if (response.status === HttpStatusCode.Ok) {
+            this.lstInfoPosts = response.data;
+          } else {
+            this._messageService.errorMessage(response.message);
+          }
+        })
+    } else {
+      let _id = JSON.parse(window.atob((localStorage.getItem('accessToken') || '').split('.')[1])).id;
+      this._infoPostService.findByUserId(_id)
+        .pipe(takeUntil(this._unsubscribe))
+        .subscribe((response: APIResponse) => {
+          this._loadingService.loading(false);
+          if (response.status === HttpStatusCode.Ok) {
+            this.lstInfoPosts = response.data;
+          } else {
+            this._messageService.errorMessage(response.message);
+          }
+        })
+    }
   }
 
   onRowEditInit(infoTypeSkip: InfoType) {
@@ -115,6 +176,42 @@ export class InfoComponent implements OnInit, OnDestroy {
       })
   }
 
+  deleteInfoType(infoTypeId: number) {
+    this._confirmationService.confirm(
+      {
+        message: 'Bạn có chắc chắn muốn xóa danh mục này? Việc xóa danh mục đồng thời sẽ xóa các bài đăng có danh mục đó.',
+        header: 'Xóa danh mục',
+        acceptButtonStyleClass: 'p-button-success',
+        rejectButtonStyleClass: 'p-button-outlined p-button-danger',
+        acceptLabel: 'Đồng ý',
+        rejectLabel: 'Từ chối',
+        accept: () => {
+          this._loadingService.loading(true);
+          this._infoTypeService.delete(infoTypeId)
+            .pipe(takeUntil(this._unsubscribe))
+            .subscribe((response: APIResponse) => {
+              this._loadingService.loading(false);
+              if (response.status === HttpStatusCode.Ok) {
+                this._messageService.successMessage(response.message);
+                this.lstInfoTypeSkips = this.lstInfoTypeSkips.filter((e: InfoType) => e.id !== infoTypeId);
+                this.getLstPosts();
+              } else {
+                this._messageService.errorMessage(response.message);
+              }
+            })
+        },
+        reject: (type: any) => {
+          switch (type) {
+            case ConfirmEventType.REJECT:
+              break;
+            case ConfirmEventType.CANCEL:
+              break;
+          }
+        }
+      }
+    )
+  }
+
   removeVietnameseTones(str: string): string {
     str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a");
     str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, "e");
@@ -142,5 +239,68 @@ export class InfoComponent implements OnInit, OnDestroy {
     // Bỏ dấu câu, kí tự đặc biệt
     str = str.replace(/!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\.|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g, " ");
     return str.toLowerCase().split(' ').join('-');
+  }
+
+  createInfoPost(): void {
+    this._router.navigate(['create-info-post'], { relativeTo: this._route });
+  }
+
+  genCreateBy(createBy: string): string {
+    if (createBy === 'admin') {
+      return createBy;
+    }
+    let returnVal = 'Không xác định';
+    try {
+      this._userService.getUserInfo(createBy).pipe(takeUntil(this._unsubscribe))
+        .subscribe((apiResponse: APIResponse) => {
+          if (apiResponse.status === HttpStatusCode.Ok) {
+            returnVal = apiResponse.data.firstName + ' ' + apiResponse.data.middleName + ' ' + apiResponse.data.lastName;
+          } else {
+            this._messageService.errorMessage(apiResponse.message);
+          }
+        })
+      return returnVal;
+    } catch (error) {
+      return returnVal;
+    }
+  }
+
+  updatePost(id: number): void {
+    this._router.navigate([`update-info-post/${id}`], { relativeTo: this._route });
+  }
+
+  deletePost(id: number): void {
+    this._confirmationService.confirm(
+      {
+        message: 'Bạn có chắc chắn muốn xóa bài viết?',
+        header: 'Xóa bài viết',
+        acceptButtonStyleClass: 'p-button-success',
+        rejectButtonStyleClass: 'p-button-outlined p-button-danger',
+        acceptLabel: 'Đồng ý',
+        rejectLabel: 'Từ chối',
+        accept: () => {
+          this._loadingService.loading(true);
+          this._infoPostService.delete(id)
+            .pipe(takeUntil(this._unsubscribe))
+            .subscribe((response: APIResponse) => {
+              this._loadingService.loading(false);
+              if (response.status === HttpStatusCode.Ok) {
+                this._messageService.successMessage(response.message);
+                this.lstInfoPosts = this.lstInfoPosts.filter((e: InfoPost) => e.id !== id);
+              } else {
+                this._messageService.errorMessage(response.message);
+              }
+            })
+        },
+        reject: (type: any) => {
+          switch (type) {
+            case ConfirmEventType.REJECT:
+              break;
+            case ConfirmEventType.CANCEL:
+              break;
+          }
+        }
+      }
+    )
   }
 }

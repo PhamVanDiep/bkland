@@ -43,4 +43,22 @@ export class InfoPostService {
     findById(id: string): Observable<APIResponse> {
         return this._httpClient.get<APIResponse>(`${environment.BASE_URL_NO_AUTH}/info-post/${id}`);
     }
+
+    findByUserId(userId: string): Observable<APIResponse> {
+        let accessToken = localStorage.getItem('accessToken') || '';
+        return this._httpClient.get<APIResponse>(`${environment.BASE_URL_AUTH}/info-post/enterprise/${userId}`, {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        });
+    }
+
+    delete(id: number): Observable<APIResponse> {
+        let accessToken = localStorage.getItem('accessToken') || '';
+        return this._httpClient.delete<APIResponse>(`${environment.BASE_URL_AUTH}/info-post/${id}`, {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        })
+    }
 }
