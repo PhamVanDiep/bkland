@@ -179,21 +179,7 @@ export class AccountManagementComponent implements OnInit, OnDestroy {
       .then((response: APIResponse) => {
         if (response.status === HttpStatusCode.Ok) {
           this.user = response.data;
-          if (this.user.avatarUrl == undefined || this.user.avatarUrl == null || this.user.avatarUrl.length == 0) {
-            this.user.avatarUrl = '/assets/images/user.png'
-          } else if (this.user.avatarUrl.includes(environment.BASE_URL_NO_AUTH)) {
-            this._mediaService.retriveImage(this.user.avatarUrl)
-              .pipe(takeUntil(this._unsubscribe))
-              .subscribe((response: APIResponse) => {
-                if (response.status === HttpStatusCode.Ok) {
-                  this.avatarUrlRetrive = this._domSanitizer.bypassSecurityTrustResourceUrl(`data:${response.data.type};base64,${response.data.body}`);
-                } else {
-                  this._messageService.errorMessage(response.message);
-                }
-              })
-          } else {
-            this.avatarUrlRetrive = this.user.avatarUrl;
-          }
+          this.retriveAvatar();
         } else {
           this._messageService.errorMessage(response.message);
         }
@@ -220,6 +206,24 @@ export class AccountManagementComponent implements OnInit, OnDestroy {
       });
   }
 
+  retriveAvatar(): void {
+    if (this.user.avatarUrl == undefined || this.user.avatarUrl == null || this.user.avatarUrl.length == 0) {
+      this.user.avatarUrl = '/assets/images/user.png'
+    } else if (this.user.avatarUrl.includes(environment.BASE_URL_NO_AUTH)) {
+      this._mediaService.retriveImage(this.user.avatarUrl)
+        .pipe(takeUntil(this._unsubscribe))
+        .subscribe((response: APIResponse) => {
+          if (response.status === HttpStatusCode.Ok) {
+            this.avatarUrlRetrive = this._domSanitizer.bypassSecurityTrustResourceUrl(`data:${response.data.type};base64,${response.data.body}`);
+          } else {
+            this._messageService.errorMessage(response.message);
+          }
+        })
+    } else {
+      this.avatarUrlRetrive = this.user.avatarUrl;
+    }
+  }
+
   genderOutcome(): string {
     if (this.user.gender === GENDER.MALE) {
       return 'Nam';
@@ -235,9 +239,8 @@ export class AccountManagementComponent implements OnInit, OnDestroy {
       .then((response: APIResponse) => {
         if (response.status === HttpStatusCode.Ok) {
           this.user = response.data;
-          if (this.user.avatarUrl == undefined || this.user.avatarUrl == null || this.user.avatarUrl.length == 0) {
-            this.user.avatarUrl = '/assets/images/user.png'
-          }
+          this._userService.updateUserInfo(this.user.avatarUrl);
+          this.retriveAvatar();
         } else {
           this._messageService.errorMessage(response.message);
         }

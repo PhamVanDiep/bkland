@@ -7,7 +7,7 @@
         <span class="font-bold text-2xl">Thông tin tài khoản</span>
         <button pButton pRipple label="Cập nhật" (click)="updateFunc()"></button>
     </div>
-    <div class="flex flex-col w-full space-y-4">
+    <div class="flex flex-col w-full space-y-4" *ngIf="selectedRole == 1;else enterprise">
         <div class="flex w-full justify-center items-center">
             <img [src]="avatarUrlRetrive" class="w-32 h-32 rounded-[50%] align-middle">
         </div>
@@ -52,6 +52,39 @@
             <span class="text-base font-medium">{{ user.dateOfBirth ? (user.dateOfBirth | date:'dd/MM/yyyy') : 'Không xác định' }}</span>
         </div>
     </div>
+    <ng-template #enterprise>
+        <div class="flex w-full justify-center items-center">
+            <img [src]="avatarUrlRetrive" class="w-32 h-32 rounded-[50%] align-middle">
+        </div>
+        <div class="flex flex-row items-center space-x-2">
+            <span class="text-lg font-semibold">Mã người dùng:</span>
+            <span class="text-base font-medium">{{ user.id }}</span>
+        </div>
+        <div class="flex flex-row items-center space-x-2">
+            <span class="text-lg font-semibold">Tên doanh nghiệp:</span>
+            <span class="text-base font-medium">{{ user.firstName + ' ' + user.middleName + ' ' + user.lastName }}</span>
+        </div>
+        <div class="flex flex-row items-center space-x-2">
+            <span class="text-lg font-semibold">Tên đăng nhập:</span>
+            <span class="text-base font-medium break-all">{{ user.username }}</span>
+        </div>
+        <div class="flex flex-row items-center space-x-2">
+            <span class="text-lg font-semibold">Email:</span>
+            <span class="text-base font-medium">{{ user.email }}</span>
+        </div>
+        <div class="flex flex-row items-center space-x-2">
+            <span class="text-lg font-semibold">Địa chỉ:</span>
+            <span class="text-base font-medium">{{ addressOutcome() }}</span>
+        </div>
+        <div class="flex flex-row items-center space-x-2">
+            <span class="text-lg font-semibold">Số điện thoại:</span>
+            <span class="text-base font-medium">{{ user.phoneNumber ? user.phoneNumber : 'Không xác định' }}</span>
+        </div>
+        <div class="flex flex-row items-center space-x-2">
+            <span class="text-lg font-semibold">Số dư tài khoản:</span>
+            <span class="text-base font-medium">{{ user.accountBalance | currency:'VND' }}</span>
+        </div>
+    </ng-template>
 </div>
 <p-dialog header="Cập nhật thông tin" [(visible)]="displayAccountUpdate" [style]="{width: innerWidth <= 640 ? '100vw' : '50vw'}" 
     [baseZIndex]="100" [modal]="true">

@@ -6,6 +6,7 @@ import { DeviceDetectorService, DeviceInfo } from 'ngx-device-detector';
 import { MenuItem } from 'primeng/api';
 import { ReplaySubject, filter, takeUntil } from 'rxjs';
 import { EMAIL_VERIFY_TYPE } from 'src/app/core/constants/email-verify.constant';
+import { ADMIN_NAV, ENTERPRISE_NAV, HEADER_NAV, USER_NAV } from 'src/app/core/constants/navigation.constant';
 import { ROLE } from 'src/app/core/constants/role.constant';
 import { APIResponse } from 'src/app/core/models/api-response.model';
 import { EmailVerify } from 'src/app/core/models/email-verify.model';
@@ -72,82 +73,15 @@ export class AdministrationLayoutComponent implements OnInit, OnDestroy {
     if (this.roles.length <= 0) {
       this._router.navigate(['pages/forbidden']);
     }
+    
     if (this.roles.includes(ROLE.ROLE_USER)
       || this.roles.includes(ROLE.ROLE_AGENCY)
       || this.roles.includes(ROLE.ROLE_ENTERPRISE)) {
-      this.items = [
-        {
-          label: "Mua bán",
-          // routerLink: '/mua-ban',
-          command: () => this.navigatePage('/mua-ban'),
-          items: [
-            {
-              label: "Nhà đất",
-              // routerLink: '/nha-dat',
-              command: () => this.navigatePage('/nha-dat')
-            },
-            {
-              label: "Chung cư",
-              routerLink: '/chung-cu'
-            },
-            {
-              label: "Đất nền",
-              routerLink: '/dat-nen'
-            }
-          ]
-        },
-        {
-          label: "Cho thuê",
-          routerLink: '/cho-thue',
-          items: [
-            {
-              label: "Nhà đất",
-              routerLink: '/nha-dat'
-            },
-            {
-              label: "Chung cư",
-              routerLink: '/chung-cu'
-            },
-            {
-              label: "Đất nền",
-              routerLink: '/dat-nen'
-            }
-          ]
-        },
-        {
-          label: "Cộng đồng",
-          routerLink: '/cong-dong'
-        },
-        {
-          label: "Tiện ích",
-          routerLink: '/tien-ich',
-          items: [
-            {
-              label: "Dự án",
-              routerLink: '/du-an'
-            },
-            {
-              label: "Tin tức",
-              routerLink: '/tin-tuc'
-            },
-            {
-              label: "Phong thủy",
-              routerLink: '/phong-thuy'
-            },
-            {
-              label: "Quy định",
-              routerLink: '/quy-dinh'
-            },
-            {
-              label: "Hướng dẫn",
-              routerLink: "/huong-dan"
-            }
-          ]
-        }
-      ];
+      this.items = HEADER_NAV;
     } else {
-      this.menuItems = [];
+      this.items = [];
     }
+
     this.menuItems = [
       {
         label: 'Quản lý tài khoản',
@@ -175,123 +109,20 @@ export class AdministrationLayoutComponent implements OnInit, OnDestroy {
         }
       }
     ];
+
     this.innerWidth = window.innerWidth;
     this.innerWidth < 1024 ? this.sidebarVisible = false : this.sidebarVisible = true;
 
-    // if (this.roles.includes(ROLE.ROLE_USER)) {
-    // if (true) {
     if (this.roles.includes(ROLE.ROLE_USER)) {
-      this.sidebarItems = [
-        {
-          label: 'Bài đăng quan tâm',
-          icon: 'pi pi-heart-fill',
-          routerLink: 'user/focus'
-        },
-        {
-          label: 'Quản lý bài viết',
-          icon: 'pi pi-list',
-          routerLink: 'user/post',
-          items: [
-            {
-              label: 'Bài viết bán/cho thuê',
-              routerLink: 'user/post/main'
-            },
-            {
-              label: 'Bài viết cộng đồng',
-              routerLink: 'user/post/forum'
-            }
-          ]
-        },
-        {
-          label: 'Quản lý tài chính',
-          icon: 'pi pi-chart-line',
-          routerLink: 'user/balance-fluctuation',
-          items: [
-            {
-              label: 'Nạp tiền',
-              routerLink: 'user/recharge'
-            },
-            {
-              label: 'Lịch sử giao dịch',
-              routerLink: 'user/balance-fluctuation'
-            }
-          ]
-        },
-        {
-          label: 'Thông báo BĐ giá',
-          icon: 'pi pi-bell',
-          routerLink: 'user/price-fluctuation-notify'
-        },
-        {
-          label: 'Nhắn tin',
-          icon: 'pi pi-comments',
-          routerLink: 'user/message'
-        },
-        {
-          label: 'Liên kết môi giới',
-          icon: 'pi pi-users',
-          routerLink: 'user/cooperate-agency'
-        },
-        {
-          label: 'Quản lý tài khoản',
-          icon: 'pi pi-user',
-          routerLink: 'user/account-management'
-        }
-      ]
+      this.sidebarItems = USER_NAV;
     }
     if (this.roles.includes(ROLE.ROLE_ADMIN)) {
-      this.sidebarItems = [
-        {
-          label: 'Thống kê',
-          icon: 'pi pi-th-large',
-          routerLink: 'admin/dashboard'
-        },
-        {
-          label: 'Quản lý bài viết',
-          icon: 'pi pi-list',
-          routerLink: 'admin/post',
-          items: [
-            {
-              label: 'Bài viết bán/cho thuê',
-              routerLink: 'admin/post/main'
-            },
-            {
-              label: 'Bài viết cộng đồng',
-              routerLink: 'admin/post/forum'
-            },
-            {
-              label: 'Bài viết tin tức',
-              routerLink: 'admin/post/info'
-            }
-          ]
-        },
-        {
-          label: 'Quản lý tài khoản người dùng',
-          icon: 'pi pi-user',
-          routerLink: 'admin/manage-account'
-        },
-        {
-          label: 'Quản lý báo cáo bài viết',
-          icon: 'pi pi-exclamation-triangle',
-          routerLink: 'admin/report'
-        },
-        {
-          label: 'Quản lý giao dịch tài chính',
-          icon: 'pi pi-chart-line',
-          routerLink: 'admin/finance-transaction'
-        },
-        {
-          label: 'Nhắn tin với người dùng',
-          icon: 'pi pi-comments',
-          routerLink: 'admin/message'
-        },
-        {
-          label: 'Quản lý thông tin hệ thống',
-          icon: 'pi pi-info-circle',
-          routerLink: 'admin/about'
-        }
-      ]
+      this.sidebarItems = ADMIN_NAV;
     }
+    if (this.roles.includes(ROLE.ROLE_ENTERPRISE)) {
+      this.sidebarItems = ENTERPRISE_NAV;
+    }
+
     this.emailVerify = '';
     
     this.displayChangePassword = false;
@@ -316,21 +147,7 @@ export class AdministrationLayoutComponent implements OnInit, OnDestroy {
         if (response.status === HttpStatusCode.Ok) {
           this.user = response.data;
           this.emailVerify = this.user.email;
-          if (response.data.avatarUrl != undefined && response.data.avatarUrl != null && response.data.avatarUrl.length > 0) {
-            if (this.user.avatarUrl.includes(environment.BASE_URL_NO_AUTH)) {
-              this._mediaService.retriveImage(this.user.avatarUrl)
-                .pipe(takeUntil(this._unsubscribe))
-                .subscribe((response: APIResponse) => {
-                  if (response.status === HttpStatusCode.Ok) {
-                    this.avatarUrl = this._domSanitizer.bypassSecurityTrustResourceUrl(`data:${response.data.type};base64,${response.data.body}`);
-                  } else {
-                    this._messageService.errorMessage(response.message);
-                  }
-                })
-            } else {
-              this.avatarUrl = this.user.avatarUrl;
-            }
-          }
+          this.retriveAvatar(this.user.avatarUrl);
         } else {
           this._messageService.errorMessage(response.message);
         }
@@ -345,7 +162,31 @@ export class AdministrationLayoutComponent implements OnInit, OnDestroy {
         if (this.innerWidth < 640) {
           this.sidebarVisible = false; 
         }
+      });
+
+    this._userService.avatarUpdate$
+      .pipe(takeUntil(this._unsubscribe))
+      .subscribe((path: string) => {
+        this.retriveAvatar(path);
       })
+  }
+
+  retriveAvatar(path: string): void {
+    if (path == undefined || path == null || path.length == 0) {
+      this.avatarUrl = '/assets/images/user.png'
+    } else if (path.includes(environment.BASE_URL_NO_AUTH)) {
+      this._mediaService.retriveImage(path)
+        .pipe(takeUntil(this._unsubscribe))
+        .subscribe((response: APIResponse) => {
+          if (response.status === HttpStatusCode.Ok) {
+            this.avatarUrl = this._domSanitizer.bypassSecurityTrustResourceUrl(`data:${response.data.type};base64,${response.data.body}`);
+          } else {
+            this._messageService.errorMessage(response.message);
+          }
+        })
+    } else {
+      this.avatarUrl = this.user.avatarUrl;
+    }
   }
 
   navigatePage(path: string): void {

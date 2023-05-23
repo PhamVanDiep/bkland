@@ -10,6 +10,8 @@ import { ROLE } from '../constants/role.constant';
     providedIn: 'root'
 })
 export class UserService {
+    private _avatarUpdate: BehaviorSubject<string> = new BehaviorSubject<string>('');
+
     private accessToken: string;
 
     constructor(
@@ -89,5 +91,13 @@ export class UserService {
             return true;
         }
         return false;
+    }
+
+    get avatarUpdate$(): Observable<string> {
+        return this._avatarUpdate.asObservable();
+    }
+
+    updateUserInfo(path: string): void {
+        this._avatarUpdate.next(path);
     }
 }

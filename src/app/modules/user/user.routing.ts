@@ -6,6 +6,8 @@ import { BalanceFluctuationComponent } from "./balance-fluctuation/balance-fluct
 import { ManageMainPostComponent } from "./manage-main-post/manage-main-post.component";
 import { CooperateAgencyComponent } from "./cooperate-agency/cooperate-agency.component";
 import { RegisterComponent } from "./cooperate-agency/register/register.component";
+import { InfoComponent } from "../common/info/info.component";
+import { CreateInfoPostComponent } from "../common/info/create-info-post/create-info-post.component";
 
 export const route: Route[] = [
     {
@@ -39,6 +41,23 @@ export const route: Route[] = [
             {
                 path: 'main',
                 component: ManageMainPostComponent
+            },
+            {
+                path: 'info',
+                children: [
+                    {
+                        path: '',
+                        component: InfoComponent
+                    },
+                    {
+                        path: 'create-info-post',
+                        component: CreateInfoPostComponent
+                    },
+                    {
+                        path: 'update-info-post/:id',
+                        component: CreateInfoPostComponent
+                    }
+                ]
             }
         ]
     },
