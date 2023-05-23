@@ -76,7 +76,7 @@
                 <span class="text-base font-medium">{{ user.id }}</span>
             </div>
             <div class="flex flex-row items-center space-x-2">
-                <span class="text-lg font-semibold">Họ và tên:</span>
+                <span class="text-lg font-semibold">{{ !isEnterprise() ? 'Họ và tên: ' : 'Tên doanh nghiệp: '}}</span>
                 <span class="text-base font-medium">{{ user.firstName + ' ' + user.middleName + ' ' + user.lastName }}</span>
             </div>
             <div class="flex flex-row items-center space-x-2">
@@ -87,11 +87,11 @@
                 <span class="text-lg font-semibold">Email:</span>
                 <span class="text-base font-medium">{{ user.email }}</span>
             </div>
-            <div class="flex flex-row items-center space-x-2">
+            <div class="flex flex-row items-center space-x-2" *ngIf="!isEnterprise()">
                 <span class="text-lg font-semibold">Số CMND/CCCD:</span>
                 <span class="text-base font-medium">{{ user.identification ? user.identification : 'Không xác định' }}</span>
             </div>
-            <div class="flex flex-row items-center space-x-2">
+            <div class="flex flex-row items-center space-x-2" *ngIf="!isEnterprise()">
                 <span class="text-lg font-semibold">Giới tính:</span>
                 <span class="text-base font-medium">{{ genderOutcome() }}</span>
             </div>
@@ -107,7 +107,7 @@
                 <span class="text-lg font-semibold">Số dư tài khoản:</span>
                 <span class="text-base font-medium">{{ user.accountBalance | currency:'VND' }}</span>
             </div>
-            <div class="flex flex-row items-center space-x-2">
+            <div class="flex flex-row items-center space-x-2" *ngIf="!isEnterprise()">
                 <span class="text-lg font-semibold">Ngày sinh:</span>
                 <span class="text-base font-medium">{{ user.dateOfBirth ? (user.dateOfBirth | date:'dd/MM/yyyy') : 'Không xác định' }}</span>
             </div>

@@ -27,7 +27,7 @@ export class InfoComponent implements OnInit, OnDestroy {
   clonedInfoTypeSkips: { [s: number]: InfoType } = {};
   newInfoTypeName: string;
 
-  lstInfoPosts: InfoPost[];
+  lstInfoPosts: any[];
 
   innerWidth: any;
   @HostListener('window:resize', ['$event'])
@@ -245,25 +245,25 @@ export class InfoComponent implements OnInit, OnDestroy {
     this._router.navigate(['create-info-post'], { relativeTo: this._route });
   }
 
-  genCreateBy(createBy: string): string {
-    if (createBy === 'admin') {
-      return createBy;
-    }
-    let returnVal = 'Không xác định';
-    try {
-      this._userService.getUserInfo(createBy).pipe(takeUntil(this._unsubscribe))
-        .subscribe((apiResponse: APIResponse) => {
-          if (apiResponse.status === HttpStatusCode.Ok) {
-            returnVal = apiResponse.data.firstName + ' ' + apiResponse.data.middleName + ' ' + apiResponse.data.lastName;
-          } else {
-            this._messageService.errorMessage(apiResponse.message);
-          }
-        })
-      return returnVal;
-    } catch (error) {
-      return returnVal;
-    }
-  }
+  // genCreateBy(createBy: string): string {
+  //   if (createBy === 'admin') {
+  //     return createBy;
+  //   }
+  //   let returnVal = 'Không xác định';
+  //   try {
+  //     this._userService.getUserInfo(createBy).pipe(takeUntil(this._unsubscribe))
+  //       .subscribe((apiResponse: APIResponse) => {
+  //         if (apiResponse.status === HttpStatusCode.Ok) {
+  //           returnVal = apiResponse.data.firstName + ' ' + apiResponse.data.middleName + ' ' + apiResponse.data.lastName;
+  //         } else {
+  //           this._messageService.errorMessage(apiResponse.message);
+  //         }
+  //       })
+  //     return returnVal;
+  //   } catch (error) {
+  //     return returnVal;
+  //   }
+  // }
 
   updatePost(id: number): void {
     this._router.navigate([`update-info-post/${id}`], { relativeTo: this._route });

@@ -4,8 +4,8 @@ import { AboutComponent } from "./about/about.component";
 import { FinanceTransactionComponent } from "./finance-transaction/finance-transaction.component";
 import { MainPostComponent } from "./main-post/main-post.component";
 import { UserAccountComponent } from "./user-account/user-account.component";
-import { InfoComponent } from "./info/info.component";
-import { CreateInfoPostComponent } from "./info/create-info-post/create-info-post.component";
+import { InfoComponent } from "../common/info/info.component";
+import { CreateInfoPostComponent } from "../common/info/create-info-post/create-info-post.component";
 
 export const route: Route[] = [
     {

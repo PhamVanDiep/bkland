@@ -57,4 +57,13 @@ export class InfoTypeService {
             }
         });
     }
+
+    findById(id: number): Observable<APIResponse> {
+        let accessToken = localStorage.getItem('accessToken') || '';
+        return this._httpClient.get<APIResponse>(`${environment.BASE_URL_AUTH}/info-type/${id}`, {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        });
+    }
 }

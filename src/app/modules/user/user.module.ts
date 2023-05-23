@@ -31,6 +31,7 @@ import { RegisterComponent } from './cooperate-agency/register/register.componen
 import { MultiSelectModule } from 'primeng/multiselect';
 import { SpecialAccountService } from 'src/app/core/services/special-account.service';
 import { PaymentService } from 'src/app/core/services/payment.service';
+import { InfoModule } from '../common/info/info.module';
 
 @NgModule({
   declarations: [
@@ -63,7 +64,8 @@ import { PaymentService } from 'src/app/core/services/payment.service';
     TableModule,
     MenuModule,
     ConfirmDialogModule,
-    MultiSelectModule
+    MultiSelectModule,
+    InfoModule
   ],
   providers: [
     ConfirmationService,

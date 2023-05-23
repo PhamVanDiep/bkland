@@ -5,6 +5,7 @@ import { AuthService } from "../services/auth.service";
 import { RefreshTokenRequest, RefreshTokenResponse } from "../models/refresh-token.model";
 import { APIResponse } from "../models/api-response.model";
 import { HttpStatusCode } from "@angular/common/http";
+import { ROLE } from "../constants/role.constant";
 
 @Injectable({
     providedIn: 'root'
@@ -59,6 +60,9 @@ export class AuthGuardService {
                 if (lstRoles.includes(expectedRole)) {
                     return true;
                 } else {
+                    if (roles === ROLE.ROLE_ENTERPRISE) {
+                        return true;
+                    }
                     this.router.navigate(['pages/forbidden']);
                     return false;
                 }

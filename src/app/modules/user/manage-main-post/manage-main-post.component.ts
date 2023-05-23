@@ -1,8 +1,9 @@
 import { HttpStatusCode } from '@angular/common/http';
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmEventType, ConfirmationService, MenuItem } from 'primeng/api';
 import { ReplaySubject, takeUntil } from 'rxjs';
+import { ROLE } from 'src/app/core/constants/role.constant';
 import { STATUS } from 'src/app/core/constants/status.constant';
 import { APIResponse } from 'src/app/core/models/api-response.model';
 import { RealEstatePost } from 'src/app/core/models/real-estate-post.model';
@@ -37,6 +38,7 @@ export class ManageMainPostComponent implements OnInit, OnDestroy {
     private _messageService: MessageService,
     private _realEsatePostService: RealEstatePostService,
     private _router: Router,
+    private _route: ActivatedRoute,
     private _confirmationService: ConfirmationService
   ) {
     this._appTitleService.setTitle(this.title);
@@ -56,7 +58,11 @@ export class ManageMainPostComponent implements OnInit, OnDestroy {
           this.hidePost();
         }
       }
-    ]
+    ];
+    let roles = localStorage.getItem('roles') || '';
+    if (roles === ROLE.ROLE_ENTERPRISE) {
+      this._router.navigate(['../info'], { relativeTo: this._route });
+    }
   }
 
   ngOnInit(): void {

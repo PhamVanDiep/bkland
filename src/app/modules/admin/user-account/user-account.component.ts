@@ -207,6 +207,17 @@ export class UserAccountComponent implements OnInit, OnDestroy {
     }
   }
 
+  isEnterprise(): boolean {
+    let roles: any[] = this.user.roles || [];
+    let res = false;
+    roles.forEach(e => {
+      if (e.name === ROLE.ROLE_ENTERPRISE) {
+        res = true;
+      }
+    });
+    return res;
+  }
+
   lockOrUnLock(): void {
     this._confirmationService.confirm(
       {
