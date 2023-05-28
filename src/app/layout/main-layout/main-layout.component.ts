@@ -6,6 +6,7 @@ import { DeviceDetectorService, DeviceInfo } from 'ngx-device-detector';
 import { MenuItem } from 'primeng/api';
 import { ReplaySubject, takeUntil } from 'rxjs';
 import { EMAIL_VERIFY_TYPE } from 'src/app/core/constants/email-verify.constant';
+import { HEADER_NAV } from 'src/app/core/constants/navigation.constant';
 import { About } from 'src/app/core/models/about.model';
 import { APIResponse } from 'src/app/core/models/api-response.model';
 import { EmailVerify } from 'src/app/core/models/email-verify.model';
@@ -69,76 +70,7 @@ export class MainLayoutComponent implements OnInit, OnDestroy{
   ) {
     let _roles = localStorage.getItem('roles') || '';
     this.roles = _roles.split(',');
-    this.items = [
-      {
-        label: "Mua bán",
-        // routerLink: '/mua-ban',
-        command: () => this.navigatePage('/mua-ban'),
-        items: [
-          {
-            label: "Nhà đất",
-            // routerLink: '/nha-dat',
-            command: () => this.navigatePage('/nha-dat')
-          },
-          {
-            label: "Chung cư",
-            routerLink: '/chung-cu'
-          },
-          {
-            label: "Đất nền",
-            routerLink: '/dat-nen'
-          }
-        ]
-      },
-      {
-        label: "Cho thuê",
-        routerLink: '/cho-thue',
-        items: [
-          {
-            label: "Nhà đất",
-            routerLink: '/nha-dat'
-          },
-          {
-            label: "Chung cư",
-            routerLink: '/chung-cu'
-          },
-          {
-            label: "Đất nền",
-            routerLink: '/dat-nen'
-          }
-        ]
-      },
-      {
-        label: "Cộng đồng",
-        routerLink: '/cong-dong'
-      },
-      {
-        label: "Tiện ích",
-        routerLink: '/tien-ich',
-        items: [
-          {
-            label: "Dự án",
-            routerLink: '/du-an'
-          },
-          {
-            label: "Tin tức",
-            routerLink: '/tin-tuc'
-          },
-          {
-            label: "Phong thủy",
-            routerLink: '/phong-thuy'
-          },
-          {
-            label: "Quy định",
-            routerLink: '/quy-dinh'
-          },
-          {
-            label: "Hướng dẫn",
-            routerLink: "/huong-dan"
-          }
-        ]
-      }
-    ];
+    this.items = HEADER_NAV;
     this.isAuth = false;
     this.avatarIcon = "pi pi-user";
     this.avatarUrl = '/assets/images/user.png';

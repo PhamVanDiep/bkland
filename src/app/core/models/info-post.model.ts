@@ -6,6 +6,7 @@ export interface InfoPost {
     title: string;
     description: string;
     content: string;
+    imageUrl: string;
     createBy: string;
     createAt: any;
     updateBy: string;
