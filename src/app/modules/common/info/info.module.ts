@@ -19,6 +19,7 @@ import { PaymentService } from 'src/app/core/services/payment.service';
 import { DropdownModule } from 'primeng/dropdown';
 import { InfoPostService } from 'src/app/core/services/info-post.service';
 import { EditorModule } from 'primeng/editor';
+import { TooltipModule } from 'primeng/tooltip';
 
 
 @NgModule({
@@ -42,7 +43,8 @@ import { EditorModule } from 'primeng/editor';
     MenuModule,
     CardModule,
     DropdownModule,
-    EditorModule
+    EditorModule,
+    TooltipModule
   ],
   exports: [
     InfoComponent,

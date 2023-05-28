@@ -97,3 +97,7 @@ tbody th {
     padding-top: 1rem !important;
     padding-bottom: 1rem !important;
 }
+
+tbody tr {
+    border-bottom: 1px solid #CCD1D1;
+}

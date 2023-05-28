@@ -1,6 +1,5 @@
 import { HttpStatusCode } from '@angular/common/http';
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
-import { DeviceDetectorService, DeviceInfo } from 'ngx-device-detector';
 import { ReplaySubject, firstValueFrom, takeUntil } from 'rxjs';
 import { GENDER, GENDER_LST } from 'src/app/core/constants/gender.constant';
 import { ROLE } from 'src/app/core/constants/role.constant';
@@ -8,15 +7,12 @@ import { APIResponse } from 'src/app/core/models/api-response.model';
 import { District } from 'src/app/core/models/district.model';
 import { Province } from 'src/app/core/models/province.model';
 import { SignUpRequest } from 'src/app/core/models/sign-up.model';
-import { UserDeviceToken } from 'src/app/core/models/user-device-token.model';
 import { UserInfo } from 'src/app/core/models/user-info.model';
 import { Ward } from 'src/app/core/models/ward.model';
 import { LoadingService } from 'src/app/core/services/loading.service';
 import { MediaService } from 'src/app/core/services/media.service';
 import { MessageService } from 'src/app/core/services/message.service';
 import { NoAuthService } from 'src/app/core/services/no-auth.service';
-import { PushNotificationService } from 'src/app/core/services/push-notification.service';
-import { UserDeviceTokenService } from 'src/app/core/services/user-device-token.service';
 import { UserService } from 'src/app/core/services/user.service';
 import { environment } from 'src/environments/environment';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -32,8 +28,6 @@ export class AccountManagementComponent implements OnInit, OnDestroy {
   private title: string = 'Quản lý tài khoản';
 
   user: UserInfo;
-  deviceInfo: DeviceInfo;
-  userDeviceToken: UserDeviceToken;
   userUpdate: SignUpRequest;
 
   innerWidth: any;
@@ -57,9 +51,6 @@ export class AccountManagementComponent implements OnInit, OnDestroy {
     private _userService: UserService,
     private _loadingService: LoadingService,
     private _messageService: MessageService,
-    private _userDeviceTokenService: UserDeviceTokenService,
-    private _deviceDetectorService: DeviceDetectorService,
-    private _pushNotificationService: PushNotificationService,
     private _noAuthService: NoAuthService,
     private _mediaService: MediaService,
     private _domSanitizer: DomSanitizer
@@ -117,18 +108,6 @@ export class AccountManagementComponent implements OnInit, OnDestroy {
       updateBy: '',
       updateAt: null
     }
-    this.userDeviceToken = {
-      id: 0,
-      deviceInfo: '',
-      enable: false,
-      logout: false,
-      notifyToken: '',
-      userId: '',
-      createBy: '',
-      createAt: null,
-      updateBy: '',
-      updateAt: null
-    }
     this.userUpdate = {
       id: '',
       accountBalance: 0,
@@ -172,37 +151,18 @@ export class AccountManagementComponent implements OnInit, OnDestroy {
     this._unsubscribe.complete();
   }
 
-  async ngOnInit() {
+  ngOnInit(): void {
     // throw new Error('Method not implemented.');
     this._loadingService.loading(true);
-    await firstValueFrom(this._userService.getUserInfoById().pipe(takeUntil(this._unsubscribe)))
-      .then((response: APIResponse) => {
+    this._userService.getUserInfoById().pipe(takeUntil(this._unsubscribe))
+      .subscribe((response: APIResponse) => {
+        this._loadingService.loading(false);
         if (response.status === HttpStatusCode.Ok) {
           this.user = response.data;
           this.retriveAvatar();
         } else {
           this._messageService.errorMessage(response.message);
         }
-      });
-
-    this.deviceInfo = this._deviceDetectorService.getDeviceInfo();
-    await firstValueFrom(this._userDeviceTokenService
-      .getUserDeviceToken(this.user.id, this.deviceInfo.userAgent)
-      .pipe(takeUntil(this._unsubscribe)))
-      .then((response: APIResponse) => {
-        if (response.status === HttpStatusCode.Ok) {
-          this.userDeviceToken = response.data;
-        } else {
-          this._messageService.errorMessage(response.message);
-        }
-      });
-
-    this._loadingService.loading(false);
-    this._pushNotificationService.pushNotifyToken$
-      .pipe(takeUntil(this._unsubscribe))
-      .subscribe((response: string) => {
-        this.userDeviceToken.notifyToken = response;
-        this.sendUpdateUserDeviceTokenRequest();
       });
   }
 
@@ -258,27 +218,6 @@ export class AccountManagementComponent implements OnInit, OnDestroy {
       + this.user.ward.fullName + ', '
       + this.user.district.fullName + ', '
       + this.user.province.fullName
-  }
-
-  updateUserDeviceToken(): void {
-    if (this.userDeviceToken.enable && this.userDeviceToken.notifyToken.length == 0) {
-      this._pushNotificationService.requestPermission();
-    } else {
-      this.sendUpdateUserDeviceTokenRequest();
-    }
-  }
-
-  sendUpdateUserDeviceTokenRequest(): void {
-    this.userDeviceToken.updateBy = this.userDeviceToken.userId;
-    this._userDeviceTokenService.updateUserDeviceToken(this.userDeviceToken)
-      .pipe(takeUntil(this._unsubscribe))
-      .subscribe((response: APIResponse) => {
-        if (response.status === HttpStatusCode.Ok) {
-
-        } else {
-          this._messageService.errorMessage(response.message);
-        }
-      })
   }
 
   nullable(field: string): boolean {

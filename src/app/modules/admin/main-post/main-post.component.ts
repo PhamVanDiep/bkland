@@ -114,6 +114,10 @@ export class MainPostComponent implements OnInit, OnDestroy {
     }
   }
 
+  viewPost(): void {
+    
+  }
+
   showOrHidePost(): void {
     if (this.selectedRep.status !== STATUS.DA_KIEM_DUYET) {
       this._messageService.warningMessage('Chỉ có thể ấn/hiện bài viết khi bài viết đang ở trạng thái đã kiểm duyệt.');

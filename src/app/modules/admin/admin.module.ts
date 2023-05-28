@@ -25,6 +25,8 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InfoPostService } from 'src/app/core/services/info-post.service';
 import { EditorModule } from 'primeng/editor';
 import { InfoModule } from '../common/info/info.module';
+import { TooltipModule } from 'primeng/tooltip';
+import { TabViewModule } from 'primeng/tabview';
 
 @NgModule({
   declarations: [
@@ -51,7 +53,9 @@ import { InfoModule } from '../common/info/info.module';
     CardModule,
     DropdownModule,
     EditorModule,
-    InfoModule
+    InfoModule,
+    TooltipModule,
+    TabViewModule
   ],
   providers: [
     ConfirmationService,

@@ -60,7 +60,7 @@
                         </span>
                     </th>
                     <th>
-                        <div class="flex align-items-center justify-content-center gap-2">
+                        <div class="flex items-center justify-end gap-2">
                             <button *ngIf="!editing" pButton pRipple type="button" pInitEditableRow icon="pi pi-pencil" (click)="onRowEditInit(infoTypeSkip)" class="p-button-rounded p-button-text"></button>
                             <button *ngIf="editing" pButton pRipple type="button" pSaveEditableRow icon="pi pi-check" (click)="onRowEditSave(infoTypeSkip)" class="p-button-rounded p-button-text p-button-success mr-2"></button>
                             <button *ngIf="editing" pButton pRipple type="button" pCancelEditableRow icon="pi pi-times" (click)="onRowEditCancel(infoTypeSkip, index)" class="p-button-rounded p-button-text p-button-danger"></button>
@@ -78,8 +78,9 @@
     </div>
     <div class="flex flex-col w-full space-y-4">
         <div class="flex flex-row w-full justify-between items-center">
-            <span class="text-xl font-bold">Danh sách bài đăng</span>
-            <button pButton pRipple class="p-button-rounded p-button-success" icon="pi pi-plus" (click)="createInfoPost()"></button>
+            <span class="text-xl font-bold">{{ 'Danh sách bài đăng [' + lstInfoPosts.length + ']' }}</span>
+            <button pButton pRipple pTooltip="Tạo bài viết mới"
+                class="p-button-rounded p-button-success" icon="pi pi-plus" (click)="createInfoPost()"></button>
         </div>
         <p-table
             [value]="lstInfoPosts"
@@ -88,6 +89,7 @@
             dataKey="id"
             [rowsPerPageOptions]="[10, 25, 50]"
             currentPageReportTemplate="{first} đến {last} trên {totalRecords} bản ghi"
+            class="p-datatable-striped"
         >
             <ng-template pTemplate="header">
                 <tr>
@@ -133,8 +135,10 @@
                         </span>
                     </th>
                     <th>
-                        <button pButton pRipple class="p-button-rounded p-button-text" icon="pi pi-pencil" (click)="updatePost(infoPost.id)"></button>
-                        <button pButton pRipple class="p-button-rounded p-button-danger p-button-text" icon="pi pi-trash" (click)="deletePost(infoPost.id)"></button>
+                        <div class="flex flex-row justify-end">
+                            <button pButton pRipple class="p-button-rounded p-button-text" icon="pi pi-pencil" (click)="updatePost(infoPost.id)"></button>
+                            <button pButton pRipple class="p-button-rounded p-button-danger p-button-text" icon="pi pi-trash" (click)="deletePost(infoPost.id)"></button>
+                        </div>
                     </th>
                 </tr>
             </ng-template>
