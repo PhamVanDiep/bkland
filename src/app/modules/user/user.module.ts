@@ -32,6 +32,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { SpecialAccountService } from 'src/app/core/services/special-account.service';
 import { PaymentService } from 'src/app/core/services/payment.service';
 import { InfoModule } from '../common/info/info.module';
+import { ManageConfigComponent } from './manage-config/manage-config.component';
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import { InfoModule } from '../common/info/info.module';
     ManageMainPostComponent,
     CooperateAgencyComponent,
     RegisterComponent,
+    ManageConfigComponent,
   ],
   imports: [
     CommonModule,

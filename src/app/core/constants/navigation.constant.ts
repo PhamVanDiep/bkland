@@ -105,6 +105,11 @@ export const USER_NAV = [
         label: 'Quản lý tài khoản',
         icon: 'pi pi-user',
         routerLink: 'user/account-management'
+    },
+    {
+        label: 'Quản lý cấu hình',
+        icon: 'pi pi-cog',
+        routerLink: 'user/config'
     }
 ];
 
@@ -148,6 +153,11 @@ export const ENTERPRISE_NAV = [
         label: 'Quản lý tài khoản',
         icon: 'pi pi-user',
         routerLink: 'user/account-management'
+    },
+    {
+        label: 'Quản lý cấu hình',
+        icon: 'pi pi-cog',
+        routerLink: 'user/config'
     }
 ];
 

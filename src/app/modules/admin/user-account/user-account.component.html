@@ -1,5 +1,4 @@
 <p-confirmDialog [style]="{width: innerWidth > 640 ? '50vw' : '100vh'}"></p-confirmDialog>
-<p-menu #menu [model]="items" [popup]="true"></p-menu>
 <div class="w-full flex flex-col px-4 lg:px-6 space-y-6">
     <span class="text-xl font-bold">Danh sách tài khoản</span>
     <p-table
@@ -52,8 +51,14 @@
                         [severity]="user.enable ? 'success' : 'warning'"></p-tag>
                 </th>
                 <th>
-                    <button pButton pRipple class="p-button-rounded p-button-text" icon="pi pi-ellipsis-v"
-                        (click)="menu.toggle($event); selectedUser = user"></button>
+                    <div class="flex flex-row justify-end">
+                        <button pButton pRipple pTooltip="Xem thông tin chi tiết"
+                            class="p-button-rounded p-button-text p-button-info" icon="pi pi-eye"
+                            (click)="selectedUser=user;viewInfoDetail()"></button>
+                        <button pButton pRipple pTooltip="Khóa/Mở khóa tài khoản"
+                            class="p-button-rounded p-button-text p-button-danger" icon="pi pi-lock"
+                            (click)="selectedUser=user;lockOrUnLock()"></button>
+                    </div>
                 </th>
             </tr>
         </ng-template>

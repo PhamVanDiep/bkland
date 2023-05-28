@@ -26,7 +26,6 @@ export class UserAccountComponent implements OnInit, OnDestroy {
 
   users: SignUpRequest[];
   selectedUser: SignUpRequest;
-  items: MenuItem[];
 
   innerWidth: any;
   displayUserDetail: boolean;
@@ -49,22 +48,6 @@ export class UserAccountComponent implements OnInit, OnDestroy {
   ) {
     this._appTitleService.setTitle(this.title);
     this.users = [];
-    this.items = [
-      {
-        icon: 'pi pi-eye',
-        label: 'Xem thông tin chi tiết',
-        command: () => {
-          this.viewInfoDetail();
-        }
-      },
-      {
-        icon: 'pi pi-lock',
-        label: 'Khóa/Mở khóa tài khoản',
-        command: () => {
-          this.lockOrUnLock();
-        }
-      }
-    ];
     this.displayUserDetail = false;
     this.avatarUrlRetrive = '/assets/images/user.png';
     this.user = {

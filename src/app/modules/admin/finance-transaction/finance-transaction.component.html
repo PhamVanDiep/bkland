@@ -14,12 +14,23 @@
     <div class="flex flex-col w-full space-y-4">
         <span class="font-bold text-2xl">Danh sách nạp tiền</span>
         <p-table
+            #tbl1
             [value]="charges"
             [paginator]="true"
             [rows]="10"
             [rowsPerPageOptions]="[10, 25, 50]"
             currentPageReportTemplate="{first} đến {last} trên {totalRecords} bản ghi"
         >
+            <ng-template pTemplate="caption">
+                <div class="flex flex-row justify-end">
+                    <p-dropdown [options]="lstChargeDropdown" (onChange)="filterByStatus()" class="w-max"
+                        [(ngModel)]="selectedStatus" optionLabel="value"></p-dropdown>
+                    <!-- <span class="p-input-icon-left ml-auto">
+                        <i class="pi pi-search"></i>
+                        <input #inputFilter pInputText type="text" (input)="tbl1.filterGlobal(inputFilter.value, 'contains')" placeholder="Search keyword" />
+                    </span> -->
+                </div>
+            </ng-template>
             <ng-template pTemplate="header">
                 <tr>
                     <th pFrozenColumn>#</th>

@@ -23,7 +23,11 @@ export class FinanceTransactionComponent implements OnInit, OnDestroy {
   private _unsubscribe: ReplaySubject<any> = new ReplaySubject<any>();
   private title: string = 'Giao dịch tài chính';
 
+  sourceCharges: any[];
   charges: any[];
+  lstChargeDropdown: any[];
+  selectedStatus: any;
+
   postPaids: PostPay[];
   monthlyPaids: SpecialAccountPay[];
 
@@ -49,6 +53,8 @@ export class FinanceTransactionComponent implements OnInit, OnDestroy {
   ) {
     this._appTitleService.setTitle(this.title);
 
+    this.sourceCharges = [];
+
     this.charges = [];
     this.postPaids = [];
     this.monthlyPaids = [];
@@ -56,6 +62,29 @@ export class FinanceTransactionComponent implements OnInit, OnDestroy {
     this.totalCharge = 0;
     this.totalMonthlyPaid = 0;
     this.totalPostPaid = 0;
+
+    this.lstChargeDropdown = [
+      {
+        key: 'ALL',
+        value: 'Tất cả'
+      }, 
+      {
+        key: CHARGE_STATUS.CHO_XAC_NHAN,
+        value: 'Chờ xác nhận'
+      },
+      {
+        key: CHARGE_STATUS.DA_XAC_NHAN,
+        value: 'Đã xác nhận'
+      },
+      {
+        key: CHARGE_STATUS.DA_TU_CHOI,
+        value: 'Đã từ chối'
+      }
+    ];
+    this.selectedStatus = {
+      key: 'ALL',
+      value: 'Tất cả'
+    };
   }
 
   ngOnInit(): void {
@@ -66,8 +95,8 @@ export class FinanceTransactionComponent implements OnInit, OnDestroy {
       .subscribe((response: APIResponse) => {
         this._loadingService.loading(false);
         if (response.status === HttpStatusCode.Ok) {
-          this.charges = response.data;
-          this.charges.forEach(e => {
+          this.sourceCharges = response.data;
+          this.sourceCharges.forEach(e => {
             if (e.imageUrl != null && e.imageUrl.length > 0) {
               this._mediaService.retriveImage(e.imageUrl)
                 .pipe(takeUntil(this._unsubscribe))
@@ -83,6 +112,7 @@ export class FinanceTransactionComponent implements OnInit, OnDestroy {
               this.totalCharge += e.soTien; 
             }
           })
+          this.charges = this.sourceCharges;
         } else {
           this._messageService.errorMessage(response.message);
         }
@@ -176,9 +206,22 @@ export class FinanceTransactionComponent implements OnInit, OnDestroy {
       .subscribe((response: APIResponse) => {
         if (response.status === HttpStatusCode.Ok) {
           this._messageService.successMessage(response.message);
+          this.sourceCharges.forEach(e => {
+            if (e.id === charge.id) {
+              e.status = charge.status;
+            }
+          })
         } else {
           this._messageService.errorMessage(response.message);
         }
       })
+  }
+
+  filterByStatus(): void {
+    if (this.selectedStatus.key === 'ALL') {
+      this.charges = this.sourceCharges;
+    } else {
+      this.charges = this.sourceCharges.filter(e => e.status === this.selectedStatus.key);
+    }
   }
 }

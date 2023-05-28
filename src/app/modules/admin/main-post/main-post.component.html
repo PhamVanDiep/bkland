@@ -1,14 +1,8 @@
 <p-confirmDialog [style]="{width: innerWidth > 640 ? '50vw' : '100vh'}"></p-confirmDialog>
-<p-menu #menu [model]="items" [popup]="true"></p-menu>
 <div class="w-full flex flex-col px-4 lg:px-6 space-y-6">
     <span class="text-xl font-bold mt-4">Danh sách bài đăng bán/cho thuê</span>
-    <p-table
-        [value]="realEstatePosts"
-        [paginator]="true"
-        [rows]="10"
-        [rowsPerPageOptions]="[10, 25, 50]"
-        currentPageReportTemplate="{first} đến {last} trên {totalRecords} bản ghi"
-    >
+    <p-table [value]="realEstatePosts" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[10, 25, 50]"
+        currentPageReportTemplate="{first} đến {last} trên {totalRecords} bản ghi">
         <ng-template pTemplate="header">
             <tr>
                 <th pFrozenColumn>#</th>
@@ -51,8 +45,15 @@
                     <p-tag [value]="getStatusValue(rep.status)" [severity]="getStatusSeverity(rep.status)"></p-tag>
                 </th>
                 <th>
-                    <button pButton pRipple class="p-button-rounded p-button-text" icon="pi pi-ellipsis-v"
-                        (click)="menu.toggle($event); selectedRep = rep"></button>
+                    <button pButton pRipple class="p-button-text p-button-info p-button-rounded"
+                        pTooltip="Xem bài viết"
+                        icon="pi pi-info-circle" (click)="selectedRep=rep;viewPost()"></button>
+                    <button pButton pRipple class="p-button-text p-button-warning p-button-rounded"
+                        pTooltip="Ẩn/Hiện bài viết"
+                        icon="pi pi-eye" (click)="selectedRep=rep;showOrHidePost()"></button>
+                    <button pButton pRipple class="p-button-text p-button-success p-button-rounded"
+                        pTooltip="Chấp nhận/Từ chối bài viết"
+                        icon="pi pi-check" (click)="selectedRep=rep;acceptOrRejectPost()"></button>
                 </th>
             </tr>
         </ng-template>
