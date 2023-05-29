@@ -6,13 +6,15 @@ import { route } from './pages.routing';
 import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
 import { ForbiddenComponent } from './forbidden/forbidden.component';
+import { NotFoundComponent } from './not-found/not-found.component';
 
 
 
 @NgModule({
   declarations: [
     VnpaySuccessComponent,
-    ForbiddenComponent
+    ForbiddenComponent,
+    NotFoundComponent
   ],
   imports: [
     CommonModule,

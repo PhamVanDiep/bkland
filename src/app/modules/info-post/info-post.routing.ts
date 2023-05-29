@@ -13,5 +13,17 @@ export const route: Route[] = [
     {
         path: 'du-an',
         component: InfoPostComponent
+    },
+    {
+        path: 'phong-thuy',
+        component: InfoPostComponent
+    },
+    {
+        path: 'quy-dinh',
+        component: InfoPostComponent
+    },
+    {
+        path: 'huong-dan',
+        component: InfoPostComponent
     }
 ]
