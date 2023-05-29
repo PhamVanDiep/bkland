@@ -26,6 +26,7 @@ export interface InfoPostResponse {
     updateBy: string;
     updateAt: any;
     user: SignUpRequest;
+    retriveImage: any;
 }
 
 export interface TinTucResponse {

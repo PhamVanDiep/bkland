@@ -1,29 +1,76 @@
 import { Route } from "@angular/router";
 import { InfoPostComponent } from "./info-post.component";
+import { InfoPostDetailComponent } from "./info-post-detail/info-post-detail.component";
 
 export const route: Route[] = [
     {
         path: '',
-        component: InfoPostComponent
+        redirectTo: 'tin-tuc',
+        pathMatch: 'full'
     },
     {
         path: 'tin-tuc',
-        component: InfoPostComponent
+        children: [
+            {
+                path: '',
+                component: InfoPostComponent
+            },
+            {
+                path: 'detail/:id',
+                component: InfoPostDetailComponent
+            }
+        ]
     },
     {
         path: 'du-an',
-        component: InfoPostComponent
+        children: [
+            {
+                path: '',
+                component: InfoPostComponent
+            },
+            {
+                path: 'detail/:id',
+                component: InfoPostDetailComponent
+            }
+        ]
     },
     {
         path: 'phong-thuy',
-        component: InfoPostComponent
+        children: [
+            {
+                path: '',
+                component: InfoPostComponent
+            },
+            {
+                path: 'detail/:id',
+                component: InfoPostDetailComponent
+            }
+        ]
     },
     {
         path: 'quy-dinh',
-        component: InfoPostComponent
+        children: [
+            {
+                path: '',
+                component: InfoPostComponent
+            },
+            {
+                path: 'detail/:id',
+                component: InfoPostDetailComponent
+            }
+        ]
     },
     {
         path: 'huong-dan',
-        component: InfoPostComponent
+        children: [
+            {
+                path: '',
+                component: InfoPostComponent
+            },
+            {
+                path: 'detail/:id',
+                component: InfoPostDetailComponent
+            }
+        ]
     }
 ]

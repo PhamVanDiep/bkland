@@ -1,0 +1,23 @@
+<div class="w-full flex flex-col my-4 justify-center items-center">
+    <div class="w-full md:w-1/2 flex flex-col space-y-6">
+        <span class="text-3xl font-bold">{{ infoPostResponse.title }}</span>
+        <div class="w-full flex flex-row items-center space-x-4">
+            <p-avatar [image]="retriveAvatar" shape="circle"></p-avatar>
+            <div class="flex flex-col space-y-1">
+                <span>{{ 'Được đăng bởi: '
+                    + infoPostResponse.user.firstName + ' '
+                    + infoPostResponse.user.middleName + ' '
+                    + infoPostResponse.user.lastName
+                    }}</span>
+                <span>{{ infoPostResponse.updateAt == null ?
+                    'Được viết vào: ' + (infoPostResponse.createAt | date:'dd/MM/yyyy, h:mm:ss a') :
+                    'Cập nhật lần cuối vào: ' + (infoPostResponse.updateAt | date:'dd/MM/yyyy, h:mm:ss a') }}</span>
+            </div>
+        </div>
+        <span class="font-bold italic">{{ infoPostResponse.description }}</span>
+        <div class="ql-container ql-snow" style="border-width: 0; z-index: 40;">
+            <div class="ql-editor" [innerHTML]="infoPostResponse.content">
+            </div>
+        </div>
+    </div>
+</div>
