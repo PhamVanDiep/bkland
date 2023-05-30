@@ -35,6 +35,54 @@ export class InfoPostDetailComponent implements OnInit, OnDestroy {
     private _mediaService: MediaService
   ) {
     this.retriveAvatar = '/assets/images/user.png';
+    this.infoPostResponse = {
+      id: 0,
+      content: '',
+      createAt: null,
+      createBy: '',
+      updateAt: null,
+      updateBy: '',
+      description: '',
+      title: '',
+      imageUrl: '',
+      view: 0,
+      infoType: {
+        id: 0,
+        name: '',
+        parent: 2,
+        path: '',
+        createAt: null,
+        createBy: '',
+        updateAt: null,
+        updateBy: ''
+      },
+      retriveImage: null,
+      user: {
+        id: "",
+        accountBalance: 0,
+        address: "",
+        avatarUrl: "",
+        dateOfBirth: "",
+        districtCode: "",
+        email: "",
+        enable: true,
+        firstName: "",
+        gender: "MALE",
+        identification: "",
+        lastName: "",
+        middleName: "",
+        password: "",
+        phoneNumber: "",
+        provinceCode: "",
+        roles: null,
+        username: "",
+        wardCode: "",
+        createBy: "",
+        createAt: null,
+        updateBy: '',
+        updateAt: null
+      }
+    }
   }
 
   ngOnInit(): void {
@@ -44,7 +92,7 @@ export class InfoPostDetailComponent implements OnInit, OnDestroy {
       this._router.navigate(['pages/not-found']);
     }
     this._loadingService.loading(true);
-    this._infoPostService.findById(postId)
+    this._infoPostService.findByIdWithIncreaseView(postId)
       .pipe(takeUntil(this._unsubscribe))
       .subscribe((response: APIResponse) => {
         this._loadingService.loading(false);

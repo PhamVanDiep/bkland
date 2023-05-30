@@ -11,7 +11,7 @@
                     class="w-full md:max-w-[25%] h-auto max-h-[20vh] rounded-t-sm md:rounded-lg">
                 <div class="w-full flex flex-col space-y-3 p-2">
                     <span class="text-sm font-light">
-                        {{ (infoPost.createAt | date:'short') 
+                        {{ (infoPost.createAt | date:'dd/MM/yyyy, h:mm:ss a') 
                         + ' - ' + infoPost.user.firstName 
                         + ' ' + infoPost.user.middleName
                         + ' ' + infoPost.user.lastName 

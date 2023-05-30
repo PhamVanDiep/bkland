@@ -44,6 +44,10 @@ export class InfoPostService {
         return this._httpClient.get<APIResponse>(`${environment.BASE_URL_NO_AUTH}/info-post/${id}`);
     }
 
+    findByIdWithIncreaseView(id: string): Observable<APIResponse> {
+        return this._httpClient.get<APIResponse>(`${environment.BASE_URL_NO_AUTH}/info-post/user-view/${id}`);
+    }
+
     findByUserId(userId: string): Observable<APIResponse> {
         let accessToken = localStorage.getItem('accessToken') || '';
         return this._httpClient.get<APIResponse>(`${environment.BASE_URL_AUTH}/info-post/enterprise/${userId}`, {

@@ -28,6 +28,8 @@ export interface RealEstatePost {
     direction: string;
     sell: boolean;
     street: string;
+    view: number;
+    clickedView: number;
     createBy: string;
     createAt: any;
     updateBy: string;

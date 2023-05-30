@@ -8,6 +8,7 @@ export interface InfoPost {
     description: string;
     content: string;
     imageUrl: string;
+    view: number;
     createBy: string;
     createAt: any;
     updateBy: string;
@@ -21,6 +22,7 @@ export interface InfoPostResponse {
     description: string;
     content: string;
     imageUrl: string;
+    view: number;
     createBy: string;
     createAt: any;
     updateBy: string;

@@ -41,6 +41,14 @@ export class RealEstatePostService {
         return this._httpClient.get<APIResponse>(`${environment.BASE_URL_NO_AUTH}/real-estate-post/${id}`);
     }
 
+    findByIdWithIncreaseView(id: string): Observable<APIResponse> {
+        return this._httpClient.get<APIResponse>(`${environment.BASE_URL_NO_AUTH}/real-estate-post/user-view/${id}`);
+    }
+
+    clickUserDetail(body: any): Observable<APIResponse> {
+        return this._httpClient.post<APIResponse>(`${environment.BASE_URL_NO_AUTH}/real-estate-post/click-info`, body);
+    }
+
     updatePost(body: any): Observable<APIResponse> {
         this.accessToken = localStorage.getItem('accessToken') || '';
         return this._httpClient.put<APIResponse>(`${environment.BASE_URL_AUTH}/real-estate-post`, body,

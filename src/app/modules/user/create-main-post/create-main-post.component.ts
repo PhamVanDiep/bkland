@@ -144,7 +144,9 @@ export class CreateMainPostComponent implements OnInit, OnDestroy {
         name: '',
         nameEn: ''
       },
-      street: ''
+      street: '',
+      view: 0,
+      clickedView: 0
     };
     this.plot = {
       behindWidth: 0,
@@ -442,6 +444,7 @@ export class CreateMainPostComponent implements OnInit, OnDestroy {
           this.images.push(img);
         } 
       }
+      this.realEstatePost.updateBy = JSON.parse(window.atob((localStorage.getItem('accessToken') || '').split('.')[1])).id;
       let realEstatePostRequest: RealEstatePostRequest = {
         apartment: this.apartment,
         house: this.house,

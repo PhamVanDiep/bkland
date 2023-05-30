@@ -52,6 +52,7 @@ export class CreateInfoPostComponent implements OnInit, OnDestroy {
       description: '',
       title: '',
       imageUrl: '',
+      view: 0,
       infoType: {
         id: 0,
         name: '',
