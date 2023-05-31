@@ -9,6 +9,7 @@ import { RegisterComponent } from "./cooperate-agency/register/register.componen
 import { InfoComponent } from "../common/info/info.component";
 import { CreateInfoPostComponent } from "../common/info/create-info-post/create-info-post.component";
 import { ManageConfigComponent } from "./manage-config/manage-config.component";
+import { PriceFluctuationComponent } from "./price-fluctuation/price-fluctuation.component";
 
 export const route: Route[] = [
     {
@@ -78,5 +79,9 @@ export const route: Route[] = [
     {
         path: 'config',
         component: ManageConfigComponent
+    },
+    {
+        path: 'price-fluctuation-notify',
+        component: PriceFluctuationComponent
     }
 ]
