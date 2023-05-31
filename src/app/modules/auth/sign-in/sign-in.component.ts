@@ -149,7 +149,11 @@ export class SignInComponent implements OnInit, OnDestroy {
             .pipe(takeUntil(this._unsubscribe))
             .subscribe((response1: APIResponse) => {
               if (response1.status === HttpStatusCode.Ok) {
-                const redirectUrl = this._route.snapshot.queryParamMap.get('redirectUrl') || '/signed-in-redirect';
+                let redir = 'home';
+                if (loginResponse.roles.includes(ROLE.ROLE_ADMIN)) {
+                  redir = 'admin';
+                }
+                const redirectUrl = this._route.snapshot.queryParamMap.get('redirectUrl') || redir;
                 this._router.navigateByUrl(redirectUrl);
               } else {
                 this._messageService.errorMessage(response1.message);

@@ -13,23 +13,22 @@
         </div>
         <div class="flex flex-col w-full">
             <label class="text-sm">Loại bất động sản</label>
-            <p-dropdown [options]="realEstateTypes" [style]="{'width': '100%'}" 
-                optionLabel="value" optionValue="key" [(ngModel)]="realEstatePost.type"
-                autoWidth="false" [disabled]="isUpdate"></p-dropdown>
+            <p-dropdown [options]="realEstateTypes" [style]="{'width': '100%'}" optionLabel="value" optionValue="key"
+                [(ngModel)]="realEstatePost.type" autoWidth="false" [disabled]="isUpdate"></p-dropdown>
         </div>
         <div class="flex flex-col w-full space-y-4 lg:space-y-0 lg:flex-row lg:space-x-4">
             <div class="flex flex-col w-full">
                 <label for="provinceCode" class="text-sm">Tỉnh/Thành phố</label>
                 <p-dropdown [options]="provinces" [(ngModel)]="realEstatePost.province.code" [style]="{'width': '100%'}"
                     optionLabel="fullName" (ngModelChange)="getDistrictsInProvince()" optionValue="code" [filter]="true"
-                    filterBy="fullName" autoWidth="false"></p-dropdown>
+                    filterBy="fullName" autoWidth="false" [disabled]="isUpdate"></p-dropdown>
             </div>
             <div class="flex flex-col w-full">
                 <label for="districtCode" class="text-sm">Quận/Huyện/Thị xã</label>
                 <p-dropdown [options]="districts" [(ngModel)]="realEstatePost.district.code" [style]="{'width': '100%'}"
                     optionLabel="fullName" [disabled]="realEstatePost.province.code.length <= 0"
                     (ngModelChange)="getWardsInDistrict()" optionValue="code" [filter]="true"
-                    filterBy="fullName"></p-dropdown>
+                    filterBy="fullName" [disabled]="isUpdate"></p-dropdown>
             </div>
         </div>
         <div class="flex flex-col w-full space-y-4 lg:space-y-0 lg:flex-row lg:space-x-4">
@@ -37,11 +36,12 @@
                 <label for="wardCode" class="text-sm">Xã/Phường/Thị trấn</label>
                 <p-dropdown [options]="wards" [(ngModel)]="realEstatePost.ward.code" [style]="{'width': '100%'}"
                     optionLabel="fullName" [disabled]="realEstatePost.district.code.length <= 0" optionValue="code"
-                    [filter]="true" filterBy="fullName"></p-dropdown>
+                    [filter]="true" filterBy="fullName" [disabled]="isUpdate"></p-dropdown>
             </div>
             <div class="flex flex-col w-full">
                 <label for="street" class="text-sm">Đường</label>
-                <input id="street" pInputText class="w-full" placeholder="Nhập tên đường" [(ngModel)]="realEstatePost.street">
+                <input id="street" pInputText class="w-full" placeholder="Nhập tên đường"
+                    [(ngModel)]="realEstatePost.street">
             </div>
         </div>
         <div class="flex flex-col w-full">
@@ -65,18 +65,18 @@
         <div class="w-full flex flex-row space-x-4">
             <div class="flex flex-col w-full">
                 <label for="direction" class="text-sm">Độ ưu tiên</label>
-                <p-dropdown [options]="priorities" [(ngModel)]="realEstatePost.priority" 
-                    [style]="{'width': '100%'}" (ngModelChange)="calcPayVal()"
-                    optionLabel="value" optionValue="key" [disabled]="isUpdate"></p-dropdown>
+                <p-dropdown [options]="priorities" [(ngModel)]="realEstatePost.priority" [style]="{'width': '100%'}"
+                    (ngModelChange)="calcPayVal()" optionLabel="value" optionValue="key"
+                    [disabled]="checkPriorityAndPeriod() || isUpdate"></p-dropdown>
             </div>
             <div class="flex flex-col w-full">
                 <label for="direction" class="text-sm">Thời gian tồn tại</label>
-                <p-dropdown [options]="periods" [(ngModel)]="realEstatePost.period" 
-                    [style]="{'width': '100%'}" (ngModelChange)="calcPayVal()"
-                    optionLabel="value" optionValue="key" [disabled]="isUpdate"></p-dropdown>
+                <p-dropdown [options]="periods" [(ngModel)]="realEstatePost.period" [style]="{'width': '100%'}"
+                    (ngModelChange)="calcPayVal()" optionLabel="value" optionValue="key"
+                    [disabled]="checkPriorityAndPeriod() || isUpdate"></p-dropdown>
             </div>
         </div>
-        <div class="w-full">
+        <div class="w-full" *ngIf="!check()">
             <span class="text-lg font-bold">
                 {{'Số tiền khách hàng phải trả là: '}}
             </span>
@@ -84,41 +84,43 @@
                 {{ payValue | currency:'VND' }}
             </span>
         </div>
+        <div class="italic text-sm">*Lưu ý: Với người dùng đã đăng ký tài khoản môi giới khi đăng bài trong khu vực mình
+            đã đăng ký sẽ không phải trả phí đăng bài và bài đăng sẽ có độ ưu tiên cao nhất, và bài đăng sẽ có thời hạn trong 365 ngày. 
+            Nếu đăng bài ngoài khu vực đăng ký sẽ bị tính phí đăng bài như người dùng thông thường.</div>
     </div>
     <div class="w-full flex flex-col space-y-4 mt-4">
         <span class="font-bold text-2xl">Thông tin bất động sản</span>
         <div class="flex flex-col w-full space-y-4 lg:space-y-0 lg:flex-row lg:space-x-4">
             <div class="flex flex-col w-full">
                 <label for="area" class="text-sm">Diện tích (m2)</label>
-                <p-inputNumber id="area" class="w-full" placeholder="Nhập diện tích: m2"
-                    inputId="integeronly"
+                <p-inputNumber id="area" class="w-full" placeholder="Nhập diện tích: m2" inputId="integeronly"
                     [(ngModel)]="realEstatePost.area"></p-inputNumber>
             </div>
             <div class="flex flex-col w-full">
-                <label for="price" class="text-sm">{{ realEstatePost.sell ? 'Giá (tỷ VNĐ)' : 'Giá (triệu VNĐ)' }}</label>
-                <p-inputNumber id="price" class="w-full" [(ngModel)]="realEstatePost.price"
-                    inputId="minmaxfraction" mode="decimal" [minFractionDigits]="2" [maxFractionDigits]="2"
+                <label for="price" class="text-sm">{{ realEstatePost.sell ? 'Giá (tỷ VNĐ)' : 'Giá (triệu VNĐ)'
+                    }}</label>
+                <p-inputNumber id="price" class="w-full" [(ngModel)]="realEstatePost.price" inputId="minmaxfraction"
+                    mode="decimal" [minFractionDigits]="2" [maxFractionDigits]="2"
                     [placeholder]="realEstatePost.sell ? 'Nhập giá: tỷ VNĐ' : 'Nhập giá: triệu VNĐ'">
                 </p-inputNumber>
             </div>
             <div class="flex flex-col w-full">
                 <label for="direction" class="text-sm">Hướng</label>
-                <p-dropdown [options]="directions" [(ngModel)]="realEstatePost.direction" 
-                    [style]="{'width': '100%'}"
+                <p-dropdown [options]="directions" [(ngModel)]="realEstatePost.direction" [style]="{'width': '100%'}"
                     optionLabel="value" optionValue="key"></p-dropdown>
             </div>
         </div>
         <div class="flex flex-col w-full space-y-4 lg:space-y-0 lg:flex-row lg:space-x-4" *ngIf="isPlot()">
             <div class="flex flex-col w-full">
                 <label for="frontWidth" class="text-sm">Mặt tiền (m)</label>
-                <p-inputNumber id="frontWidth" class="w-full" [(ngModel)]="plot.frontWidth"
-                    inputId="minmaxfraction" mode="decimal" [minFractionDigits]="1" [maxFractionDigits]="1"
+                <p-inputNumber id="frontWidth" class="w-full" [(ngModel)]="plot.frontWidth" inputId="minmaxfraction"
+                    mode="decimal" [minFractionDigits]="1" [maxFractionDigits]="1"
                     placeholder="Nhập chiều dài mặt tiền: m"></p-inputNumber>
             </div>
             <div class="flex flex-col w-full">
                 <label for="behindWidth" class="text-sm">Mặt hậu (m)</label>
-                <p-inputNumber id="behindWidth" class="w-full" [(ngModel)]="plot.behindWidth"
-                    inputId="minmaxfraction" mode="decimal" [minFractionDigits]="1" [maxFractionDigits]="1"
+                <p-inputNumber id="behindWidth" class="w-full" [(ngModel)]="plot.behindWidth" inputId="minmaxfraction"
+                    mode="decimal" [minFractionDigits]="1" [maxFractionDigits]="1"
                     placeholder="Nhập chiều dài mặt hậu: m"></p-inputNumber>
             </div>
         </div>
@@ -126,27 +128,23 @@
             <div class="flex flex-col w-full space-y-4 lg:space-y-0 lg:flex-row lg:space-x-4">
                 <div class="flex flex-col w-full">
                     <label for="floorNo" class="text-sm">Tầng số</label>
-                    <p-inputNumber id="floorNo" class="w-full" [(ngModel)]="apartment.floorNo"
-                        inputId="integeronly"
+                    <p-inputNumber id="floorNo" class="w-full" [(ngModel)]="apartment.floorNo" inputId="integeronly"
                         placeholder="BĐS ở tầng số?"></p-inputNumber>
                 </div>
                 <div class="flex flex-col w-full">
                     <label for="noBedroom" class="text-sm">Số phòng ngủ</label>
-                    <p-inputNumber id="noBedroom" class="w-full" [(ngModel)]="apartment.noBedroom"
-                        inputId="integeronly"
+                    <p-inputNumber id="noBedroom" class="w-full" [(ngModel)]="apartment.noBedroom" inputId="integeronly"
                         placeholder="Nhập số phòng ngủ"></p-inputNumber>
                 </div>
                 <div class="flex flex-col w-full">
                     <label for="noBathroom" class="text-sm">Số phòng tắm</label>
                     <p-inputNumber id="noBathroom" class="w-full" [(ngModel)]="apartment.noBathroom"
-                        inputId="integeronly"
-                        placeholder="Nhập số phòng tắm"></p-inputNumber>
+                        inputId="integeronly" placeholder="Nhập số phòng tắm"></p-inputNumber>
                 </div>
                 <div class="flex flex-col w-full">
                     <label for="balconyDirection" class="text-sm">Hướng ban công</label>
-                    <p-dropdown [options]="directions" [(ngModel)]="apartment.balconyDirection" 
-                        [style]="{'width': '100%'}"
-                        optionLabel="value" optionValue="key"></p-dropdown>
+                    <p-dropdown [options]="directions" [(ngModel)]="apartment.balconyDirection"
+                        [style]="{'width': '100%'}" optionLabel="value" optionValue="key"></p-dropdown>
                 </div>
             </div>
             <div class="flex flex-col w-full">
@@ -179,8 +177,7 @@
                 </div>
                 <div class="flex flex-col w-full">
                     <label for="balconyDirection" class="text-sm">Hướng ban công</label>
-                    <p-dropdown [options]="directions" [(ngModel)]="house.balconyDirection" 
-                        [style]="{'width': '100%'}"
+                    <p-dropdown [options]="directions" [(ngModel)]="house.balconyDirection" [style]="{'width': '100%'}"
                         optionLabel="value" optionValue="key"></p-dropdown>
                 </div>
             </div>
@@ -192,26 +189,27 @@
             <div class="flex flex-col w-full space-y-4 lg:space-y-0 lg:flex-row lg:space-x-4">
                 <div class="flex flex-col w-full">
                     <label for="frontWidth" class="text-sm">Mặt tiền (m)</label>
-                    <p-inputNumber id="frontWidth" [(ngModel)]="house.frontWidth"
-                        mode="decimal" inputId="minmaxfraction" [minFractionDigits]="1" [maxFractionDigits]="1"
+                    <p-inputNumber id="frontWidth" [(ngModel)]="house.frontWidth" mode="decimal"
+                        inputId="minmaxfraction" [minFractionDigits]="1" [maxFractionDigits]="1"
                         placeholder="Nhập chiều dài mặt tiền: m"></p-inputNumber>
                 </div>
                 <div class="flex flex-col w-full">
                     <label for="behindWidth" class="text-sm">Mặt hậu (m)</label>
-                    <p-inputNumber id="behindWidth"  class="w-full" [(ngModel)]="house.behindWidth"
-                        mode="decimal" inputId="minmaxfraction" [minFractionDigits]="1" [maxFractionDigits]="1"
+                    <p-inputNumber id="behindWidth" class="w-full" [(ngModel)]="house.behindWidth" mode="decimal"
+                        inputId="minmaxfraction" [minFractionDigits]="1" [maxFractionDigits]="1"
                         placeholder="Nhập chiều dài mặt hậu: m"></p-inputNumber>
                 </div>
                 <div class="flex flex-col w-full">
                     <label for="streetWidth" class="text-sm">Chiều rộng đường trước nhà (m)</label>
-                    <p-inputNumber id="streetWidth" class="w-full" [(ngModel)]="house.streetWidth"
-                        mode="decimal" inputId="minmaxfraction" [minFractionDigits]="1" [maxFractionDigits]="1"
+                    <p-inputNumber id="streetWidth" class="w-full" [(ngModel)]="house.streetWidth" mode="decimal"
+                        inputId="minmaxfraction" [minFractionDigits]="1" [maxFractionDigits]="1"
                         placeholder="Nhập chiều rộng đường trước nhà: m"></p-inputNumber>
                 </div>
             </div>
         </div>
-        <span class="italic text-sm">Vị trí của bất động sản được lấy trực tiếp tại vị trí của người đăng bài. 
-                Chính vì thế, lưu ý khi đăng bài cần đứng tại nơi đăng bài và đảm bảo cho phép ứng dụng quyền được lấy vị trí.</span>
+        <span class="italic text-sm">Vị trí của bất động sản được lấy trực tiếp tại vị trí của người đăng bài.
+            Chính vì thế, lưu ý khi đăng bài cần đứng tại nơi đăng bài và đảm bảo cho phép ứng dụng quyền được lấy vị
+            trí.</span>
     </div>
     <div class="w-full flex flex-col space-y-4 mt-4">
         <div class="flex flex-row justify-between items-center w-full">
@@ -220,9 +218,8 @@
                 <label for="uploadImage" class="cursor-pointer">
                     <i class="pi pi-cloud-upload" style="font-size: 2rem;"></i>
                 </label>
-                <input type="file" name="uploadImage" 
-                    accept="image/png, image/gif, image/jpeg" id="uploadImage" [hidden]="true"
-                    (change)="onFileSelected($event)" [multiple]="true">
+                <input type="file" name="uploadImage" accept="image/png, image/gif, image/jpeg" id="uploadImage"
+                    [hidden]="true" (change)="onFileSelected($event)" [multiple]="true">
             </div>
         </div>
         <div class="w-full flex flex-col">

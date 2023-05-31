@@ -1,0 +1,29 @@
+<div class="w-full flex flex-col my-4 space-y-6">
+    <div class="w-full flex flex-col space-y-4" *ngFor="let tinTucResponse of tinTucResponses">
+        <div class="w-full">
+            <span class="text-xl font-bold">{{ tinTucResponse.infoType.name }}</span>
+        </div>
+        <div *ngIf="tinTucResponse.infoPosts.length > 0;else emptyInfoPost" class="px-4 md:px-0 pb-2 md:py-2 space-y-4">
+            <div class="w-full flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-4 rounded-sm shadow-lg cursor-pointer" 
+                *ngFor="let infoPost of tinTucResponse.infoPosts"
+                (click)="showDetail(infoPost.id)">
+                <img [src]="infoPost.retriveImage" 
+                    class="w-full md:max-w-[25%] h-auto max-h-[20vh] rounded-t-sm md:rounded-lg">
+                <div class="w-full flex flex-col space-y-3 p-2">
+                    <span class="text-sm font-light">
+                        {{ (infoPost.createAt | date:'dd/MM/yyyy, h:mm:ss a') 
+                        + ' - ' + infoPost.user.firstName 
+                        + ' ' + infoPost.user.middleName
+                        + ' ' + infoPost.user.lastName 
+                        }}
+                    </span>
+                    <span class="text-base font-bold hover:text-gray-custom">{{ infoPost.title }}</span>
+                    <span class="text-sm">{{ infoPost.description }}</span>
+                </div>
+            </div>
+        </div>
+        <ng-template #emptyInfoPost>
+            <span class="italic">Không có bài viết nào.</span>
+        </ng-template>
+    </div>
+</div>

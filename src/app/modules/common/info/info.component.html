@@ -33,7 +33,7 @@
             <ng-template pTemplate="body" let-infoTypeSkip let-editing="editing" let-index="rowIndex">
                 <tr [pEditableRow]="infoTypeSkip">
                     <th>
-                        <span class="text-sm font-normal">
+                        <span class="text-sm font-normal pl-4">
                             {{ index + 1}}
                         </span>
                     </th>
@@ -51,12 +51,12 @@
                     </th>
                     <th>
                         <span class="text-sm font-normal">
-                            {{ infoTypeSkip.createAt | date:'short' }}
+                            {{ infoTypeSkip.createAt | date:'dd/MM/yyyy, h:mm:ss a' }}
                         </span>
                     </th>
                     <th>
                         <span class="text-sm font-normal">
-                            {{ infoTypeSkip.updateAt | date:'short' }}
+                            {{ infoTypeSkip.updateAt | date:'dd/MM/yyyy, h:mm:ss a' }}
                         </span>
                     </th>
                     <th>
@@ -99,13 +99,14 @@
                     <th>Loại</th>
                     <th>Người tạo</th>
                     <th>Thời gian tạo</th>
+                    <th>Số lượt xem</th>
                     <th></th>
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-infoPost let-editing="editing" let-index="rowIndex">
                 <tr>
                     <th>
-                        <span class="text-sm font-normal">
+                        <span class="text-sm font-normal pl-4">
                             {{ index + 1}}
                         </span>
                     </th>
@@ -131,7 +132,12 @@
                     </th>
                     <th>
                         <span class="text-sm font-normal">
-                            {{ infoPost.createAt | date:'short' }}
+                            {{ infoPost.createAt | date:'dd/MM/yyyy, h:mm:ss a' }}
+                        </span>
+                    </th>
+                    <th class="text-center">
+                        <span class="text-sm font-normal pl-4">
+                            {{ infoPost.view }}
                         </span>
                     </th>
                     <th>

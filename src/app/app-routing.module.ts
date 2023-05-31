@@ -87,6 +87,16 @@ const routes: Routes = [
         loadChildren: () => import('src/app/modules/pages/pages.module').then(m => m.PagesModule)
       }
     ]
+  },
+  {
+    path: 'tien-ich',
+    component: MainLayoutComponent,
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('src/app/modules/info-post/info-post.module').then(m => m.InfoPostModule)
+      }
+    ]
   }
 ];
 

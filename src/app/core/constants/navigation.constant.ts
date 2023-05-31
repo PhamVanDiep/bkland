@@ -164,39 +164,35 @@ export const ENTERPRISE_NAV = [
 export const HEADER_NAV = [
     {
         label: "Mua bán",
-        routerLink: '/mua-ban',
-        //   command: () => this.navigatePage('/mua-ban'),
         items: [
             {
                 label: "Nhà đất",
-                routerLink: '/nha-dat',
-                //   command: () => this.navigatePage('/nha-dat')
+                routerLink: '/mua-ban/nha-dat',
             },
             {
                 label: "Chung cư",
-                routerLink: '/chung-cu'
+                routerLink: '/mua-ban/chung-cu'
             },
             {
                 label: "Đất nền",
-                routerLink: '/dat-nen'
+                routerLink: '/mua-ban/dat-nen'
             }
         ]
     },
     {
         label: "Cho thuê",
-        routerLink: '/cho-thue',
         items: [
             {
                 label: "Nhà đất",
-                routerLink: '/nha-dat'
+                routerLink: '/cho-thue/nha-dat'
             },
             {
                 label: "Chung cư",
-                routerLink: '/chung-cu'
+                routerLink: '/cho-thue/chung-cu'
             },
             {
                 label: "Đất nền",
-                routerLink: '/dat-nen'
+                routerLink: '/cho-thue/dat-nen'
             }
         ]
     },
@@ -206,27 +202,26 @@ export const HEADER_NAV = [
     },
     {
         label: "Tiện ích",
-        routerLink: '/tien-ich',
         items: [
             {
                 label: "Dự án",
-                routerLink: '/du-an'
+                routerLink: '/tien-ich/du-an'
             },
             {
                 label: "Tin tức",
-                routerLink: '/tin-tuc'
+                routerLink: '/tien-ich/tin-tuc'
             },
             {
                 label: "Phong thủy",
-                routerLink: '/phong-thuy'
+                routerLink: '/tien-ich/phong-thuy'
             },
             {
                 label: "Quy định",
-                routerLink: '/quy-dinh'
+                routerLink: '/tien-ich/quy-dinh'
             },
             {
                 label: "Hướng dẫn",
-                routerLink: "/huong-dan"
+                routerLink: "/tien-ich/huong-dan"
             }
         ]
     }
