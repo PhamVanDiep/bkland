@@ -5,6 +5,7 @@ import { ReplaySubject, firstValueFrom, takeUntil } from 'rxjs';
 import { DIRECTION, DIRECTION_DROPDOWN } from 'src/app/core/constants/direction.constant';
 import { PERIOD_DROPDOWN } from 'src/app/core/constants/period.constant';
 import { PRIORITY_DROPDOWN } from 'src/app/core/constants/priority.constant';
+import { ROLE } from 'src/app/core/constants/role.constant';
 import { STATUS } from 'src/app/core/constants/status.constant';
 import { TYPE, TYPE_DROPDOWN } from 'src/app/core/constants/type.constant';
 import { Apartment } from 'src/app/core/models/apartment.model';
@@ -22,6 +23,8 @@ import { MediaService } from 'src/app/core/services/media.service';
 import { MessageService } from 'src/app/core/services/message.service';
 import { NoAuthService } from 'src/app/core/services/no-auth.service';
 import { RealEstatePostService } from 'src/app/core/services/real-estate-post.service';
+import { SpecialAccountService } from 'src/app/core/services/special-account.service';
+import { UserService } from 'src/app/core/services/user.service';
 import * as uuid from 'uuid';
 
 @Component({
@@ -43,13 +46,15 @@ export class CreateMainPostComponent implements OnInit, OnDestroy {
   districts: District[];
   wards: Ward[];
   directions: any;
-  priorities: any;
-  periods: any;
+  priorities: any[];
+  periods: any[];
   payValue: number;
   selectedFiles: any[];
   images: PostMedia[];
   selectedFileNames: string[];
   isUpdate: boolean;
+  isAgency: boolean;
+  lstSelectedDistrictCodes: string[];
 
   constructor(
     private _appTitleService: AppTitleService,
@@ -59,13 +64,17 @@ export class CreateMainPostComponent implements OnInit, OnDestroy {
     private _mediaService: MediaService,
     private _realEstatePostService: RealEstatePostService,
     private _router: Router,
-    private _route: ActivatedRoute
+    private _route: ActivatedRoute,
+    private _userService: UserService,
+    private _specialAccountService: SpecialAccountService
   ) {
     this._appTitleService.setTitle(this.title);
     this.realEstateTypes = TYPE_DROPDOWN;
     this.directions = DIRECTION_DROPDOWN;
-    this.priorities = PRIORITY_DROPDOWN;
-    this.periods = PERIOD_DROPDOWN;
+    this.priorities = [];
+    this.priorities.concat(PRIORITY_DROPDOWN);
+    this.periods = [];
+    this.periods.concat(PERIOD_DROPDOWN);
     this.payValue = 0;
     this.selectedFiles = [];
     let _id = JSON.parse(window.atob((localStorage.getItem('accessToken') || '').split('.')[1])).id;
@@ -182,6 +191,8 @@ export class CreateMainPostComponent implements OnInit, OnDestroy {
     } else {
       this.isUpdate = true;
     }
+    this.isAgency = this._userService.isAgency();
+    this.lstSelectedDistrictCodes = [];
   }
 
   ngOnDestroy(): void {
@@ -248,6 +259,18 @@ export class CreateMainPostComponent implements OnInit, OnDestroy {
             this.getDistrictsInProvince();
             this.getWardsInDistrict();
             this.calcPayVal();
+          } else {
+            this._messageService.errorMessage(response.message);
+          }
+        })
+    } else {
+      this._specialAccountService.agencyInfo(this.realEstatePost.ownerId.id)
+        .pipe(takeUntil(this._unsubscribe))
+        .subscribe((response: APIResponse) => {
+          if (response.status === HttpStatusCode.Ok) {
+            response.data.districts.forEach((e: any) => {
+              this.lstSelectedDistrictCodes.push(e.code);
+            })
           } else {
             this._messageService.errorMessage(response.message);
           }
@@ -365,6 +388,46 @@ export class CreateMainPostComponent implements OnInit, OnDestroy {
     // this.selectedFileNames.
   }
 
+  checkPriorityAndPeriod(): boolean {
+    if (this.isAgency && this.lstSelectedDistrictCodes.includes(this.realEstatePost.district.code)) {
+      let _priorities: any[] = [];
+      _priorities.concat(this.priorities);
+      _priorities.push({
+        key: 4,
+        value: 'Mức 4',
+        priceHire: 0,
+        priceSell: 0
+      })
+      this.priorities = _priorities;
+      this.realEstatePost.priority = 4;
+
+      let _periods: any[] = [];
+      _periods.concat(this.periods);
+      _periods.push({
+        key: 365,
+        value: '365 ngày',
+        heSo: 0
+      });
+      this.periods = _periods;
+
+      return true;
+    } else {
+      this.priorities = PRIORITY_DROPDOWN;
+      this.periods = PERIOD_DROPDOWN;
+      this.realEstatePost.period = 15;
+      this.realEstatePost.priority = 1;
+
+      return false;
+    }
+  }
+
+  check(): boolean {
+    if (this.isAgency && this.lstSelectedDistrictCodes.includes(this.realEstatePost.district.code)) {
+      return true;
+    }
+    return false;
+  }
+
   async savePost() {
     if (this.selectedFiles.length > 0) {
       if (this.selectedFiles.length < 2) {
@@ -401,6 +464,7 @@ export class CreateMainPostComponent implements OnInit, OnDestroy {
         }
         this.images.push(img);
       }
+
       let realEstatePostRequest: RealEstatePostRequest = {
         apartment: this.apartment,
         house: this.house,
