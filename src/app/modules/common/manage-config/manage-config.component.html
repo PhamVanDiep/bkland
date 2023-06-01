@@ -1,0 +1,17 @@
+<div class="w-full flex flex-col space-y-4 mt-4">
+    <div class="w-full flex flex-row justify-between items-center px-2 py-2 border border-gray-custom rounded-lg shadow-lg">
+        <span>Nhận thông báo trên thiết bị: </span>
+        <p-inputSwitch [(ngModel)]="userDeviceToken.enable" (ngModelChange)="updateUserDeviceToken()"></p-inputSwitch>
+    </div>
+    <div class="w-full flex flex-row justify-between items-center px-2 py-2 border border-gray-custom rounded-lg shadow-lg" *ngIf="isUser">
+        <span>Bật thông báo biến động giá: </span>
+        <p-inputSwitch [(ngModel)]="pfEnable" [disabled]="!isRegistered"
+            (ngModelChange)="updatePriceFluctuationEnable()"></p-inputSwitch>
+    </div>
+    <div class="w-full flex flex-row justify-between items-center px-2 py-2 border border-gray-custom rounded-lg shadow-lg" *ngIf="isSpecialAccount">
+        <span>Nhận thông báo đến hạn đóng phí hàng tháng trước: </span>
+        <p-dropdown [(ngModel)]="specialAccount.notifyBefore" 
+            [options]="lstNotifyBefore" optionLabel="value" optionValue="key"
+            (ngModelChange)="updateSpecialAccount()"></p-dropdown>
+    </div>
+</div>

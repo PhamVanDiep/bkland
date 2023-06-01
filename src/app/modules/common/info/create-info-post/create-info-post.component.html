@@ -12,7 +12,19 @@
     </div>
     <div class="flex flex-col w-full">
         <label for="infoType">Loại bài viết</label>
-        <p-dropdown [options]="lstInfoType" [(ngModel)]="infoPost.infoType" optionLabel="name" [disabled]="isEnterprise"></p-dropdown>
+        <p-dropdown [options]="lstInfoType" [(ngModel)]="infoPost.infoType" optionLabel="name" [disabled]="isEnterprise || isUpdate"></p-dropdown>
+    </div>
+    <div *ngIf="infoPost.infoType.id === 6 && !isUpdate" class="flex flex-col md:flex-row space-y-4 md:space-x-4 md:space-y-0">
+        <div class="flex flex-col w-full">
+            <label for="provinceCode" class="text-sm">Tỉnh/Thành phố</label>
+            <p-dropdown [options]="provinces" [(ngModel)]="selectedProvince" [disabled]="true"
+                [style]="{'width': '100%'}" optionLabel="fullName" (ngModelChange)="getDistrictsInProvince()"
+                optionValue="code" [filter]="true" filterBy="fullName" autoWidth="false"></p-dropdown>
+        </div>
+        <div class="flex flex-col w-full">
+            <label for="selectedDistricts" class="text-sm">Quận/Huyện/Thị xã</label>
+            <p-multiSelect [options]="districts" [(ngModel)]="selectedDistricts" optionLabel="fullName" optionValue="code"></p-multiSelect>
+        </div>
     </div>
     <div class="flex flex-row w-full justify-between items-center">
         <span>Tải ảnh minh họa lên:</span>

@@ -20,6 +20,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InfoPostService } from 'src/app/core/services/info-post.service';
 import { EditorModule } from 'primeng/editor';
 import { TooltipModule } from 'primeng/tooltip';
+import { MultiSelectModule } from 'primeng/multiselect';
 
 
 @NgModule({
@@ -44,7 +45,8 @@ import { TooltipModule } from 'primeng/tooltip';
     CardModule,
     DropdownModule,
     EditorModule,
-    TooltipModule
+    TooltipModule,
+    MultiSelectModule
   ],
   exports: [
     InfoComponent,

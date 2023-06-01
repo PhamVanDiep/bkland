@@ -47,6 +47,11 @@ export const ADMIN_NAV = [
         label: 'Quản lý thông tin hệ thống',
         icon: 'pi pi-info-circle',
         routerLink: 'admin/about'
+    },
+    {
+        label: 'Quản lý cấu hình',
+        icon: 'pi pi-cog',
+        routerLink: 'admin/config'
     }
 ];
 

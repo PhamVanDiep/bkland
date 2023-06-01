@@ -22,7 +22,7 @@ export class InfoPostService {
         });
     }
 
-    create(body: InfoPost): Observable<APIResponse> {
+    create(body: any): Observable<APIResponse> {
         let accessToken = localStorage.getItem('accessToken') || '';
         return this._httpClient.post<APIResponse>(`${environment.BASE_URL_AUTH}/info-post`, body, {
             headers: {

@@ -2,14 +2,18 @@ import { HttpStatusCode } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DeviceDetectorService, DeviceInfo } from 'ngx-device-detector';
 import { ReplaySubject, takeUntil } from 'rxjs';
+import { NOTIFY_BEFORE } from 'src/app/core/constants/other.constant';
+import { ROLE } from 'src/app/core/constants/role.constant';
 import { APIResponse } from 'src/app/core/models/api-response.model';
-import { PriceFluctuationResponse } from 'src/app/core/models/price-fluctuation.model';
+import { EnablePFRequest, PriceFluctuationResponse } from 'src/app/core/models/price-fluctuation.model';
+import { SpecialAccount } from 'src/app/core/models/special-account.model';
 import { UserDeviceToken } from 'src/app/core/models/user-device-token.model';
 import { AppTitleService } from 'src/app/core/services/app-title.service';
 import { LoadingService } from 'src/app/core/services/loading.service';
 import { MessageService } from 'src/app/core/services/message.service';
 import { PriceFluctuationService } from 'src/app/core/services/price-fluctuation.service';
 import { PushNotificationService } from 'src/app/core/services/push-notification.service';
+import { SpecialAccountService } from 'src/app/core/services/special-account.service';
 import { UserDeviceTokenService } from 'src/app/core/services/user-device-token.service';
 
 @Component({
@@ -28,6 +32,14 @@ export class ManageConfigComponent implements OnInit, OnDestroy {
   response: PriceFluctuationResponse;
   isRegistered: boolean;
 
+  isUser: boolean;
+  isSpecialAccount: boolean;
+
+  lstNotifyBefore: any[];
+  specialAccount: SpecialAccount;
+
+  userId: string;
+
   constructor(
     private _appTitleService: AppTitleService,
     private _loadingService: LoadingService,
@@ -36,6 +48,7 @@ export class ManageConfigComponent implements OnInit, OnDestroy {
     private _pushNotificationService: PushNotificationService,
     private _userDeviceTokenService: UserDeviceTokenService,
     private _priceFluctuationService: PriceFluctuationService,
+    private _specialAccountService: SpecialAccountService
   ) {
     this._appTitleService.setTitle(this.title);
 
@@ -53,6 +66,27 @@ export class ManageConfigComponent implements OnInit, OnDestroy {
     };
     this.pfEnable = false;
     this.isRegistered = false;
+    let _roles = localStorage.getItem('roles')?.split(',');
+    if (_roles?.includes(ROLE.ROLE_USER)) {
+      this.isUser = true;
+    } else {
+      this.isUser = false;
+    }
+
+    if (_roles?.includes(ROLE.ROLE_AGENCY) || _roles?.includes(ROLE.ROLE_ENTERPRISE)) {
+      this.isSpecialAccount = true;
+    } else {
+      this.isSpecialAccount = false;
+    }
+    this.lstNotifyBefore = NOTIFY_BEFORE;
+    this.specialAccount = {
+      agency: false,
+      lastPaid: null,
+      monthlyCharge: 0,
+      notifyBefore: 7,
+      userId: ''
+    };
+    this.userId = JSON.parse(window.atob((localStorage.getItem('accessToken') || '').split('.')[1])).id;
   }
 
   ngOnDestroy(): void {
@@ -98,7 +132,19 @@ export class ManageConfigComponent implements OnInit, OnDestroy {
             this._messageService.errorMessage(response.message); 
           }
         }
-      })
+      });
+
+    if (this.isSpecialAccount) {
+      this._specialAccountService.findById(this.userId)
+        .pipe(takeUntil(this._unsubscribe))
+        .subscribe((response: APIResponse) => {
+          if (response.status === HttpStatusCode.Ok) {
+            this.specialAccount = response.data;
+          } else {
+            this._messageService.errorMessage(response.message);
+          }
+        })
+    }
   }
 
   updateUserDeviceToken(): void {
@@ -123,6 +169,30 @@ export class ManageConfigComponent implements OnInit, OnDestroy {
   }
 
   updatePriceFluctuationEnable(): void {
+    let body: EnablePFRequest = {
+      enable: this.pfEnable,
+      userId: this.userId
+    }
+    this._priceFluctuationService.enable(body)
+      .pipe(takeUntil(this._unsubscribe))
+      .subscribe((response: APIResponse) => {
+        if (response.status === HttpStatusCode.Ok) {
+          this._messageService.successMessage(response.message);
+        } else {
+          this._messageService.errorMessage(response.message);
+        }
+      })
+  }
 
+  updateSpecialAccount(): void {
+    this._specialAccountService.updateSpecialAccount(this.specialAccount)
+      .pipe(takeUntil(this._unsubscribe))
+      .subscribe((response: APIResponse) => {
+        if (response.status === HttpStatusCode.Ok) {
+          
+        } else {
+          this._messageService.errorMessage(response.message);
+        }
+      })
   }
 }

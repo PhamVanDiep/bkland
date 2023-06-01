@@ -8,7 +8,7 @@ import { CooperateAgencyComponent } from "./cooperate-agency/cooperate-agency.co
 import { RegisterComponent } from "./cooperate-agency/register/register.component";
 import { InfoComponent } from "../common/info/info.component";
 import { CreateInfoPostComponent } from "../common/info/create-info-post/create-info-post.component";
-import { ManageConfigComponent } from "./manage-config/manage-config.component";
+import { ManageConfigComponent } from "../common/manage-config/manage-config.component";
 import { PriceFluctuationComponent } from "./price-fluctuation/price-fluctuation.component";
 
 export const route: Route[] = [
