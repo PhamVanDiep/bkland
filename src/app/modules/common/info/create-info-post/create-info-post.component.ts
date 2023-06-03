@@ -4,14 +4,17 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ReplaySubject, firstValueFrom, takeUntil } from 'rxjs';
 import { ROLE } from 'src/app/core/constants/role.constant';
 import { APIResponse } from 'src/app/core/models/api-response.model';
+import { District } from 'src/app/core/models/district.model';
 import { InfoPost } from 'src/app/core/models/info-post.model';
 import { InfoType } from 'src/app/core/models/info-type.model';
+import { Province } from 'src/app/core/models/province.model';
 import { AppTitleService } from 'src/app/core/services/app-title.service';
 import { InfoPostService } from 'src/app/core/services/info-post.service';
 import { InfoTypeService } from 'src/app/core/services/info-type.service';
 import { LoadingService } from 'src/app/core/services/loading.service';
 import { MediaService } from 'src/app/core/services/media.service';
 import { MessageService } from 'src/app/core/services/message.service';
+import { NoAuthService } from 'src/app/core/services/no-auth.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -20,7 +23,7 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./create-info-post.component.css']
 })
 export class CreateInfoPostComponent implements OnInit, OnDestroy {
-  private _unsubscibe: ReplaySubject<any> = new ReplaySubject<any>();
+  private _unsubscribe: ReplaySubject<any> = new ReplaySubject<any>();
   private title: string = 'Bài đăng tin tức';
 
   infoPost: InfoPost;
@@ -31,6 +34,12 @@ export class CreateInfoPostComponent implements OnInit, OnDestroy {
 
   selectedFile: any;
 
+  provinces: Province[];
+  districts: District[];
+
+  selectedProvince: string;
+  selectedDistricts: string[];
+
   constructor(
     private _appTitleService: AppTitleService,
     private _loadingService: LoadingService,
@@ -39,7 +48,8 @@ export class CreateInfoPostComponent implements OnInit, OnDestroy {
     private _infoPostService: InfoPostService,
     private _router: Router,
     private _route: ActivatedRoute,
-    private _mediaService: MediaService
+    private _mediaService: MediaService,
+    private _noAuthService: NoAuthService
   ) {
     this._appTitleService.setTitle(this.title);
     this.infoPost = {
@@ -76,6 +86,9 @@ export class CreateInfoPostComponent implements OnInit, OnDestroy {
     } else {
       this.isEnterprise = false;
     }
+
+    this.selectedProvince = '01';
+    this.selectedDistricts = [];
   }
 
   ngOnInit(): void {
@@ -83,7 +96,7 @@ export class CreateInfoPostComponent implements OnInit, OnDestroy {
     this._loadingService.loading(true);
     if (!this.isEnterprise) {
       this._infoTypeService.getAll()
-        .pipe(takeUntil(this._unsubscibe))
+        .pipe(takeUntil(this._unsubscribe))
         .subscribe((response: APIResponse) => {
           this._loadingService.loading(false);
           if (response.status === HttpStatusCode.Ok) {
@@ -94,7 +107,7 @@ export class CreateInfoPostComponent implements OnInit, OnDestroy {
         });
     } else {
       this._infoTypeService.findById(1)
-        .pipe(takeUntil(this._unsubscibe))
+        .pipe(takeUntil(this._unsubscribe))
         .subscribe((response: APIResponse) => {
           this._loadingService.loading(false);
           if (response.status === HttpStatusCode.Ok) {
@@ -109,7 +122,7 @@ export class CreateInfoPostComponent implements OnInit, OnDestroy {
     if (this.isUpdate) {
       let postId = this._route.snapshot.paramMap.get('id') || '';
       this._infoPostService.findById(postId)
-        .pipe(takeUntil(this._unsubscibe))
+        .pipe(takeUntil(this._unsubscribe))
         .subscribe((response: APIResponse) => {
           if (response.status === HttpStatusCode.Ok) {
             this.infoPost = response.data;
@@ -121,6 +134,30 @@ export class CreateInfoPostComponent implements OnInit, OnDestroy {
           }
         })
     }
+    this._noAuthService.getAllProvinces()
+      .pipe(takeUntil(this._unsubscribe))
+      .subscribe((response: APIResponse) => {
+        this._loadingService.loading(false);
+        if (response.status === HttpStatusCode.Ok) {
+          this.provinces = response.data.filter((e: any) => e.code != "NOT_FOUND");
+        } else {
+          this._messageService.errorMessage(response.message);
+        }
+      });
+    this.getDistrictsInProvince();
+  }
+
+  getDistrictsInProvince(): void {
+    this._noAuthService.getAllDistrictsInProvince(this.selectedProvince)
+      .pipe(takeUntil(this._unsubscribe))
+      .subscribe((response: APIResponse) => {
+        this._loadingService.loading(false);
+        if (response.status === HttpStatusCode.Ok) {
+          this.districts = response.data.filter((e: any) => e.code != "NOT_FOUND");
+        } else {
+          this._messageService.errorMessage(response.message);
+        }
+      })
   }
 
   onFileSelected(event: any): void {
@@ -152,7 +189,7 @@ export class CreateInfoPostComponent implements OnInit, OnDestroy {
       formData.append('title', this.selectedFile.type);
       formData.append('image', this.selectedFile, this.selectedFile.name);
 
-      let responseImgae = await firstValueFrom(this._mediaService.postImage(formData).pipe(takeUntil(this._unsubscibe)));
+      let responseImgae = await firstValueFrom(this._mediaService.postImage(formData).pipe(takeUntil(this._unsubscribe)));
       if (responseImgae.status === HttpStatusCode.Ok) {
         this.infoPost.imageUrl = environment.BASE_URL_NO_AUTH + '/photos/' + responseImgae.data;
       } else {
@@ -162,7 +199,10 @@ export class CreateInfoPostComponent implements OnInit, OnDestroy {
       }
       let _id = JSON.parse(window.atob((localStorage.getItem('accessToken') || '').split('.')[1])).id;
       this.infoPost.createBy = _id;
-      await firstValueFrom(this._infoPostService.create(this.infoPost).pipe(takeUntil(this._unsubscibe))) 
+      await firstValueFrom(this._infoPostService.create({
+        infoPost: this.infoPost,
+        districtCodes: this.selectedDistricts
+      }).pipe(takeUntil(this._unsubscribe))) 
         .then((response: APIResponse) => {
           this._loadingService.loading(false);
           if (response.status === HttpStatusCode.Ok) {
@@ -184,7 +224,7 @@ export class CreateInfoPostComponent implements OnInit, OnDestroy {
         formData.append('title', this.selectedFile.type);
         formData.append('image', this.selectedFile, this.selectedFile.name);
 
-        let responseImgae = await firstValueFrom(this._mediaService.postImage(formData).pipe(takeUntil(this._unsubscibe)));
+        let responseImgae = await firstValueFrom(this._mediaService.postImage(formData).pipe(takeUntil(this._unsubscribe)));
         if (responseImgae.status === HttpStatusCode.Ok) {
           this.infoPost.imageUrl = environment.BASE_URL_NO_AUTH + '/photos/' + responseImgae.data;
         } else {
@@ -195,7 +235,7 @@ export class CreateInfoPostComponent implements OnInit, OnDestroy {
       }
       let _id = JSON.parse(window.atob((localStorage.getItem('accessToken') || '').split('.')[1])).id;
       this.infoPost.updateBy = _id;
-      await firstValueFrom(this._infoPostService.update(this.infoPost).pipe(takeUntil(this._unsubscibe))) 
+      await firstValueFrom(this._infoPostService.update(this.infoPost).pipe(takeUntil(this._unsubscribe))) 
         .then((response: APIResponse) => {
           this._loadingService.loading(false);
           if (response.status === HttpStatusCode.Ok) {
@@ -219,8 +259,8 @@ export class CreateInfoPostComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     // throw new Error('Method not implemented.');
-    this._unsubscibe.next(null);
-    this._unsubscibe.complete();
+    this._unsubscribe.next(null);
+    this._unsubscribe.complete();
   }
 
 }

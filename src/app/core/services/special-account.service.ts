@@ -3,6 +3,7 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { environment } from "src/environments/environment";
 import { APIResponse } from "../models/api-response.model";
+import { SpecialAccount } from "../models/special-account.model";
 
 @Injectable({
     providedIn: 'root'
@@ -42,6 +43,24 @@ export class SpecialAccountService {
     agencyInfo(userId: string): Observable<APIResponse> {
         let accessToken = localStorage.getItem('accessToken') || '';
         return this._httpClient.get<APIResponse>(`${environment.BASE_URL_AUTH}/special-account/agency/${userId}`, {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        });
+    }
+
+    findById(userId: string): Observable<APIResponse> {
+        let accessToken = localStorage.getItem('accessToken') || '';
+        return this._httpClient.get<APIResponse>(`${environment.BASE_URL_AUTH}/special-account/${userId}`, {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        });
+    }
+
+    updateSpecialAccount(specialAccount: SpecialAccount): Observable<APIResponse> {
+        let accessToken = localStorage.getItem('accessToken') || '';
+        return this._httpClient.put<APIResponse>(`${environment.BASE_URL_AUTH}/special-account`, specialAccount, {
             headers: {
                 'Authorization': `Bearer ${accessToken}`
             }

@@ -32,7 +32,8 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { SpecialAccountService } from 'src/app/core/services/special-account.service';
 import { PaymentService } from 'src/app/core/services/payment.service';
 import { InfoModule } from '../common/info/info.module';
-import { ManageConfigComponent } from './manage-config/manage-config.component';
+import { ManageConfigComponent } from '../common/manage-config/manage-config.component';
+import { PriceFluctuationComponent } from './price-fluctuation/price-fluctuation.component';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import { ManageConfigComponent } from './manage-config/manage-config.component';
     CooperateAgencyComponent,
     RegisterComponent,
     ManageConfigComponent,
+    PriceFluctuationComponent,
   ],
   imports: [
     CommonModule,

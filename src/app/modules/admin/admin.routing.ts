@@ -6,6 +6,7 @@ import { MainPostComponent } from "./main-post/main-post.component";
 import { UserAccountComponent } from "./user-account/user-account.component";
 import { InfoComponent } from "../common/info/info.component";
 import { CreateInfoPostComponent } from "../common/info/create-info-post/create-info-post.component";
+import { ManageConfigComponent } from "../common/manage-config/manage-config.component";
 
 export const route: Route[] = [
     {
@@ -52,5 +53,9 @@ export const route: Route[] = [
     {
         path: 'manage-account',
         component: UserAccountComponent
+    },
+    {
+        path: 'config',
+        component: ManageConfigComponent
     }
 ]

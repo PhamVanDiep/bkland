@@ -194,7 +194,8 @@ export class SignUpComponent implements OnInit, OnDestroy {
               agency: false,
               lastPaid: null,
               monthlyCharge: 100000,
-              userId: this.signUpRequest.id
+              userId: this.signUpRequest.id,
+              notifyBefore: 7
             }
             this._noAuthService.createSpecialAccount(specialAccount)
               .pipe(takeUntil(this._unsubscribe))

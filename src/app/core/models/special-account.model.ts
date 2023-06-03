@@ -3,4 +3,5 @@ export interface SpecialAccount {
     monthlyCharge: number;
     agency: boolean;
     lastPaid: any;
+    notifyBefore: number;
 }
