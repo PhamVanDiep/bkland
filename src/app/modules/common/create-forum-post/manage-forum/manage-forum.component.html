@@ -1,0 +1,13 @@
+<div class="w-full flex flex-col px-4 lg:px-6 space-y-6">
+    <div class="flex flex-row w-full justify-between items-center mt-4">
+        <span class="font-bold text-2xl">Danh sách bài viết đã chia sẻ tới cộng đồng</span>
+        <button pButton class="p-button-success p-button-rounded" 
+            icon="pi pi-plus" pTooltip="Chia sẻ bài viết mới" (click)="createPost()"></button>
+    </div>
+    <div class="w-full flex flex-col justify-center items-center space-y-4 pb-4">
+        <div class="w-full flex flex-col md:w-[50vw] border rounded-md border-gray-custom p-4" 
+            *ngFor="let item of forumPosts">
+            <app-forum-post-detail [forumPost]="item" [isView]="false"></app-forum-post-detail>
+        </div>
+    </div>
+</div>

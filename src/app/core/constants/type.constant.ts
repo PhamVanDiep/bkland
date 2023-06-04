@@ -18,3 +18,8 @@ export const TYPE_DROPDOWN = [
         value: 'Đất nền'
     }
 ];
+
+export const POST_TYPE = {
+    REAL_ESTATE_POST: 'REAL_ESTATE_POST',
+    FORUM_POST: 'FORUM_POST'
+}

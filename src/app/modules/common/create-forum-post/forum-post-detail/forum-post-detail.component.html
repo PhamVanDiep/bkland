@@ -1,0 +1,89 @@
+<p-overlayPanel #op>
+    <span>{{ noReportsToolTip }}</span>
+</p-overlayPanel>
+<p-menu #menu [model]="items" [popup]="true"></p-menu>
+<div class="w-full flex flex-col space-y-4">
+    <div class="flex flex-row w-full justify-between items-center">
+        <div class="flex flex-row w-full space-x-4 items-center">
+            <p-avatar [image]="avatarRetrive" shape="circle"></p-avatar>
+            <div class="flex flex-col">
+                <span class="font-bold">{{ username }}</span>
+                <span class="font-light text-sm">{{ createAt }}</span>
+            </div>
+        </div>
+        <div class="flex flex-row space-x-2 justify-center items-center">
+            <div *ngIf="isView;else isManage">
+                <button pButton pRipple icon="pi pi-exclamation-triangle"
+                    class="p-button-rounded p-button-text p-button-secondary" (click)="report()"></button>
+            </div>
+            <ng-template #isManage>
+                <i class="pi pi-exclamation-triangle" *ngIf="!isView" [pTooltip]="noReportsToolTip"
+                    (click)="op.toggle($event)"></i>
+                <button pButton pRipple icon="pi pi-ellipsis-v"
+                    class="p-button-rounded p-button-text p-button-secondary" (click)="menu.toggle($event)"></button>
+            </ng-template>
+        </div>
+    </div>
+    <div class="w-full">
+        <span>{{ forumPost.content }}</span>
+    </div>
+
+    <div *ngIf="images.length > 0" class="flex flex-row w-full space-x-2">
+        <div *ngIf="images.length == 1" class="w-full">
+            <div *ngFor="let image of images; let index = index" key="index">
+                <img [src]="image" class="w-full h-auto cursor-pointer" (click)="imageClick(index)" />
+            </div>
+        </div>
+        <div *ngIf="images.length == 2" class="flex flex-row w-full space-x-2 justify-between">
+            <img [src]="images[0]" class="w-full h-48 cursor-pointer" (click)="imageClick(0)" />
+            <img [src]="images[1]" class="w-full h-48 cursor-pointer" (click)="imageClick(1)" />
+        </div>
+        <div *ngIf="images.length == 3" class="w-full">
+            <div class="flex flex-row space-x-2 w-full">
+                <img [src]="images[0]" class="w-1/2 h-72 cursor-pointer" (click)="imageClick(0)" />
+                <div class="flex flex-col space-y-2 w-full">
+                    <img [src]="images[1]" class="w-full h-36 cursor-pointer" (click)="imageClick(1)" />
+                    <img [src]="images[2]" class="w-full h-36 cursor-pointer" (click)="imageClick(2)" />
+                </div>
+            </div>
+        </div>
+        <div *ngIf="images.length == 4" class="w-full">
+            <div class="flex flex-row space-x-2 w-full">
+                <div class="flex flex-col space-y-2 w-full">
+                    <img [src]="images[0]" class="w-full h-36 cursor-pointer" (click)="imageClick(0)" />
+                    <img [src]="images[1]" class="w-full h-36 cursor-pointer" (click)="imageClick(1)" />
+                </div>
+                <div class="flex flex-col space-y-2 w-full">
+                    <img [src]="images[2]" class="w-full h-36 cursor-pointer" (click)="imageClick(2)" />
+                    <img [src]="images[3]" class="w-full h-36 cursor-pointer" (click)="imageClick(3)" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <p-galleria [value]="images" [(visible)]="displayCustom" [(activeIndex)]="activeIndex"
+        [responsiveOptions]="responsiveOptions" [containerStyle]="{ 'max-width': '850px' }" [numVisible]="7"
+        [circular]="true" [fullScreen]="true" [showItemNavigators]="true" [showThumbnails]="false">
+        <ng-template pTemplate="item" let-item>
+            <img [src]="item" style="width: 100%; display: block;" />
+        </ng-template>
+    </p-galleria>
+    <div class="w-full flex flex-row justify-between items-center">
+        <span class="text-sm font-thin">{{ forumPostLog.noLikes + ' lượt thích' }}</span>
+        <span class="text-sm font-thin">{{ forumPostLog.noComments + ' bình luận' }}</span>
+    </div>
+    <div class="flex flex-row w-full border-t border-gray-400 pt-4">
+        <div class="flex flex-row w-full justify-center items-center border-r border-gray-400">
+            <div class="flex flex-row space-x-2 justify-center items-center cursor-pointer" (click)="likeClicked()">
+                <i class="pi pi-thumbs-up" [ngClass]="liked ? 'text-blue-custom' : 'text-black'"></i>
+                <span [ngClass]="liked ? 'text-blue-custom' : 'text-black'">Thích</span>
+            </div>
+        </div>
+        <div class="flex flex-row w-full justify-center items-center">
+            <div class="flex flex-row space-x-2 justify-center items-center cursor-pointer" (click)="commentClicked()">
+                <i class="pi pi-comment"></i>
+                <span>Bình luận</span>
+            </div>
+        </div>
+    </div>
+</div>

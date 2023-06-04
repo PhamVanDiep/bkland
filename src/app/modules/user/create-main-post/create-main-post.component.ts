@@ -7,7 +7,7 @@ import { PERIOD_DROPDOWN } from 'src/app/core/constants/period.constant';
 import { PRIORITY_DROPDOWN } from 'src/app/core/constants/priority.constant';
 import { ROLE } from 'src/app/core/constants/role.constant';
 import { STATUS } from 'src/app/core/constants/status.constant';
-import { TYPE, TYPE_DROPDOWN } from 'src/app/core/constants/type.constant';
+import { POST_TYPE, TYPE, TYPE_DROPDOWN } from 'src/app/core/constants/type.constant';
 import { Apartment } from 'src/app/core/models/apartment.model';
 import { APIResponse } from 'src/app/core/models/api-response.model';
 import { District } from 'src/app/core/models/district.model';
@@ -459,7 +459,7 @@ export class CreateMainPostComponent implements OnInit, OnDestroy {
           id: response.data,
           mediaType: element.type,
           postId: this.realEstatePost.id,
-          postType: 'REAL_ESTATE_POST',
+          postType: POST_TYPE.REAL_ESTATE_POST,
           name: element.name
         }
         this.images.push(img);
@@ -502,7 +502,7 @@ export class CreateMainPostComponent implements OnInit, OnDestroy {
             id: response.data,
             mediaType: element.type,
             postId: this.realEstatePost.id,
-            postType: 'REAL_ESTATE_POST',
+            postType: POST_TYPE.REAL_ESTATE_POST,
             name: element.name
           }
           this.images.push(img);

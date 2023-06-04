@@ -1,0 +1,188 @@
+<p-confirmDialog [style]="{width: innerWidth > 640 ? '50vw' : '100vh'}"></p-confirmDialog>
+<div class="w-full flex flex-col px-4 lg:px-6 space-y-6">
+    <div class="flex flex-col space-y-4 mt-4">
+        <span class="text-xl font-bold">Danh mục báo cáo</span>
+        <p-card header="Thêm mới danh mục">
+            <div class="w-full flex flex-row justify-between space-x-4 text-left mt-4">
+                <input pInputText [(ngModel)]="newReportType.name" class="w-1/2" placeholder="Nhập tên danh mục">
+                <div class="flex flex-col justify-start">
+                    <label for="useFor" class="font-bold">Áp dụng cho:</label>
+                    <div class="flex flex-row space-x-4">
+                        <div *ngFor="let item of useFor">
+                            <p-radioButton [value]="item.key" [inputId]="item.key" [(ngModel)]="newReportType.forum"></p-radioButton>
+                            <label [for]="item.key" class="ml-2">{{ item.value }}</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-1/4 flex justify-end md:w-1/12">
+                    <button pButton pRipple icon="pi pi-plus"
+                        class="p-button-rounded p-button-success w-max"
+                        (click)="createReportType()" pTooltip="Tạo mới danh mục"></button>
+                </div>
+            </div>
+        </p-card>
+        <p-table
+            [value]="lstReportTypes"
+            [paginator]="true"
+            [rows]="10"
+            dataKey="id"
+            editMode="row"
+            [rowsPerPageOptions]="[10, 25, 50]"
+            currentPageReportTemplate="{first} đến {last} trên {totalRecords} bản ghi"
+        >
+            <ng-template pTemplate="header">
+                <tr>
+                    <th pFrozenColumn>#</th>
+                    <th>Tên danh mục</th>
+                    <th>Áp dụng cho</th>
+                    <th>Thời điểm tạo</th>
+                    <th>Thời điểm cập nhật</th>
+                    <th></th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-reportType let-editing="editing" let-index="rowIndex">
+                <tr [pEditableRow]="reportType">
+                    <th>
+                        <span class="text-sm font-normal pl-4">
+                            {{ index + 1}}
+                        </span>
+                    </th>
+                    <th>
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <input pInputText [(ngModel)]="reportType.name">
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                                <span class="text-sm font-normal">
+                                    {{ reportType.name }}
+                                </span>
+                            </ng-template>
+                        </p-cellEditor>
+                    </th>
+                    <th>
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <div class="flex flex-col justify-start">
+                                    <label for="useFor" class="font-bold">Áp dụng cho:</label>
+                                    <div class="flex flex-row space-x-4">
+                                        <div *ngFor="let item of useFor">
+                                            <p-radioButton [value]="item.key" [inputId]="item.key" [(ngModel)]="reportType.forum"></p-radioButton>
+                                            <label [for]="item.key" class="ml-2">{{ item.value }}</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                                <span class="text-sm font-normal">
+                                    {{ reportType.forum ? 'Cộng đồng' : 'Bán/Cho thuê' }}
+                                </span>
+                            </ng-template>
+                        </p-cellEditor>
+                    </th>
+                    <th>
+                        <span class="text-sm font-normal">
+                            {{ reportType.createAt | date:'dd/MM/yyyy, h:mm:ss a' }}
+                        </span>
+                    </th>
+                    <th>
+                        <span class="text-sm font-normal">
+                            {{ reportType.updateAt | date:'dd/MM/yyyy, h:mm:ss a' }}
+                        </span>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-end gap-2">
+                            <button *ngIf="!editing" pButton pRipple type="button" pInitEditableRow icon="pi pi-pencil" (click)="onRowEditInit(reportType)" class="p-button-rounded p-button-text"></button>
+                            <button *ngIf="editing" pButton pRipple type="button" pSaveEditableRow icon="pi pi-check" (click)="onRowEditSave(reportType)" class="p-button-rounded p-button-text p-button-success mr-2"></button>
+                            <button *ngIf="editing" pButton pRipple type="button" pCancelEditableRow icon="pi pi-times" (click)="onRowEditCancel(reportType, index)" class="p-button-rounded p-button-text p-button-danger"></button>
+                            <button *ngIf="!editing" pButton pRipple class="p-button-rounded p-button-danger p-button-text" icon="pi pi-trash" (click)="deleteReportType(reportType.id)"></button>
+                        </div>
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td>Không có dữ liệu.</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+    <!-- <div class="flex flex-col w-full space-y-4">
+        <div class="flex flex-row w-full justify-between items-center">
+            <span class="text-xl font-bold">{{ 'Danh sách bài đăng [' + lstInfoPosts.length + ']' }}</span>
+            <button pButton pRipple pTooltip="Tạo bài viết mới"
+                class="p-button-rounded p-button-success" icon="pi pi-plus" (click)="createInfoPost()"></button>
+        </div>
+        <p-table
+            [value]="lstInfoPosts"
+            [paginator]="true"
+            [rows]="10"
+            dataKey="id"
+            [rowsPerPageOptions]="[10, 25, 50]"
+            currentPageReportTemplate="{first} đến {last} trên {totalRecords} bản ghi"
+            class="p-datatable-striped"
+        >
+            <ng-template pTemplate="header">
+                <tr>
+                    <th pFrozenColumn>#</th>
+                    <th>Tiêu đề</th>
+                    <th>Mô tả</th>
+                    <th>Loại</th>
+                    <th>Người tạo</th>
+                    <th>Thời gian tạo</th>
+                    <th>Số lượt xem</th>
+                    <th></th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-infoPost let-editing="editing" let-index="rowIndex">
+                <tr>
+                    <th>
+                        <span class="text-sm font-normal pl-4">
+                            {{ index + 1}}
+                        </span>
+                    </th>
+                    <th>
+                        <span class="text-sm font-normal">
+                            {{ infoPost.title }}
+                        </span>
+                    </th>
+                    <th>
+                        <span class="text-sm font-normal">
+                            {{ infoPost.description }}
+                        </span>
+                    </th>
+                    <th>
+                        <span class="text-sm font-normal">
+                            {{ infoPost.infoType.name }}
+                        </span>
+                    </th>
+                    <th>
+                        <span class="text-sm font-normal">
+                            {{ infoPost.user.firstName + ' ' + infoPost.user.middleName + ' ' + infoPost.user.lastName }}
+                        </span>
+                    </th>
+                    <th>
+                        <span class="text-sm font-normal">
+                            {{ infoPost.createAt | date:'dd/MM/yyyy, h:mm:ss a' }}
+                        </span>
+                    </th>
+                    <th class="text-center">
+                        <span class="text-sm font-normal pl-4">
+                            {{ infoPost.view }}
+                        </span>
+                    </th>
+                    <th>
+                        <div class="flex flex-row justify-end">
+                            <button pButton pRipple class="p-button-rounded p-button-text" icon="pi pi-pencil" (click)="updatePost(infoPost.id)"></button>
+                            <button pButton pRipple class="p-button-rounded p-button-danger p-button-text" icon="pi pi-trash" (click)="deletePost(infoPost.id)"></button>
+                        </div>
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td>Không có dữ liệu.</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div> -->
+</div>

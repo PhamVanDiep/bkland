@@ -34,6 +34,7 @@ import { PaymentService } from 'src/app/core/services/payment.service';
 import { InfoModule } from '../common/info/info.module';
 import { ManageConfigComponent } from '../common/manage-config/manage-config.component';
 import { PriceFluctuationComponent } from './price-fluctuation/price-fluctuation.component';
+import { CreateForumPostModule } from '../common/create-forum-post/create-forum-post.module';
 
 @NgModule({
   declarations: [
@@ -69,7 +70,8 @@ import { PriceFluctuationComponent } from './price-fluctuation/price-fluctuation
     MenuModule,
     ConfirmDialogModule,
     MultiSelectModule,
-    InfoModule
+    InfoModule,
+    CreateForumPostModule
   ],
   providers: [
     ConfirmationService,

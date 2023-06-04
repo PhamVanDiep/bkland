@@ -27,6 +27,11 @@ import { EditorModule } from 'primeng/editor';
 import { InfoModule } from '../common/info/info.module';
 import { TooltipModule } from 'primeng/tooltip';
 import { TabViewModule } from 'primeng/tabview';
+import { CreateForumPostModule } from '../common/create-forum-post/create-forum-post.module';
+import { ReportComponent } from './report/report.component';
+import { ReportTypeService } from 'src/app/core/services/report-type.service';
+import { RadioButtonModule } from 'primeng/radiobutton';
+import { CheckboxModule } from 'primeng/checkbox';
 
 @NgModule({
   declarations: [
@@ -35,6 +40,7 @@ import { TabViewModule } from 'primeng/tabview';
     FinanceTransactionComponent,
     MainPostComponent,
     UserAccountComponent,
+    ReportComponent,
   ],
   imports: [
     CommonModule,
@@ -55,12 +61,16 @@ import { TabViewModule } from 'primeng/tabview';
     EditorModule,
     InfoModule,
     TooltipModule,
-    TabViewModule
+    TabViewModule,
+    CreateForumPostModule,
+    RadioButtonModule,
+    CheckboxModule
   ],
   providers: [
     ConfirmationService,
     PaymentService,
-    InfoPostService
+    InfoPostService,
+    ReportTypeService
   ]
 })
 export class AdminModule { }

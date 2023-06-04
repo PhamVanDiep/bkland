@@ -10,6 +10,8 @@ import { InfoComponent } from "../common/info/info.component";
 import { CreateInfoPostComponent } from "../common/info/create-info-post/create-info-post.component";
 import { ManageConfigComponent } from "../common/manage-config/manage-config.component";
 import { PriceFluctuationComponent } from "./price-fluctuation/price-fluctuation.component";
+import { ManageForumComponent } from "../common/create-forum-post/manage-forum/manage-forum.component";
+import { CreateForumPostComponent } from "../common/create-forum-post/create-forum-post.component";
 
 export const route: Route[] = [
     {
@@ -83,5 +85,22 @@ export const route: Route[] = [
     {
         path: 'price-fluctuation-notify',
         component: PriceFluctuationComponent
+    },
+    {
+        path: 'post/forum',
+        children: [
+            {
+                path: '',
+                component: ManageForumComponent
+            },
+            {
+                path: 'create',
+                component: CreateForumPostComponent
+            },
+            {
+                path: 'update/:id',
+                component: CreateForumPostComponent
+            }
+        ]
     }
 ]

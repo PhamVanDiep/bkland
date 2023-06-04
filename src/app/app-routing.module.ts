@@ -7,6 +7,7 @@ import { NoAuthGuardService as NoAuthGuard } from 'src/app/core/guards/no-auth.g
 import { ROLE } from './core/constants/role.constant';
 import { MainLayoutComponent } from 'src/app/layout/main-layout/main-layout.component';
 import { AdministrationLayoutComponent } from 'src/app/layout/administration-layout/administration-layout.component';
+import { ForumComponent } from './modules/forum/forum.component';
 
 const routes: Routes = [
   {
@@ -95,6 +96,16 @@ const routes: Routes = [
       {
         path: '',
         loadChildren: () => import('src/app/modules/info-post/info-post.module').then(m => m.InfoPostModule)
+      }
+    ]
+  },
+  {
+    path: 'cong-dong',
+    component: MainLayoutComponent,
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('src/app/modules/forum/forum.module').then(m => m.ForumModule)
       }
     ]
   }
