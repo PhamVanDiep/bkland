@@ -1,0 +1,28 @@
+<p-dialog header="Báo cáo bài viết" 
+    [(visible)]="displayCreateReportDialog" 
+    [style]="{width: innerWidth <= 640 ? '100vw' : '30vw', 'height': '100vh'}" 
+    [baseZIndex]="100" [modal]="true"
+    (onHide)="hideDialog()">
+    <div class="w-full flex flex-col space-y-4 px-2">
+        <span class="text-lg font-semibold">Báo cáo bài viết</span>
+        <div>
+            <label>Bài viết vi phạm</label>
+            <p-multiSelect [ngClass]="postReport.reportTypes.length == 0 ? 'ng-invalid ng-dirty' : ''"
+                [options]="reportTypes" optionLabel="name" 
+                [(ngModel)]="postReport.reportTypes"
+                [filter]="false"
+                ></p-multiSelect>
+        </div>
+        <div class="flex flex-col w-full">
+            <label>Mô tả chi tiết</label>
+            <textarea cols="30" pInputTextarea
+            [(ngModel)]="postReport.description" 
+            [ngClass]="postReport.description.length == 0 ? 'ng-invalid ng-dirty' : ''"></textarea>
+        </div>
+    </div>
+    <ng-template pTemplate="footer">
+        <p-button (click)="sendReport()" 
+            [disabled]="postReport.reportTypes.length == 0 || postReport.description.length == 0" 
+            label="Gửi báo cáo" styleClass="p-button-text"></p-button>
+    </ng-template>
+</p-dialog>

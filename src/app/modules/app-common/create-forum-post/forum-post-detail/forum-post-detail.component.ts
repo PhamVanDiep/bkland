@@ -1,5 +1,5 @@
 import { HttpStatusCode } from '@angular/common/http';
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { ReplaySubject, firstValueFrom, takeUntil } from 'rxjs';
 import { APIResponse } from 'src/app/core/models/api-response.model';
 import { ForumPost, ForumPostLog } from 'src/app/core/models/forum-post.model';
@@ -24,6 +24,9 @@ export class ForumPostDetailComponent implements OnInit, OnDestroy {
   @Input() forumPost: ForumPost;
   @Input() isView: boolean;
 
+  @Output() postIdEvent = new EventEmitter<string>();
+  @Output() deleteEvent = new EventEmitter<string>();
+  
   avatarRetrive: any;
   username: string;
   createAt: string;
@@ -172,7 +175,11 @@ export class ForumPostDetailComponent implements OnInit, OnDestroy {
   }
 
   report(): void {
-
+    if (!this._authService.isAuthenticated()) {
+      this._messageService.infoMessage("Bạn cần đăng nhập để thực hiện tính năng này.")
+      return;
+    }
+    this.postIdEvent.next(this.forumPost.id);
   }
 
   updatePost(): void {
@@ -180,7 +187,16 @@ export class ForumPostDetailComponent implements OnInit, OnDestroy {
   }
 
   deletePost(): void {
-
+    this._loadingService.loading(true);
+    this._forumPostService.deletePost(this.forumPost.id)
+      .pipe(takeUntil(this._unsubscribe))
+      .subscribe((response: APIResponse) => {
+        if (response.status === HttpStatusCode.Ok) {
+          this._messageService.successMessage(response.message);
+        } else {
+          this._messageService.errorMessage(response.message);
+        }
+      })
   }
 
   likeClicked(): void {

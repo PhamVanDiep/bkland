@@ -1,3 +1,9 @@
+<app-create-report 
+    [isForumPost]="true" 
+    [displayCreateReportDialog]="displayCreateReportDialog" 
+    [postId]="selectedPostId"
+    (hideEvent)="displayCreateReportDialog=false">
+</app-create-report>
 <div class="w-full flex flex-col px-4 lg:px-6 space-y-6 justify-center items-center">
     <div class="w-full flex flex-row md:w-[50vw] border rounded-md border-gray-custom p-4 space-x-4 mt-4">
         <p-avatar [image]="retriveAvatar" shape="circle"></p-avatar>
@@ -8,7 +14,7 @@
     <div class="w-full flex flex-col justify-center items-center space-y-4 pb-4 mt-4" *ngIf="forumPosts.length > 0;else emptyForumPost">
         <div class="w-full flex flex-col md:w-[50vw] border rounded-md border-gray-custom p-4" 
             *ngFor="let item of forumPosts">
-            <app-forum-post-detail [forumPost]="item" [isView]="true"></app-forum-post-detail>
+            <app-forum-post-detail [forumPost]="item" [isView]="true" (postIdEvent)="selectedPostId = $event; displayCreateReportDialog = true"></app-forum-post-detail>
         </div>
     </div>
     <ng-template #emptyForumPost>

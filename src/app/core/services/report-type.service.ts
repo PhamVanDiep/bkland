@@ -14,7 +14,25 @@ export class ReportTypeService {
     ) {}
 
     getAll(): Observable<APIResponse> {
-        return this._httpClient.get<APIResponse>(`${environment.BASE_URL_NO_AUTH}/report-type`);
+        let accessToken = localStorage.getItem('accessToken') || '';
+        return this._httpClient.get<APIResponse>(`${environment.BASE_URL_AUTH}/report-type`, {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        });
+    }
+
+    getAllReportTypeREP(): Observable<APIResponse> {
+        return this._httpClient.get<APIResponse>(`${environment.BASE_URL_NO_AUTH}/report-type/rep`);
+    }
+
+    getAllReportTypeFR(): Observable<APIResponse> {
+        let accessToken = localStorage.getItem('accessToken') || '';
+        return this._httpClient.get<APIResponse>(`${environment.BASE_URL_AUTH}/report-type/fp`, {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        });
     }
 
     create(body: ReportType): Observable<APIResponse> {

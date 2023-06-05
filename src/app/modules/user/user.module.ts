@@ -31,10 +31,8 @@ import { RegisterComponent } from './cooperate-agency/register/register.componen
 import { MultiSelectModule } from 'primeng/multiselect';
 import { SpecialAccountService } from 'src/app/core/services/special-account.service';
 import { PaymentService } from 'src/app/core/services/payment.service';
-import { InfoModule } from '../common/info/info.module';
-import { ManageConfigComponent } from '../common/manage-config/manage-config.component';
 import { PriceFluctuationComponent } from './price-fluctuation/price-fluctuation.component';
-import { CreateForumPostModule } from '../common/create-forum-post/create-forum-post.module';
+import { AppCommonModule } from '../app-common/app-common.module';
 
 @NgModule({
   declarations: [
@@ -45,7 +43,6 @@ import { CreateForumPostModule } from '../common/create-forum-post/create-forum-
     ManageMainPostComponent,
     CooperateAgencyComponent,
     RegisterComponent,
-    ManageConfigComponent,
     PriceFluctuationComponent,
   ],
   imports: [
@@ -70,8 +67,7 @@ import { CreateForumPostModule } from '../common/create-forum-post/create-forum-
     MenuModule,
     ConfirmDialogModule,
     MultiSelectModule,
-    InfoModule,
-    CreateForumPostModule
+    AppCommonModule
   ],
   providers: [
     ConfirmationService,

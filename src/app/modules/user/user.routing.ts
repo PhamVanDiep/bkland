@@ -6,12 +6,12 @@ import { BalanceFluctuationComponent } from "./balance-fluctuation/balance-fluct
 import { ManageMainPostComponent } from "./manage-main-post/manage-main-post.component";
 import { CooperateAgencyComponent } from "./cooperate-agency/cooperate-agency.component";
 import { RegisterComponent } from "./cooperate-agency/register/register.component";
-import { InfoComponent } from "../common/info/info.component";
-import { CreateInfoPostComponent } from "../common/info/create-info-post/create-info-post.component";
-import { ManageConfigComponent } from "../common/manage-config/manage-config.component";
+import { InfoComponent } from "../app-common/info/info.component";
+import { CreateInfoPostComponent } from "../app-common/info/create-info-post/create-info-post.component";
+import { ManageConfigComponent } from "../app-common/manage-config/manage-config.component";
 import { PriceFluctuationComponent } from "./price-fluctuation/price-fluctuation.component";
-import { ManageForumComponent } from "../common/create-forum-post/manage-forum/manage-forum.component";
-import { CreateForumPostComponent } from "../common/create-forum-post/create-forum-post.component";
+import { ManageForumComponent } from "../app-common/create-forum-post/manage-forum/manage-forum.component";
+import { CreateForumPostComponent } from "../app-common/create-forum-post/create-forum-post.component";
 
 export const route: Route[] = [
     {

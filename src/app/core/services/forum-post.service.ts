@@ -69,4 +69,13 @@ export class ForumPostService {
     getLog(postId: string): Observable<APIResponse> {
         return this._httpClient.get<APIResponse>(`${environment.BASE_URL_NO_AUTH}/forum-post/log/${postId}`);
     }
+
+    deletePost(postId: string): Observable<APIResponse> {
+        let accessToken = localStorage.getItem('accessToken') || '';
+        return this._httpClient.delete<APIResponse>(`${environment.BASE_URL_AUTH}/forum-post/${postId}`, {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        });
+    }
 }

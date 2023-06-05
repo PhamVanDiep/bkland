@@ -40,6 +40,9 @@ export class ForumComponent implements OnInit, OnDestroy {
     }
   }
 
+  displayCreateReportDialog: boolean;
+  selectedPostId: string;
+  
   constructor(
     private _appTitleService: AppTitleService,
     private _loadingService: LoadingService,
@@ -56,6 +59,7 @@ export class ForumComponent implements OnInit, OnDestroy {
     this.isMore = true;
     this.page = 0;
     this.retriveAvatar = '/assets/images/user.png';
+    this.displayCreateReportDialog = false;
   }
 
   ngOnInit(): void {

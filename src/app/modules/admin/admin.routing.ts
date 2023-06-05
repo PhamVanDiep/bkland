@@ -4,11 +4,11 @@ import { AboutComponent } from "./about/about.component";
 import { FinanceTransactionComponent } from "./finance-transaction/finance-transaction.component";
 import { MainPostComponent } from "./main-post/main-post.component";
 import { UserAccountComponent } from "./user-account/user-account.component";
-import { InfoComponent } from "../common/info/info.component";
-import { CreateInfoPostComponent } from "../common/info/create-info-post/create-info-post.component";
-import { ManageConfigComponent } from "../common/manage-config/manage-config.component";
-import { ManageForumComponent } from "../common/create-forum-post/manage-forum/manage-forum.component";
-import { CreateForumPostComponent } from "../common/create-forum-post/create-forum-post.component";
+import { InfoComponent } from "../app-common/info/info.component";
+import { CreateInfoPostComponent } from "../app-common/info/create-info-post/create-info-post.component";
+import { ManageConfigComponent } from "../app-common/manage-config/manage-config.component";
+import { ManageForumComponent } from "../app-common/create-forum-post/manage-forum/manage-forum.component";
+import { CreateForumPostComponent } from "../app-common/create-forum-post/create-forum-post.component";
 import { ReportComponent } from "./report/report.component";
 
 export const route: Route[] = [

@@ -2,6 +2,7 @@ import { HttpStatusCode } from '@angular/common/http';
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { ReplaySubject, filter, takeUntil } from 'rxjs';
+import { ROLE } from 'src/app/core/constants/role.constant';
 import { APIResponse } from 'src/app/core/models/api-response.model';
 import { ForumPost } from 'src/app/core/models/forum-post.model';
 import { AppTitleService } from 'src/app/core/services/app-title.service';
@@ -22,6 +23,9 @@ export class ManageForumComponent implements OnInit, OnDestroy {
   page: number;
   private pageSize: number = 10;
   isMore: boolean;
+  isAdmin: boolean;
+
+  userForumPosts: any[];
 
   @HostListener("window:scroll", ["$event"])
   onWindowScroll() {
@@ -46,6 +50,13 @@ export class ManageForumComponent implements OnInit, OnDestroy {
     this.forumPosts = [];
     this.isMore = false;
     this.page = 0;
+    let roles = localStorage.getItem('roles') || '';
+    if (roles === ROLE.ROLE_ADMIN) {
+      this.isAdmin = true;
+    } else {
+      this.isAdmin = false;
+    }
+    this.userForumPosts = [];
   }
 
   ngOnInit(): void {
@@ -81,5 +92,17 @@ export class ManageForumComponent implements OnInit, OnDestroy {
 
   createPost(): void {
     this._router.navigate(['./create'], { relativeTo: this._route });
+  }
+
+  filtForumPost(event: any): void {
+    this.forumPosts = this.forumPosts.filter(e => e.id != event);
+  }
+
+  viewDetail(postId: string): void {
+
+  }
+
+  deleteForumPost(postId: string) {
+
   }
 }
