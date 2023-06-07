@@ -119,20 +119,22 @@ export class ManageConfigComponent implements OnInit, OnDestroy {
         this.sendUpdateUserDeviceTokenRequest();
       });
 
-    this._priceFluctuationService.findByUserId(_id)
-      .pipe(takeUntil(this._unsubscribe))
-      .subscribe((response: APIResponse) => {
-        this._loadingService.loading(false);
-        if (response.status === HttpStatusCode.Ok) {
-          this.response = response.data;
-          this.pfEnable = this.response.enable;
-          this.isRegistered = true;
-        } else {
-          if (response.status === HttpStatusCode.InternalServerError) {
-            this._messageService.errorMessage(response.message); 
+    if (this.isUser) {
+      this._priceFluctuationService.findByUserId(_id)
+        .pipe(takeUntil(this._unsubscribe))
+        .subscribe((response: APIResponse) => {
+          this._loadingService.loading(false);
+          if (response.status === HttpStatusCode.Ok) {
+            this.response = response.data;
+            this.pfEnable = this.response.enable;
+            this.isRegistered = true;
+          } else {
+            if (response.status === HttpStatusCode.InternalServerError) {
+              this._messageService.errorMessage(response.message);
+            }
           }
-        }
-      });
+        });
+    }
 
     if (this.isSpecialAccount) {
       this._specialAccountService.findById(this.userId)
@@ -189,7 +191,7 @@ export class ManageConfigComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this._unsubscribe))
       .subscribe((response: APIResponse) => {
         if (response.status === HttpStatusCode.Ok) {
-          
+
         } else {
           this._messageService.errorMessage(response.message);
         }

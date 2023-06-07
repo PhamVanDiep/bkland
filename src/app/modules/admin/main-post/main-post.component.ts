@@ -63,6 +63,7 @@ export class MainPostComponent implements OnInit, OnDestroy {
       }
     ];
     this.realEstatePosts = [];
+    this.innerWidth = window.innerWidth;
   }
 
   ngOnInit(): void {

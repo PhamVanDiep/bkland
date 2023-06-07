@@ -24,9 +24,15 @@ import { PaymentService } from 'src/app/core/services/payment.service';
 import { DropdownModule } from 'primeng/dropdown';
 import { InfoPostService } from 'src/app/core/services/info-post.service';
 import { EditorModule } from 'primeng/editor';
-import { InfoModule } from '../common/info/info.module';
 import { TooltipModule } from 'primeng/tooltip';
 import { TabViewModule } from 'primeng/tabview';
+import { ReportComponent } from './report/report.component';
+import { ReportTypeService } from 'src/app/core/services/report-type.service';
+import { RadioButtonModule } from 'primeng/radiobutton';
+import { CheckboxModule } from 'primeng/checkbox';
+import { AppCommonModule } from '../app-common/app-common.module';
+import { ReportDetailComponent } from './report/report-detail/report-detail.component';
+import { ForumPostDetailComponent } from './forum-post-detail/forum-post-detail.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +41,9 @@ import { TabViewModule } from 'primeng/tabview';
     FinanceTransactionComponent,
     MainPostComponent,
     UserAccountComponent,
+    ReportComponent,
+    ReportDetailComponent,
+    ForumPostDetailComponent,
   ],
   imports: [
     CommonModule,
@@ -53,14 +62,17 @@ import { TabViewModule } from 'primeng/tabview';
     CardModule,
     DropdownModule,
     EditorModule,
-    InfoModule,
     TooltipModule,
-    TabViewModule
+    TabViewModule,
+    RadioButtonModule,
+    CheckboxModule,
+    AppCommonModule
   ],
   providers: [
     ConfirmationService,
     PaymentService,
-    InfoPostService
+    InfoPostService,
+    ReportTypeService
   ]
 })
 export class AdminModule { }

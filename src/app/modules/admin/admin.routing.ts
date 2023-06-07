@@ -4,9 +4,14 @@ import { AboutComponent } from "./about/about.component";
 import { FinanceTransactionComponent } from "./finance-transaction/finance-transaction.component";
 import { MainPostComponent } from "./main-post/main-post.component";
 import { UserAccountComponent } from "./user-account/user-account.component";
-import { InfoComponent } from "../common/info/info.component";
-import { CreateInfoPostComponent } from "../common/info/create-info-post/create-info-post.component";
-import { ManageConfigComponent } from "../common/manage-config/manage-config.component";
+import { InfoComponent } from "../app-common/info/info.component";
+import { CreateInfoPostComponent } from "../app-common/info/create-info-post/create-info-post.component";
+import { ManageConfigComponent } from "../app-common/manage-config/manage-config.component";
+import { ManageForumComponent } from "../app-common/create-forum-post/manage-forum/manage-forum.component";
+import { CreateForumPostComponent } from "../app-common/create-forum-post/create-forum-post.component";
+import { ReportComponent } from "./report/report.component";
+import { ReportDetailComponent } from "./report/report-detail/report-detail.component";
+import { ForumPostDetailComponent } from "./forum-post-detail/forum-post-detail.component";
 
 export const route: Route[] = [
     {
@@ -47,6 +52,27 @@ export const route: Route[] = [
                         component: CreateInfoPostComponent
                     }
                 ]
+            },
+            {
+                path: 'forum',
+                children: [
+                    {
+                        path: '',
+                        component: ManageForumComponent
+                    },
+                    {
+                        path: 'create',
+                        component: CreateForumPostComponent
+                    },
+                    {
+                        path: 'update/:id',
+                        component: CreateForumPostComponent
+                    },
+                    {
+                        path: 'detail/:id',
+                        component: ForumPostDetailComponent
+                    }
+                ]
             }
         ]
     },
@@ -57,5 +83,18 @@ export const route: Route[] = [
     {
         path: 'config',
         component: ManageConfigComponent
+    },
+    {
+        path: 'report',
+        children: [
+            {
+                path: '',
+                component: ReportComponent
+            },
+            {
+                path: 'detail/:id',
+                component: ReportDetailComponent
+            }
+        ]
     }
 ]

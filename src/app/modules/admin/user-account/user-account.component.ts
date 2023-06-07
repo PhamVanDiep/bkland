@@ -46,6 +46,7 @@ export class UserAccountComponent implements OnInit, OnDestroy {
     private _mediaService: MediaService,
     private _domSanitizer: DomSanitizer
   ) {
+    this.innerWidth = window.innerWidth;
     this._appTitleService.setTitle(this.title);
     this.users = [];
     this.displayUserDetail = false;

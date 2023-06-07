@@ -1,0 +1,38 @@
+<p-confirmDialog [style]="{width: innerWidth > 640 ? '50vw' : '100vh'}"></p-confirmDialog>
+<div class="w-full flex flex-col px-4 lg:px-6 space-y-6 pb-4">
+    <div class="mt-4">
+        <span class="font-bold text-2xl">{{ isUpdate ? 'Cập nhật bài viết' : 'Tạo bài viết mới' }}</span>
+    </div>
+    <div class="flex flex-col space-y-2 w-full">
+        <label for="content">Nội dung bài viết</label>
+        <textarea class="w-full" cols="50" [autoResize]="true" pInputTextarea placeholder="Nhập nội dung bài viết..."
+            [(ngModel)]="forumPost.content"></textarea>
+    </div>
+    <div class="flex flex-col space-y-4 w-full">
+        <div class="flex flex-row w-full justify-between items-center">
+            <label>{{ 'Danh sách ảnh của bài viết [' + images.length + ']' }}</label>
+            <label for="uploadImage" class="cursor-pointer">
+                <i class="pi pi-cloud-upload" style="font-size: 2rem;" pTooltip="Tải ảnh lên"></i>
+            </label>
+            <input type="file" name="uploadImage" accept="image/png, image/gif, image/jpeg" id="uploadImage"
+                [hidden]="true" (change)="onFileSelected($event)" [multiple]="true">
+        </div>
+    </div>
+    <div class="w-full flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
+        <div *ngFor="let item of images; let i = index">
+            <div class="px-2 py-2 border-dashed border border-gray-custom mr-4 w-fit">
+                <span class="cursor-pointer absolute mt-[-20px] ml-[-20px]">
+                    <i class="pi pi-times-circle" pTooltip="Xóa ảnh này" (click)="deleteImageFunc(i)"></i>
+                </span>
+                <p-image [src]="item" [preview]="true" 
+                    [width]="innerWidth < 640 ? innerWidth : ''"
+                    [height]="innerWidth < 640 ? '' : '100'"></p-image>
+            </div>
+        </div>
+    </div>
+    <div class="w-full flex flex-col md:flex-row justify-end mb-4 md:space-x-4 md:space-y-0 space-y-4">
+        <button pButton pRipple class="w-full md:w-auto p-button-danger" label="Hủy" (click)="cancel()" *ngIf="isUpdate"></button>
+        <button pButton pRipple class="w-full md:w-auto" [label]="isUpdate ? 'Lưu thay đổi' : 'Đăng bài'"
+            (click)="onSave()" [disabled]="forumPost.content.length == 0"></button>
+    </div>
+</div>

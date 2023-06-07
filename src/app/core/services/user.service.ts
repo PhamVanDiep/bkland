@@ -93,6 +93,19 @@ export class UserService {
         return false;
     }
 
+    isAdmin(): boolean {
+        let roleStorage = localStorage.getItem('roles') || '';
+        if (roleStorage === ROLE.ROLE_ADMIN) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    getUserNoAuthById(userId: string): Observable<APIResponse> {
+        return this._httpClient.get<APIResponse>(`${environment.BASE_URL_NO_AUTH}/user/${userId}`);
+    }
+
     get avatarUpdate$(): Observable<string> {
         return this._avatarUpdate.asObservable();
     }

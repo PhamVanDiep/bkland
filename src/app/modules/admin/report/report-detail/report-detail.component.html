@@ -1,0 +1,16 @@
+<div class="w-full flex flex-col space-y-4 my-4">
+    <span class="text-xl font-bold">Danh sách báo cáo</span>
+    <div class="flex flex-col space-y-4 w-full" *ngFor="let item of lstReports">
+        <div class="flex flex-col w-full border border-gray-custom rounded-md p-2">
+            <div class="w-full flex flex-row justify-between">
+                <span class="text-base font-semibold">Danh mục vi phạm: </span>
+                <span class="text-sm">{{ item.createAt | date:'dd/MM/yyyy, h:mm:ss a' }}</span>
+            </div>
+            <span>{{ getLstReportTypeName(item.reportTypes) }}</span>
+            <div class="w-full flex flex-col">
+                <span class="text-base font-semibold">Nội dung báo cáo:</span>
+                <span>{{ item.description }}</span>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,200 @@
+<p-confirmDialog [style]="{width: innerWidth > 640 ? '50vw' : '100vh'}"></p-confirmDialog>
+<div class="w-full flex flex-col px-4 lg:px-6 space-y-6">
+    <div class="flex flex-col space-y-4 mt-4">
+        <span class="text-xl font-bold">Danh mục báo cáo</span>
+        <p-card header="Thêm mới danh mục">
+            <div class="w-full flex flex-col md:flex-row md:justify-between md:space-x-4 text-left mt-4 space-y-4 md:space-y-0">
+                <input pInputText [(ngModel)]="newReportType.name" class="w-full md:w-1/2" placeholder="Nhập tên danh mục">
+                <div class="flex flex-col justify-start">
+                    <label for="useFor" class="font-bold">Áp dụng cho:</label>
+                    <div class="flex flex-row space-x-4">
+                        <div *ngFor="let item of useFor">
+                            <p-radioButton [value]="item.key" [inputId]="item.key"
+                                [(ngModel)]="newReportType.forum"></p-radioButton>
+                            <label [for]="item.key" class="ml-2">{{ item.value }}</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-full flex justify-end md:w-1/12">
+                    <button pButton pRipple [icon]="innerWidth >= 640 ? 'pi pi-plus' : ''" 
+                        class="p-button-rounded p-button-success w-max" [label]="innerWidth >= 640 ? '' : 'Tạo mới'"
+                        (click)="createReportType()" pTooltip="Tạo mới danh mục"></button>
+                </div>
+            </div>
+        </p-card>
+        <p-table [value]="lstReportTypes" [paginator]="true" [rows]="10" dataKey="id" editMode="row"
+            [rowsPerPageOptions]="[10, 25, 50]"
+            currentPageReportTemplate="{first} đến {last} trên {totalRecords} bản ghi">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th pFrozenColumn>#</th>
+                    <th>Tên danh mục</th>
+                    <th>Áp dụng cho</th>
+                    <th>Số lượng bài viết bị gán</th>
+                    <th>Thời điểm tạo</th>
+                    <th>Thời điểm cập nhật</th>
+                    <th></th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-reportType let-editing="editing" let-index="rowIndex">
+                <tr [pEditableRow]="reportType">
+                    <th>
+                        <span class="text-sm font-normal pl-4">
+                            {{ index + 1}}
+                        </span>
+                    </th>
+                    <th>
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <input pInputText [(ngModel)]="reportType.name">
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                                <span class="text-sm font-normal">
+                                    {{ reportType.name }}
+                                </span>
+                            </ng-template>
+                        </p-cellEditor>
+                    </th>
+                    <th>
+                        <p-cellEditor>
+                            <ng-template pTemplate="input">
+                                <div class="flex flex-col justify-start">
+                                    <label for="useFor" class="font-bold">Áp dụng cho:</label>
+                                    <div class="flex flex-row space-x-4">
+                                        <div *ngFor="let item of useFor">
+                                            <p-radioButton [value]="item.key" [inputId]="item.key"
+                                                [(ngModel)]="reportType.forum"></p-radioButton>
+                                            <label [for]="item.key" class="ml-2">{{ item.value }}</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-template>
+                            <ng-template pTemplate="output">
+                                <span class="text-sm font-normal">
+                                    {{ reportType.forum ? 'Cộng đồng' : 'Bán/Cho thuê' }}
+                                </span>
+                            </ng-template>
+                        </p-cellEditor>
+                    </th>
+                    <th>
+                        <span class="text-sm font-normal">
+                            {{ reportType.count }}
+                        </span>
+                    </th>
+                    <th>
+                        <span class="text-sm font-normal">
+                            {{ reportType.createAt | date:'dd/MM/yyyy, h:mm:ss a' }}
+                        </span>
+                    </th>
+                    <th>
+                        <span class="text-sm font-normal">
+                            {{ reportType.updateAt | date:'dd/MM/yyyy, h:mm:ss a' }}
+                        </span>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-end gap-2">
+                            <button *ngIf="!editing" pButton pRipple type="button" pInitEditableRow icon="pi pi-pencil"
+                                (click)="onRowEditInit(reportType)" class="p-button-rounded p-button-text"></button>
+                            <button *ngIf="editing" pButton pRipple type="button" pSaveEditableRow icon="pi pi-check"
+                                (click)="onRowEditSave(reportType)"
+                                class="p-button-rounded p-button-text p-button-success mr-2"></button>
+                            <button *ngIf="editing" pButton pRipple type="button" pCancelEditableRow icon="pi pi-times"
+                                (click)="onRowEditCancel(reportType, index)"
+                                class="p-button-rounded p-button-text p-button-danger"></button>
+                            <button *ngIf="!editing" pButton pRipple
+                                class="p-button-rounded p-button-danger p-button-text" icon="pi pi-trash"
+                                (click)="deleteReportType(reportType.id)"></button>
+                        </div>
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td>Không có dữ liệu.</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+    <div class="flex flex-col w-full space-y-4">
+        <div class="flex flex-row w-full justify-between items-center">
+            <span class="text-xl font-bold">{{ 'Danh sách bài viết bị báo cáo [' + lstPostReportsFilter.length + ']'
+                }}</span>
+        </div>
+        <p-table [value]="lstPostReportsFilter" [paginator]="true" [rows]="10" dataKey="id"
+            [rowsPerPageOptions]="[10, 25, 50]"
+            currentPageReportTemplate="{first} đến {last} trên {totalRecords} bản ghi" class="p-datatable-striped">
+            <ng-template pTemplate="caption">
+                <div class="flex flex-row justify-end">
+                    <p-dropdown [options]="lstPostTypeDropdown" (onChange)="filterByPostType()" class="w-max"
+                        [(ngModel)]="selectedPostType" optionLabel="value" optionValue="key"></p-dropdown>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="header">
+                <tr>
+                    <th pFrozenColumn>#</th>
+                    <th>Tiêu đề</th>
+                    <th>Loại bài viết</th>
+                    <th>Người tạo</th>
+                    <th>Số điện thoại</th>
+                    <th>Thời điểm tạo</th>
+                    <th>Số báo cáo</th>
+                    <th></th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-postReport let-editing="editing" let-index="rowIndex">
+                <tr>
+                    <th>
+                        <span class="text-sm font-normal pl-4">
+                            {{ index + 1}}
+                        </span>
+                    </th>
+                    <th>
+                        <span class="text-sm font-normal">
+                            {{ postReport.title.length <= 100 ? postReport.title : postReport.title.substring(0, 100) + "..." }}
+                        </span>
+                    </th>
+                    <th>
+                        <span class="text-sm font-normal">
+                            {{ postReport.postType == 'FORUM_POST' ? 'Cộng đồng' : 'Bán/Cho thuê' }}
+                        </span>
+                    </th>
+                    <th>
+                        <span class="text-sm font-normal">
+                            {{ postReport.fullName }}
+                        </span>
+                    </th>
+                    <th>
+                        <span class="text-sm font-normal">
+                            {{ postReport.phoneNumber }}
+                        </span>
+                    </th>
+                    <th>
+                        <span class="text-sm font-normal">
+                            {{ postReport.createAt | date:'dd/MM/yyyy, h:mm:ss a' }}
+                        </span>
+                    </th>
+                    <th class="text-center">
+                        <span class="text-sm font-normal pl-4">
+                            {{ postReport.count }}
+                        </span>
+                    </th>
+                    <th>
+                        <div class="flex flex-row justify-end">
+                            <button pButton pRipple class="p-button-rounded p-button-text" icon="pi pi-eye"
+                                pTooltip="Xem chi tiết báo cáo" (click)="viewReportsDetail(postReport.postId)"></button>
+                            <button pButton pRipple class="p-button-rounded p-button-danger p-button-text"
+                                [icon]="postReport.postType == 'FORUM_POST' ? 'pi pi-trash' : 'pi pi-eye-slash'" 
+                                [pTooltip]="postReport.postType != 'FORUM_POST' ? 'Ẩn bài viết' : 'Xóa bài viết'" 
+                                (click)="deleteOrHidePost(postReport.postId)"></button>
+                        </div>
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td>Không có dữ liệu.</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
