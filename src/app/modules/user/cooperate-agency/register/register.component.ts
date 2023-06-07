@@ -56,6 +56,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
     private _authService: AuthService,
     private _deviceDetectorService: DeviceDetectorService,
   ) {
+    this.innerWidth = window.innerWidth;
     this._appTitleService.setTitle(this.title);
     let _roles = localStorage.getItem('roles');
     let roles = _roles?.split(',');

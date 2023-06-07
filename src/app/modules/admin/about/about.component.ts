@@ -57,6 +57,7 @@ export class AboutComponent implements OnInit, OnDestroy {
     };
     this.displayAboutUpdate = false;
     this._appTitleService.setTitle(this.title);
+    this.innerWidth = window.innerWidth;
   }
 
   ngOnInit(): void {

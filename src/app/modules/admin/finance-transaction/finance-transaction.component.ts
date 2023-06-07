@@ -85,6 +85,7 @@ export class FinanceTransactionComponent implements OnInit, OnDestroy {
       key: 'ALL',
       value: 'Tất cả'
     };
+    this.innerWidth = window.innerWidth;
   }
 
   ngOnInit(): void {

@@ -49,6 +49,7 @@ export class CreateForumPostComponent implements OnInit, OnDestroy {
     private _confirmationService: ConfirmationService,
     private _domSanitizer: DomSanitizer
   ) {
+    this.innerWidth = window.innerWidth;
     this.isUpdate = false;
     if (this.isUpdate) {
       this._title = 'Cập nhật bài viết';

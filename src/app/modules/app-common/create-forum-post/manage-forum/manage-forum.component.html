@@ -1,3 +1,4 @@
+<p-confirmDialog [style]="{width: innerWidth > 640 ? '50vw' : '100vh'}"></p-confirmDialog>
 <div class="w-full flex flex-col px-4 lg:px-6 space-y-6">
     <div class="w-full flex flex-col space-y-4 mt-4" *ngIf="isAdmin">
         <span class="font-bold text-2xl">Danh sách bài viết của người dùng hệ thống</span>
@@ -30,7 +31,7 @@
                     </th>
                     <th>
                         <span class="text-sm font-normal">
-                            {{ userForumPost.content }}
+                            {{ userForumPost.content.length > 100 ? userForumPost.content.substr(0,100) + '...' : userForumPost.content }}
                         </span>
                     </th>
                     <th>
@@ -61,7 +62,7 @@
                     <th>
                         <button pButton pRipple pTooltip="Xem chi tiết" (click)="viewDetail(userForumPost.id)"
                             class="p-button-text p-button-rounded p-button-secondary" icon="pi pi-eye"></button>
-                        <button pButton pRipple pTooltip="Xóa bài viết" (click)="deleteForumPost(userForumPost.id)"
+                        <button pButton pRipple pTooltip="Xóa bài viết" (click)="deleteForumPost(userForumPost.id, true)"
                             class="p-button-text p-button-rounded p-button-danger" icon="pi pi-trash"></button>
                     </th>
                 </tr>
@@ -74,14 +75,14 @@
         </p-table>
     </div>
     <div class="flex flex-row w-full justify-between items-center">
-        <span class="font-bold text-2xl">Danh sách bài viết đã chia sẻ tới cộng đồng</span>
+        <span class="font-bold text-2xl max-w-[70vw]">Danh sách bài viết đã chia sẻ tới cộng đồng</span>
         <button pButton class="p-button-success p-button-rounded" 
             icon="pi pi-plus" pTooltip="Chia sẻ bài viết mới" (click)="createPost()"></button>
     </div>
     <div class="w-full flex flex-col justify-center items-center space-y-4 pb-4 mt-4">
         <div class="w-full flex flex-col md:w-[50vw] border rounded-md border-gray-custom p-4" 
             *ngFor="let item of forumPosts">
-            <app-forum-post-detail [forumPost]="item" [isView]="false" (deleteEvent)="filtForumPost($event)"></app-forum-post-detail>
+            <app-forum-post-detail [forumPost]="item" [isView]="false" (deleteEvent)="deleteForumPost($event, false)"></app-forum-post-detail>
         </div>
     </div>
 </div>

@@ -32,6 +32,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { CheckboxModule } from 'primeng/checkbox';
 import { AppCommonModule } from '../app-common/app-common.module';
 import { ReportDetailComponent } from './report/report-detail/report-detail.component';
+import { ForumPostDetailComponent } from './forum-post-detail/forum-post-detail.component';
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import { ReportDetailComponent } from './report/report-detail/report-detail.comp
     UserAccountComponent,
     ReportComponent,
     ReportDetailComponent,
+    ForumPostDetailComponent,
   ],
   imports: [
     CommonModule,

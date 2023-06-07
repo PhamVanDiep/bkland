@@ -39,10 +39,11 @@ export class CreateReportComponent implements OnInit, OnDestroy, OnChanges {
     private _reportTypeService: ReportTypeService,
     private _authService: AuthService
   ) {
+    this.innerWidth = window.innerWidth
     this.reportTypes = [];
     this.postReport = {
       id: 0,
-      isForumPost: true,
+      forumPost: true,
       createAt: null,
       createBy: '',
       description: '',
@@ -53,7 +54,7 @@ export class CreateReportComponent implements OnInit, OnDestroy, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     // throw new Error('Method not implemented.');
-    this.postReport.isForumPost = this.isForumPost;
+    this.postReport.forumPost = this.isForumPost;
     this.postReport.postId = this.postId;
     this.postReport.id = 0;
 

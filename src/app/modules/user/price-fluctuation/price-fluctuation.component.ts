@@ -52,6 +52,7 @@ export class PriceFluctuationComponent implements OnInit, OnDestroy {
     private _priceFluctuationService: PriceFluctuationService,
     private _confirmationService: ConfirmationService,
   ) {
+    this.innerWidth = window.innerWidth;
     this._appTitleService.setTitle(this.title);
     let roles = localStorage.getItem('roles')?.split(',');
     if (!roles?.includes(ROLE.ROLE_USER)) {

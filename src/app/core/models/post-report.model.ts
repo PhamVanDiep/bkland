@@ -4,7 +4,7 @@ export interface PostReport {
     id: number,
     description: string;
     postId: string;
-    isForumPost: boolean;
+    forumPost: boolean;
     createBy: string;
     createAt: any;
     reportTypes: ReportType[];

@@ -86,6 +86,7 @@ export class ReportComponent implements OnInit, OnDestroy {
       }
     ];
     this.selectedPostType = 'ALL';
+    this.innerWidth = window.innerWidth;
   }
 
   ngOnInit(): void {

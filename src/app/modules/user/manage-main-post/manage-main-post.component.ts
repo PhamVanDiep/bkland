@@ -41,6 +41,7 @@ export class ManageMainPostComponent implements OnInit, OnDestroy {
     private _route: ActivatedRoute,
     private _confirmationService: ConfirmationService
   ) {
+    this.innerWidth = window.innerWidth;
     this._appTitleService.setTitle(this.title);
     this.realEstatePosts = [];
     this.items = [

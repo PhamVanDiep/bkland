@@ -11,6 +11,7 @@ import { ManageForumComponent } from "../app-common/create-forum-post/manage-for
 import { CreateForumPostComponent } from "../app-common/create-forum-post/create-forum-post.component";
 import { ReportComponent } from "./report/report.component";
 import { ReportDetailComponent } from "./report/report-detail/report-detail.component";
+import { ForumPostDetailComponent } from "./forum-post-detail/forum-post-detail.component";
 
 export const route: Route[] = [
     {
@@ -66,6 +67,10 @@ export const route: Route[] = [
                     {
                         path: 'update/:id',
                         component: CreateForumPostComponent
+                    },
+                    {
+                        path: 'detail/:id',
+                        component: ForumPostDetailComponent
                     }
                 ]
             }

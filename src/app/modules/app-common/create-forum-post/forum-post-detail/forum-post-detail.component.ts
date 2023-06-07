@@ -1,5 +1,5 @@
 import { HttpStatusCode } from '@angular/common/http';
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { ReplaySubject, firstValueFrom, takeUntil } from 'rxjs';
 import { APIResponse } from 'src/app/core/models/api-response.model';
 import { ForumPost, ForumPostLog } from 'src/app/core/models/forum-post.model';
@@ -11,7 +11,7 @@ import { UserService } from 'src/app/core/services/user.service';
 import { environment } from 'src/environments/environment';
 import Util from 'src/app/core/utils/util';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MenuItem } from 'primeng/api';
+import { ConfirmEventType, ConfirmationService, MenuItem } from 'primeng/api';
 import { AuthService } from 'src/app/core/services/auth.service';
 
 @Component({
@@ -32,7 +32,7 @@ export class ForumPostDetailComponent implements OnInit, OnDestroy {
   createAt: string;
   forumPostLog: ForumPostLog;
 
-  private reportTitle: string;
+  reportTitle: string;
   noReportsToolTip: string;
   items: MenuItem[];
 
@@ -60,6 +60,7 @@ export class ForumPostDetailComponent implements OnInit, OnDestroy {
   ];
 
   liked: boolean;
+  isMore: boolean;
 
   constructor(
     private _loadingService: LoadingService,
@@ -69,7 +70,7 @@ export class ForumPostDetailComponent implements OnInit, OnDestroy {
     private _mediaService: MediaService,
     private _router: Router,
     private _route: ActivatedRoute,
-    private _authService: AuthService
+    private _authService: AuthService,
   ) {
     this.username = '';
     this.createAt = '';
@@ -92,7 +93,7 @@ export class ForumPostDetailComponent implements OnInit, OnDestroy {
         label: 'Xóa bài viết',
         icon: 'pi pi-fw pi-trash',
         command: () => {
-          this.deletePost();
+          this.deletePostFunc();
         }
       }
     ];
@@ -100,9 +101,13 @@ export class ForumPostDetailComponent implements OnInit, OnDestroy {
     this.displayCustom = false;
     this.activeIndex = 0;
     this.liked = false;
+    this.isMore = false;
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    if (this.forumPost.id == undefined || this.forumPost.id == null || this.forumPost.id.length == 0) {
+      return;
+    }
     this._userService.getUserNoAuthById(this.forumPost.createBy)
       .pipe(takeUntil(this._unsubscribe))
       .subscribe((response: APIResponse) => {
@@ -186,17 +191,8 @@ export class ForumPostDetailComponent implements OnInit, OnDestroy {
     this._router.navigate([`./update/${this.forumPost.id}`], { relativeTo: this._route })
   }
 
-  deletePost(): void {
-    this._loadingService.loading(true);
-    this._forumPostService.deletePost(this.forumPost.id)
-      .pipe(takeUntil(this._unsubscribe))
-      .subscribe((response: APIResponse) => {
-        if (response.status === HttpStatusCode.Ok) {
-          this._messageService.successMessage(response.message);
-        } else {
-          this._messageService.errorMessage(response.message);
-        }
-      })
+  deletePostFunc(): void {
+    this.deleteEvent.next(this.forumPost.id);
   }
 
   likeClicked(): void {
