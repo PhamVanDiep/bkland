@@ -10,6 +10,7 @@ import { ManageConfigComponent } from "../app-common/manage-config/manage-config
 import { ManageForumComponent } from "../app-common/create-forum-post/manage-forum/manage-forum.component";
 import { CreateForumPostComponent } from "../app-common/create-forum-post/create-forum-post.component";
 import { ReportComponent } from "./report/report.component";
+import { ReportDetailComponent } from "./report/report-detail/report-detail.component";
 
 export const route: Route[] = [
     {
@@ -80,6 +81,15 @@ export const route: Route[] = [
     },
     {
         path: 'report',
-        component: ReportComponent
+        children: [
+            {
+                path: '',
+                component: ReportComponent
+            },
+            {
+                path: 'detail/:id',
+                component: ReportDetailComponent
+            }
+        ]
     }
 ]

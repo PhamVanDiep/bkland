@@ -1,12 +1,15 @@
 import { HttpStatusCode } from '@angular/common/http';
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmEventType, ConfirmationService } from 'primeng/api';
 import { ReplaySubject, takeUntil } from 'rxjs';
+import { POST_TYPE } from 'src/app/core/constants/type.constant';
 import { APIResponse } from 'src/app/core/models/api-response.model';
-import { ReportType } from 'src/app/core/models/report-type.model';
+import { ReportType, ReportTypeResponse } from 'src/app/core/models/report-type.model';
 import { AppTitleService } from 'src/app/core/services/app-title.service';
 import { LoadingService } from 'src/app/core/services/loading.service';
 import { MessageService } from 'src/app/core/services/message.service';
+import { PostReportService } from 'src/app/core/services/post-report.service';
 import { ReportTypeService } from 'src/app/core/services/report-type.service';
 
 @Component({
@@ -18,24 +21,32 @@ export class ReportComponent implements OnInit, OnDestroy {
   private _unsubscribe: ReplaySubject<any> = new ReplaySubject<any>();
   private title: string = 'Quản lý báo cáo';
 
-  lstReportTypes: ReportType[];
+  lstReportTypes: ReportTypeResponse[];
   newReportType: ReportType;
-  clonedReportType: { [s: number]: ReportType } = {};
+  clonedReportType: { [s: number]: ReportTypeResponse } = {};
 
   useFor: any[];
+
+  lstPostReports: any[];
+  lstPostReportsFilter: any[];
+  lstPostTypeDropdown: any[];
+  selectedPostType: string;
 
   innerWidth: any;
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     this.innerWidth = window.innerWidth;
   }
-  
+
   constructor(
     private _appTitleService: AppTitleService,
     private _loadingService: LoadingService,
     private _messageService: MessageService,
     private _confirmationService: ConfirmationService,
-    private _reportTypeService: ReportTypeService
+    private _reportTypeService: ReportTypeService,
+    private _postReportService: PostReportService,
+    private _router: Router,
+    private _route: ActivatedRoute
   ) {
     this._appTitleService.setTitle(this.title);
     this.lstReportTypes = [];
@@ -57,7 +68,24 @@ export class ReportComponent implements OnInit, OnDestroy {
         key: 0,
         value: 'Bán/Cho thuê'
       }
-    ]
+    ];
+    this.lstPostReports = [];
+    this.lstPostReportsFilter = [];
+    this.lstPostTypeDropdown = [
+      {
+        key: 'ALL',
+        value: 'Tất cả'
+      },
+      {
+        key: POST_TYPE.FORUM_POST,
+        value: 'Cộng đồng'
+      },
+      {
+        key: POST_TYPE.REAL_ESTATE_POST,
+        value: 'Bán/Cho thuê'
+      }
+    ];
+    this.selectedPostType = 'ALL';
   }
 
   ngOnInit(): void {
@@ -72,14 +100,26 @@ export class ReportComponent implements OnInit, OnDestroy {
         } else {
           this._messageService.errorMessage(response.message);
         }
-      })
+      });
+
+    this._postReportService.getAllStatistic()
+      .pipe(takeUntil(this._unsubscribe))
+      .subscribe((response: APIResponse) => {
+        this._loadingService.loading(false);
+        if (response.status === HttpStatusCode.Ok) {
+          this.lstPostReports = response.data;
+          this.lstPostReportsFilter = response.data;
+        } else {
+          this._messageService.errorMessage(response.message);
+        }
+      });
   }
 
-  onRowEditInit(reportType: ReportType) {
+  onRowEditInit(reportType: ReportTypeResponse) {
     this.clonedReportType[reportType.id] = { ...reportType };
   }
 
-  onRowEditSave(reportType: ReportType) {
+  onRowEditSave(reportType: ReportTypeResponse) {
     if (reportType.name.length <= 0) {
       this._messageService.errorMessage('Không được để trống tên danh mục');
       return;
@@ -99,7 +139,7 @@ export class ReportComponent implements OnInit, OnDestroy {
       });
   }
 
-  onRowEditCancel(reportType: ReportType, index: number) {
+  onRowEditCancel(reportType: ReportTypeResponse, index: number) {
     this.lstReportTypes[index] = this.clonedReportType[reportType.id];
     delete this.clonedReportType[reportType.id];
   }
@@ -122,7 +162,6 @@ export class ReportComponent implements OnInit, OnDestroy {
               if (response.status === HttpStatusCode.Ok) {
                 this._messageService.successMessage(response.message);
                 this.lstReportTypes = this.lstReportTypes.filter(e => e.id !== infoTypeId);
-                this.getLstReports();
               } else {
                 this._messageService.errorMessage(response.message);
               }
@@ -140,8 +179,12 @@ export class ReportComponent implements OnInit, OnDestroy {
     )
   }
 
-  getLstReports(): void {
-
+  filterByPostType(): void {
+    if (this.selectedPostType === 'ALL') {
+      this.lstPostReportsFilter = this.lstPostReports;
+    } else {
+      this.lstPostReportsFilter = this.lstPostReports.filter(e => e.postType === this.selectedPostType);
+    }
   }
 
   createReportType(): void {
@@ -168,5 +211,13 @@ export class ReportComponent implements OnInit, OnDestroy {
     // throw new Error('Method not implemented.');
     this._unsubscribe.next(null);
     this._unsubscribe.complete();
+  }
+
+  viewReportsDetail(id: string): void {
+    this._router.navigate([`./detail/${id}`], { relativeTo: this._route });
+  }
+
+  deleteOrHidePost(id: string): void {
+
   }
 }

@@ -31,6 +31,7 @@ import { ReportTypeService } from 'src/app/core/services/report-type.service';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { CheckboxModule } from 'primeng/checkbox';
 import { AppCommonModule } from '../app-common/app-common.module';
+import { ReportDetailComponent } from './report/report-detail/report-detail.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { AppCommonModule } from '../app-common/app-common.module';
     MainPostComponent,
     UserAccountComponent,
     ReportComponent,
+    ReportDetailComponent,
   ],
   imports: [
     CommonModule,
