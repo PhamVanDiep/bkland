@@ -1,0 +1,39 @@
+<p-menu #menu [model]="items" [popup]="true"></p-menu>
+<p-confirmDialog [style]="{width: innerWidth > 640 ? '50vw' : '100vh'}"></p-confirmDialog>
+<p-dialog header="Bình luận" 
+    [(visible)]="display" 
+    [style]="{width: innerWidth <= 640 ? '100vw' : '50vw', 'height': '80vh'}" 
+    [baseZIndex]="100" [modal]="true"
+    (onHide)="hideDialog()">
+    <div class="w-full flex flex-col space-y-4 px-2">
+        <div *ngIf="comments.length > 0;else emptyComment" class="w-full flex flex-col space-y-4">
+            <div *ngFor="let item of comments">
+                <div class="flex flex-row space-x-2">
+                    <p-avatar [image]="item.avatarUrl"></p-avatar>
+                    <div class="w-full flex flex-col space-y-2">
+                        <div class="bg-gray-300 max-w-full w-max p-2 flex flex-col space-y-1 rounded-md" 
+                            (click)="menu.toggle($event); this.selectedCommentResponse = item;">
+                            <span class="font-bold text-sm">{{ item.fullName }}</span>
+                            <span class="text-sm">{{ item.content }}</span>
+                        </div>
+                        <span class="text-xs font-light">{{ dayConvert(item.createAt) }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <ng-template #emptyComment>
+            <span>Hãy là người đầu tiên bình luận về bài viết này.</span>
+        </ng-template>
+    </div>
+    <ng-template pTemplate="footer">
+        <div class="w-full flex flex-row space-x-4 justify-between h-full items-center">
+            <input pInputText [(ngModel)]="newComment.content" placeholder="Viết bình luận..." 
+                class="w-full"  (keydown.enter)="sendComment()">
+            <div class="p-2 cursor-pointer flex justify-center items-center" 
+                pTooltip="Gửi bình luận"
+                (click)="sendComment()">
+                <i class="pi pi-send text-blue-custom"></i>
+            </div>
+        </div>
+    </ng-template>
+</p-dialog>

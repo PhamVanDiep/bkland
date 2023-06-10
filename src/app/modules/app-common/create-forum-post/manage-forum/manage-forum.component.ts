@@ -7,6 +7,7 @@ import { ROLE } from 'src/app/core/constants/role.constant';
 import { APIResponse } from 'src/app/core/models/api-response.model';
 import { ForumPost } from 'src/app/core/models/forum-post.model';
 import { AppTitleService } from 'src/app/core/services/app-title.service';
+import { CommentService } from 'src/app/core/services/comment.service';
 import { ForumPostService } from 'src/app/core/services/forum-post.service';
 import { LoadingService } from 'src/app/core/services/loading.service';
 import { MessageService } from 'src/app/core/services/message.service';
@@ -27,6 +28,8 @@ export class ManageForumComponent implements OnInit, OnDestroy {
   isAdmin: boolean;
 
   userForumPosts: any[];
+
+  displayComment: boolean;
 
   @HostListener("window:scroll", ["$event"])
   onWindowScroll() {
@@ -52,7 +55,8 @@ export class ManageForumComponent implements OnInit, OnDestroy {
     private _router: Router,
     private _route: ActivatedRoute,
     private _forumPostService: ForumPostService,
-    private _confirmationService: ConfirmationService
+    private _confirmationService: ConfirmationService,
+    private _commentService: CommentService
   ) {
     this.innerWidth = window.innerWidth;
     this._appTitleService.setTitle(this.title);
@@ -66,9 +70,11 @@ export class ManageForumComponent implements OnInit, OnDestroy {
       this.isAdmin = false;
     }
     this.userForumPosts = [];
+    this.displayComment = false;
   }
 
   ngOnInit(): void {
+    this._commentService.hideComment();
     if (this.isAdmin) {
       this._loadingService.loading(true);
       this._forumPostService.findOfUsers()
@@ -142,6 +148,10 @@ export class ManageForumComponent implements OnInit, OnDestroy {
         }
       }
     )
+  }
+
+  onCloseCommentDialog(): void {
+    this.displayComment = false;
   }
 
   deletePost(postId: string, isTable: boolean): void {

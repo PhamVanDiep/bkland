@@ -13,6 +13,7 @@ import Util from 'src/app/core/utils/util';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmEventType, ConfirmationService, MenuItem } from 'primeng/api';
 import { AuthService } from 'src/app/core/services/auth.service';
+import { CommentService } from 'src/app/core/services/comment.service';
 
 @Component({
   selector: 'app-forum-post-detail',
@@ -71,6 +72,7 @@ export class ForumPostDetailComponent implements OnInit, OnDestroy {
     private _router: Router,
     private _route: ActivatedRoute,
     private _authService: AuthService,
+    private _commentService: CommentService
   ) {
     this.username = '';
     this.createAt = '';
@@ -217,7 +219,8 @@ export class ForumPostDetailComponent implements OnInit, OnDestroy {
   }
 
   commentClicked(): void {
-
+    this._commentService.showComment();
+    this._commentService.setPostId(this.forumPost.id);
   }
 
   imageClick(index: number): void {
