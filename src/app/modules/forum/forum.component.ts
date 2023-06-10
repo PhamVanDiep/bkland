@@ -12,6 +12,7 @@ import { AuthService } from 'src/app/core/services/auth.service';
 import { environment } from 'src/environments/environment';
 import { MediaService } from 'src/app/core/services/media.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { CommentService } from 'src/app/core/services/comment.service';
 
 @Component({
   selector: 'app-forum',
@@ -28,6 +29,8 @@ export class ForumComponent implements OnInit, OnDestroy {
   isMore: boolean;
 
   retriveAvatar: any;
+
+  displayComment: boolean;
 
   @HostListener("window:scroll", ["$event"])
   onWindowScroll() {
@@ -52,7 +55,8 @@ export class ForumComponent implements OnInit, OnDestroy {
     private _authService: AuthService,
     private _mediaService: MediaService,
     private _router: Router,
-    private _route: ActivatedRoute
+    private _route: ActivatedRoute,
+    private _commentService: CommentService
   ) {
     this._appTitleService.setTitle(this.title);
     this.forumPosts = [];
@@ -60,9 +64,11 @@ export class ForumComponent implements OnInit, OnDestroy {
     this.page = 0;
     this.retriveAvatar = '/assets/images/user.png';
     this.displayCreateReportDialog = false;
+    this.displayComment = false;
   }
 
   ngOnInit(): void {
+    this._commentService.hideComment();
     this.fetchForumPost();
     if (this._authService.isAuthenticated()) {
       this._userService.getUserById()
@@ -123,6 +129,10 @@ export class ForumComponent implements OnInit, OnDestroy {
     } else {
       this._messageService.infoMessage('Bạn cần đăng nhập để  thực hiện chức năng này');
     }
+  }
+
+  onCloseCommentDialog(): void {
+    this.displayComment = false;
   }
 
   ngOnDestroy(): void {

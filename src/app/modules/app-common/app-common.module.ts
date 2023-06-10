@@ -33,6 +33,7 @@ import { ManageConfigComponent } from './manage-config/manage-config.component';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { CreateReportComponent } from './create-report/create-report.component';
 import { PostReportService } from 'src/app/core/services/post-report.service';
+import { CommentComponent } from './comment/comment.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { PostReportService } from 'src/app/core/services/post-report.service';
     InfoComponent,
     CreateInfoPostComponent,
     ManageConfigComponent,
-    CreateReportComponent
+    CreateReportComponent,
+    CommentComponent
   ],
   imports: [
     CommonModule,
@@ -75,7 +77,8 @@ import { PostReportService } from 'src/app/core/services/post-report.service';
     InfoComponent,
     CreateInfoPostComponent,
     ManageConfigComponent,
-    CreateReportComponent
+    CreateReportComponent,
+    CommentComponent
   ],
   providers: [
     ForumPostService,

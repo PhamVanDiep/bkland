@@ -25,6 +25,7 @@ import { LoadingService } from './core/services/loading.service';
 import { LayoutModule } from './layout/layout.module';
 import { AuthService } from './core/services/auth.service';
 import { MessageService as MessageServiceCustomize } from './core/services/message.service';
+import { BaseService } from './core/services/base.service';
 
 initializeApp(environment.FirebaseConfig);
 
@@ -65,6 +66,7 @@ initializeApp(environment.FirebaseConfig);
     AuthService,
     LoadingService,
     MessageServiceCustomize,
+    BaseService
     // MediaService
   ],
   bootstrap: [AppComponent]
