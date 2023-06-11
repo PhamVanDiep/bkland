@@ -34,6 +34,8 @@ import { InputSwitchModule } from 'primeng/inputswitch';
 import { CreateReportComponent } from './create-report/create-report.component';
 import { PostReportService } from 'src/app/core/services/post-report.service';
 import { CommentComponent } from './comment/comment.component';
+import { ChatComponent } from './chat/chat.component';
+import { WebSocketService } from 'src/app/core/services/web-socket.service';
 
 @NgModule({
   declarations: [
@@ -44,7 +46,8 @@ import { CommentComponent } from './comment/comment.component';
     CreateInfoPostComponent,
     ManageConfigComponent,
     CreateReportComponent,
-    CommentComponent
+    CommentComponent,
+    ChatComponent
   ],
   imports: [
     CommonModule,
@@ -78,14 +81,16 @@ import { CommentComponent } from './comment/comment.component';
     CreateInfoPostComponent,
     ManageConfigComponent,
     CreateReportComponent,
-    CommentComponent
+    CommentComponent,
+    ChatComponent
   ],
   providers: [
     ForumPostService,
     InfoPostService,
     PaymentService,
     ConfirmationService,
-    PostReportService
+    PostReportService,
+    WebSocketService
   ]
 })
 export class AppCommonModule { }

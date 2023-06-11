@@ -41,7 +41,7 @@ export const ADMIN_NAV = [
     {
         label: 'Nhắn tin với người dùng',
         icon: 'pi pi-comments',
-        routerLink: 'admin/message'
+        routerLink: 'admin/chat'
     },
     {
         label: 'Quản lý thông tin hệ thống',
@@ -99,7 +99,7 @@ export const USER_NAV = [
     {
         label: 'Nhắn tin',
         icon: 'pi pi-comments',
-        routerLink: 'user/message'
+        routerLink: 'user/chat'
     },
     {
         label: 'Liên kết môi giới',
