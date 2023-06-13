@@ -13,6 +13,7 @@ import { PriceFluctuationComponent } from "./price-fluctuation/price-fluctuation
 import { ManageForumComponent } from "../app-common/create-forum-post/manage-forum/manage-forum.component";
 import { CreateForumPostComponent } from "../app-common/create-forum-post/create-forum-post.component";
 import { ChatComponent } from "../app-common/chat/chat.component";
+import { NewRequestComponent } from "./cooperate-agency/new-request/new-request.component";
 
 export const route: Route[] = [
     {
@@ -76,6 +77,10 @@ export const route: Route[] = [
             {
                 path: 'register',
                 component: RegisterComponent
+            },
+            {
+                path: 'new-request',
+                component: NewRequestComponent
             }
         ]
     },

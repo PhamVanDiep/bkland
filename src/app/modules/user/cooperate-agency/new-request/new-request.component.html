@@ -1,0 +1,39 @@
+<div class="w-full flex flex-col px-4 lg:px-6 space-y-6 py-4">
+    <span class="text-xl font-bold">Tạo yêu cầu giúp đỡ</span>
+    <div class="flex flex-col w-full space-y-4">
+        <div class="flex flex-col space-y-1 w-full">
+            <label for="lstPosts">Bài đăng bán/cho thuê</label>
+            <p-dropdown [options]="lstEnableRep" [(ngModel)]="selectedRep" optionLabel="title" 
+                placeholder="Chọn bài viết muốn nhờ giúp đỡ"
+                (ngModelChange)="getAgencies()">
+                <ng-template pTemplate="selectedItem" *ngIf="selectedRep">
+                    <span>{{ selectedRep.title + ' - ' + genType(selectedRep.type) + ' - '
+                        + selectedRep.price + ' ' + 
+                        (selectedRep.isSell == 1 ? 'tỷ VNĐ' : 'triệu VNĐ')}}</span>
+                </ng-template>
+                <ng-template pTemplate="item" let-item>
+                    <span>{{ item.title + ' - ' + genType(item.type) + ' - '
+                        + item.price + ' ' + 
+                        (item.isSell == 1 ? 'tỷ VNĐ' : 'triệu VNĐ') }}</span>
+                </ng-template>
+            </p-dropdown>
+        </div>
+        <div class="flex flex-col space-y-1 w-full">
+            <label for="lstPosts">Môi giới</label>
+            <p-multiSelect [options]="lstAgencies" [(ngModel)]="selectedAgencies" optionLabel="fullName" 
+                placeholder="Chọn môi giới bạn muốn nhờ giúp đỡ."
+                [disabled]="selectedRep == null">
+                <ng-template pTemplate="selectedItem" *ngFor="let selectedAgency of selectedAgencies">
+                    <span>{{ selectedAgency.fullName + ' - ' + selectedAgency.phoneNumber }}</span>
+                </ng-template>
+                <ng-template pTemplate="item" let-item>
+                    <span>{{ item.fullName + ' - ' + item.phoneNumber }}</span>
+                </ng-template>
+            </p-multiSelect>
+        </div>
+        <div class="w-full flex justify-end md:space-x-4 flex-col md:flex-row space-y-4 md:space-y-0">
+            <button pButton pRipple label="Hủy" (click)="cancel()" class="md:w-auto w-full p-button-danger"></button>
+            <button pButton pRipple label="Gửi yêu cầu" (click)="sendRequest()" class="md:w-auto w-full"></button>
+        </div>
+    </div>
+</div>

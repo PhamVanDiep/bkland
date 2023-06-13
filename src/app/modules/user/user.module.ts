@@ -33,6 +33,7 @@ import { SpecialAccountService } from 'src/app/core/services/special-account.ser
 import { PaymentService } from 'src/app/core/services/payment.service';
 import { PriceFluctuationComponent } from './price-fluctuation/price-fluctuation.component';
 import { AppCommonModule } from '../app-common/app-common.module';
+import { NewRequestComponent } from './cooperate-agency/new-request/new-request.component';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import { AppCommonModule } from '../app-common/app-common.module';
     CooperateAgencyComponent,
     RegisterComponent,
     PriceFluctuationComponent,
+    NewRequestComponent,
   ],
   imports: [
     CommonModule,

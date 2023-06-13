@@ -4,3 +4,9 @@ export const STATUS = {
     BI_TU_CHOI: "BI_TU_CHOI",
     DA_HET_HAN: "DA_HET_HAN"
 }
+
+export const REQUEST_AGENCY_STATUS = {
+    DA_GUI_YEU_CAU: "DA_GUI_YEU_CAU",
+    DA_XAC_NHAN: "DA_XAC_NHAN",
+    DA_TU_CHOI: "DA_TU_CHOI"
+}
