@@ -40,14 +40,17 @@ export class CommentService extends BaseService {
     }
 
     findAllByPostId(postId: string): Observable<APIResponse> {
+        this.accessToken = localStorage.getItem('accessToken') || '';
         return this._httpClient.get<APIResponse>(`${environment.BASE_URL_NO_AUTH}/post-comment/all/${postId}`);
     }
 
     noAuthCreate(body: Comment): Observable<APIResponse> {
+        this.accessToken = localStorage.getItem('accessToken') || '';
         return this._httpClient.post<APIResponse>(`${environment.BASE_URL_NO_AUTH}/post-comment`, body);
     }
 
     authCreate(body: Comment): Observable<APIResponse> {
+        this.accessToken = localStorage.getItem('accessToken') || '';
         return this._httpClient.post<APIResponse>(`${environment.BASE_URL_AUTH}/post-comment`, body, {
             headers: {
                 'Authorization': `Bearer ${this.accessToken}`
@@ -56,6 +59,7 @@ export class CommentService extends BaseService {
     }
 
     update(body: Comment): Observable<APIResponse> {
+        this.accessToken = localStorage.getItem('accessToken') || '';
         return this._httpClient.put<APIResponse>(`${environment.BASE_URL_AUTH}/post-comment`, body, {
             headers: {
                 'Authorization': `Bearer ${this.accessToken}`
@@ -64,6 +68,7 @@ export class CommentService extends BaseService {
     }
 
     delete(id: number): Observable<APIResponse> {
+        this.accessToken = localStorage.getItem('accessToken') || '';
         return this._httpClient.delete<APIResponse>(`${environment.BASE_URL_AUTH}/post-comment/${id}`, {
             headers: {
                 'Authorization': `Bearer ${this.accessToken}`

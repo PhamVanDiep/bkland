@@ -1,1 +1,133 @@
-<p>landing-page works!</p>
+<p-overlayPanel #aroundOP>
+    <div class="w-full flex flex-col space-y-4">
+        <div class="flex flex-col">
+            <p-dropdown placeholder="Tỉnh/Thành"></p-dropdown>
+        </div>
+        <div class="flex flex-col">
+            <p-dropdown placeholder="Quận/Huyện"></p-dropdown>
+        </div>
+        <div class="flex flex-col">
+            <p-dropdown placeholder="Xã/Phường"></p-dropdown>
+        </div>
+        <div class="flex flex-row justify-between items-center mt-4">
+            <button pButton pRipple icon="pi pi-sync" pTooltip="Đặt lại"
+                class="p-button-text p-button-rounded p-button-secondary"></button>
+            <button pButton pRipple class="p-button-text p-button-raised" label="Áp dụng"></button>
+        </div>
+    </div>
+</p-overlayPanel>
+<p-overlayPanel #areaOP>
+    <div class="w-full flex flex-col space-y-6">
+        <span class="p-float-label">
+            <p-inputNumber inputId="integeronly"></p-inputNumber>
+            <label htmlFor="number-input">Từ (m2)</label>
+        </span>
+        <span class="p-float-label">
+            <p-inputNumber inputId="integeronly"></p-inputNumber>
+            <label htmlFor="number-input">Đến (m2)</label>
+        </span>
+        <div class="flex flex-row justify-between items-center">
+            <button pButton pRipple icon="pi pi-sync" pTooltip="Đặt lại"
+                class="p-button-text p-button-rounded p-button-secondary"></button>
+            <button pButton pRipple class="p-button-text p-button-raised" label="Áp dụng"></button>
+        </div>
+    </div>
+</p-overlayPanel>
+<p-overlayPanel #priceOP>
+    <div class="w-full flex flex-col">
+        <div class="w-full flex flex-col space-y-6">
+            <span class="p-float-label">
+                <p-inputNumber inputId="locale-vn" mode="decimal" locale="en-VN" [minFractionDigits]="2"></p-inputNumber>
+                <label htmlFor="number-input">{{ 'Từ (tỷ VNĐ)' }}</label>
+            </span>
+            <span class="p-float-label">
+                <p-inputNumber inputId="locale-vn" mode="decimal" locale="en-VN" [minFractionDigits]="2"></p-inputNumber>
+                <label htmlFor="number-input">{{ 'Đến (triệu VNĐ)' }}</label>
+            </span>
+            <div class="flex flex-row justify-between items-center">
+                <button pButton pRipple icon="pi pi-sync" pTooltip="Đặt lại"
+                    class="p-button-text p-button-rounded p-button-secondary"></button>
+                <button pButton pRipple class="p-button-text p-button-raised" label="Áp dụng"></button>
+            </div>
+        </div>
+    </div>
+</p-overlayPanel>
+<p-overlayPanel #otherOP>
+    <div class="w-full flex flex-col space-y-8">
+        <div class="flex flex-col space-y-2">
+            <span class="text-sm font-bold">Số phòng ngủ</span>
+            <div class="flex flex-row space-x-4">
+                <div class="rounded-lg bg-gray-custom p-2 w-auto cursor-pointer">
+                    <span>1</span>
+                </div>
+                <div class="rounded-lg bg-gray-custom p-2 w-auto cursor-pointer">
+                    <span>2</span>
+                </div>
+                <div class="rounded-lg bg-gray-custom p-2 w-auto cursor-pointer">
+                    <span>3</span>
+                </div>
+                <div class="rounded-lg bg-gray-custom p-2 w-auto cursor-pointer">
+                    <span>4</span>
+                </div>
+                <div class="rounded-lg bg-gray-custom p-2 w-auto cursor-pointer">
+                    <span>5+</span>
+                </div>
+            </div>
+        </div>
+        <span class="p-float-label">
+            <p-multiSelect placeholder="Chọn hướng" optionLabel="name" inputId="float-label"></p-multiSelect>
+            <label for="float-label">Hướng</label>
+        </span>
+        <div class="flex flex-row justify-between items-center">
+            <button pButton pRipple icon="pi pi-sync" pTooltip="Đặt lại"
+                class="p-button-text p-button-rounded p-button-secondary"></button>
+            <button pButton pRipple class="p-button-text p-button-raised" label="Áp dụng"></button>
+        </div>
+    </div>
+</p-overlayPanel>
+<div class="flex w-full flex-col">
+    <div class="flex flex-col w-full mt-4 space-y-2">
+        <div class="flex flex-row">
+            <div class="w-1/5">
+                <p-dropdown placeholder="Danh mục"></p-dropdown>
+            </div>
+            <div class="w-1/5">
+                <p-dropdown placeholder="Loại BĐS"></p-dropdown>
+            </div>
+            <div class="w-3/5 flex flex-row">
+                <div class="w-full">
+                    <input pInputText class="w-full" placeholder="Nhập từ khóa...">
+                </div>
+                <div class="w-fit">
+                    <button pButton pRipple icon="pi pi-search"></button>
+                </div>
+            </div>
+        </div>
+        <div class="flex flex-row space-x-2">
+            <div class="w-full flex justify-between items-center border rounded-md border-b-custom px-4 py-4 cursor-pointer hover:border-primary-clr" 
+                (click)="aroundOP.toggle($event)">
+                <span></span>
+                <i class="pi pi-chevron-down text-icon-custom"></i>
+            </div>
+            <div class="w-full flex justify-between items-center border rounded-md border-b-custom px-4 py-4 cursor-pointer hover:border-primary-clr"
+                (click)="areaOP.toggle($event)">
+                <span></span>
+                <i class="pi pi-chevron-down text-icon-custom"></i>
+            </div>
+            <div class="w-full flex justify-between items-center border rounded-md border-b-custom px-4 py-4 cursor-pointer hover:border-primary-clr"
+                (click)="priceOP.toggle($event)">
+                <span></span>
+                <i class="pi pi-chevron-down text-icon-custom"></i>
+            </div>
+            <div class="w-full flex justify-between items-center border rounded-md border-b-custom px-4 py-4 cursor-pointer hover:border-primary-clr"
+                (click)="otherOP.toggle($event)">
+                <span></span>
+                <i class="pi pi-chevron-down text-icon-custom"></i>
+            </div>
+            <div class="w-auto">
+                <button pButton pRipple icon="pi pi-sync" pTooltip="Đặt lại"
+                    class="p-button-text p-button-rounded p-button-secondary"></button>
+            </div>
+        </div>
+    </div>
+</div>

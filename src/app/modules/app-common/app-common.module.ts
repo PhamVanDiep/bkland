@@ -35,7 +35,6 @@ import { CreateReportComponent } from './create-report/create-report.component';
 import { PostReportService } from 'src/app/core/services/post-report.service';
 import { CommentComponent } from './comment/comment.component';
 import { ChatComponent } from './chat/chat.component';
-import { WebSocketService } from 'src/app/core/services/web-socket.service';
 
 @NgModule({
   declarations: [
@@ -89,8 +88,7 @@ import { WebSocketService } from 'src/app/core/services/web-socket.service';
     InfoPostService,
     PaymentService,
     ConfirmationService,
-    PostReportService,
-    WebSocketService
+    PostReportService
   ]
 })
 export class AppCommonModule { }

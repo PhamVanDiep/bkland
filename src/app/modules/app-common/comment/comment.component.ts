@@ -63,7 +63,7 @@ export class CommentComponent implements OnInit, OnDestroy {
       },
       {
         label: 'Xóa bình luận',
-        icon: 'pi pi-fw pi-eye-slash',
+        icon: 'pi pi-fw pi-trash',
         command: () => {
           this.deleteComment();
         }
@@ -114,7 +114,7 @@ export class CommentComponent implements OnInit, OnDestroy {
       id: 0,
       createAt: null,
       createBy: '',
-      forumPost: false,
+      forumPost: this.postType == POST_TYPE.FORUM_POST ? true : false,
       postId: '',
       updateAt: null,
       updateBy: '',
@@ -156,8 +156,8 @@ export class CommentComponent implements OnInit, OnDestroy {
       this.newComment.updateAt = this.selectedCommentResponse.updateAt;
       this.newComment.forumPost = this.selectedCommentResponse.forumPost;
       this.newComment.postId = this.selectedCommentResponse.postId;
-      this.newComment.updateAt = this.newComment.updateAt;
-      this.newComment.updateBy = this.newComment.updateBy;
+      this.newComment.createBy = this.selectedCommentResponse.createBy;
+      this.newComment.updateBy = this.selectedCommentResponse.updateBy;
     } else {
       this._messageService.warningMessage('Bạn không thể sửa bình luận này.');
       return;
@@ -211,7 +211,6 @@ export class CommentComponent implements OnInit, OnDestroy {
         .subscribe((response: APIResponse) => {
           this._loadingService.loading(false);
           if (response.status === HttpStatusCode.Ok) {
-            this._messageService.successMessage(response.message);
             this.comments.forEach(e => {
               if (e.id == response.data) {
                 e.content = this.newComment.content;
