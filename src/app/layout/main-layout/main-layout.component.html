@@ -1,4 +1,11 @@
 <p-menu #menu [model]="menuItems" [popup]="true"></p-menu>
+<app-chat-dialog 
+    [chatRoomId]="chatRoomId" 
+    [display]="displayChatDialog" 
+    [userDeviceId]="userDeviceId"
+    (hideEvent)="onHideChatDialog($event)"
+    >
+</app-chat-dialog>
 <div class="w-full flex flex-col">
     <div class="w-full h-16 fixed flex flex-row z-[999]">
         <p-menubar [model]="items" class="bg-white w-full">
@@ -56,6 +63,10 @@
                         <span class="text-sm">Hòm thư</span>
                         <span class="font-semibold">{{ about.email }}</span>
                     </div>
+                </div>
+                <div class="space-x-2 flex flex-row items-center cursor-pointer w-fit" (click)="chatWithAdmin()">
+                    <i class="pi pi-comments"></i>
+                    <span class="font-semibold">{{ 'Nhắn tin với quản trị viên' }}</span>
                 </div>
             </div>
         </div>

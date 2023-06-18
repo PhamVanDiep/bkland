@@ -12,6 +12,7 @@ import { CreateForumPostComponent } from "../app-common/create-forum-post/create
 import { ReportComponent } from "./report/report.component";
 import { ReportDetailComponent } from "./report/report-detail/report-detail.component";
 import { ForumPostDetailComponent } from "./forum-post-detail/forum-post-detail.component";
+import { ChatComponent } from "../app-common/chat/chat.component";
 
 export const route: Route[] = [
     {
@@ -96,5 +97,9 @@ export const route: Route[] = [
                 component: ReportDetailComponent
             }
         ]
+    },
+    {
+        path: 'chat',
+        component: ChatComponent
     }
 ]

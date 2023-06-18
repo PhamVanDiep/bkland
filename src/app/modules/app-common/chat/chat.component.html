@@ -1,0 +1,151 @@
+<p-dialog header="Tạo đoạn chat mới" [(visible)]="newChatRoomDialogVisible" 
+    [style]="{width: innerWidth <= 640 ? '100vw' : '50vw', 'height': '80vh'}" 
+    [baseZIndex]="100" [modal]="true">
+    <div class="flex flex-col space-y-4 p-4">
+        <span class="p-input-icon-left">
+            <i class="pi pi-search"></i>
+            <input pInputText class="w-full" [(ngModel)]="filterValue" 
+                (ngModelChange)="filter()" placeholder="Nhập tên hoặc số điện thoại">
+        </span>
+        <span>{{ 'Chọn tài khoản muốn nhắn tin.' }}</span>
+        <div class="flex flex-col w-full">
+            <div *ngIf="lstUserClones.length > 0;else emptyUser">
+                <div *ngFor="let item of lstUserClones">
+                    <div class="w-full flex flex-row items-center justify-between mb-2 rounded-md border border-b-custom p-2">
+                        <div class="flex flex-row items-center space-x-4">
+                            <p-avatar [image]="item.avatarRetrive" shape="circle"></p-avatar>
+                            <div class="flex flex-col">
+                                <span class="font-bold">{{ item.fullName }}</span>
+                                <span class="font-light text-sm">{{ item.phoneNumber }}</span>
+                            </div>
+                        </div>
+                        <p-radioButton [value]="item" [(ngModel)]="selectedNewChatUser"></p-radioButton>
+                    </div>
+                </div>
+            </div>
+            <ng-template #emptyUser>
+                <span>Không tìm thấy người dùng nào phù hợp</span>
+            </ng-template>
+        </div>
+    </div>
+    <ng-template pTemplate="footer">
+        <p-button (click)="createNewChatRoom()" [disabled]="selectedNewChatUser == undefined || selectedNewChatUser == null" label="Tạo đoạn chat" 
+            styleClass="p-button-text"></p-button>
+    </ng-template>
+</p-dialog>
+<p-sidebar [(visible)]="sidebarVisible" [showCloseIcon]="true" position="right" styleClass="w-16rem">
+    <ng-template pTemplate="header">
+        <div class="flex flex-row items-center justify-between">
+            <button pButton pRipple class="p-button-success p-button-rounded" 
+                icon="pi pi-plus" pTooltip="Đoạn chat mới" (click)="newChatRoomDialogVisible=true;sidebarVisible=false;getListChatUserEnable()"></button>
+        </div>
+    </ng-template>
+    <ng-template pTemplate="content">
+        <div class="py-4">
+            <span class="font-bold text-xl mt-2 my-4">Danh sách đoạn chat</span>
+        </div>
+        <div *ngIf="chatRooms.length > 0;else emptyChatRoom" class="w-full">
+            <div *ngFor="let item of chatRooms" class="w-full">
+                <div class="flex flex-row w-full items-center space-x-4 px-2 border-y border-y-b-custom py-2 cursor-pointer hover:bg-b-custom" 
+                    [ngClass]="selectedChatId==item.id ? 'bg-gray-300' : 'bg-white'"
+                    (click)="selectedChatId=item.id;onChatRoomSelect(item)">
+                    <p-avatar [image]="item.avatarRetrive" shape="circle"></p-avatar>
+                    <div class="flex flex-col space-y-1">
+                        <span class="font-bold">{{ item.fullName }}</span>
+                        <span class="text-sm font-light">{{ getLastMessageOfChatRoom(item) }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <ng-template #emptyChatRoom>
+            <span class="italic text-lg">Không tìm thấy đoạn chat nào.</span>
+        </ng-template>
+    </ng-template>
+</p-sidebar>
+<div class="w-full lg:grid lg:grid-cols-3 lg:pl-4 lg:overflow-y-hidden flex flex-col h-[calc(100vh-4rem)]">
+    <div class="lg:col-span-2 h-full flex flex-col overflow-y-auto lg:pr-6" #listMessages>
+        <div class="flex flex-col w-full h-full" >
+            <div *ngIf="selectedChatId > 0;else emptyMessage">
+                <div class="fixed z-10 bg-white" [ngStyle]="{'width': chatInputParentWidth + 'px'}">
+                    <div class="flex flex-row w-full py-2 border-b border-b-b-custom px-2 justify-between items-center">
+                        <div class="flex flex-row space-x-4 items-center">
+                            <p-avatar [image]="selectedChatRoom.avatarRetrive" shape="circle"></p-avatar>
+                            <span class="font-bold text-lg">{{ selectedChatRoom.fullName }}</span>
+                        </div>
+                        <button pButton pRipple class="p-button-text p-button-rounded" (click)="sidebarVisible=true"
+                            icon="pi pi-list" *ngIf="innerWidth <= 640"></button>
+                    </div>
+                </div>
+                <div class="flex flex-col w-full h-full space-y-4 mt-24 md:mt-16 md:pb-6">
+                    <div *ngFor="let item of messages">
+                        <div *ngIf="item.createBy != currentUserId;else sendByMe">
+                            <div class="flex flex-row space-x-2">
+                                <p-avatar [image]="selectedChatRoom.avatarRetrive" shape="circle"></p-avatar>
+                                <div class="w-full flex flex-col space-y-2">
+                                    <div class="bg-gray-300 w-max p-2 flex flex-col space-y-1 rounded-md"
+                                        [ngStyle]="{'max-width': chatInputParentWidth*2/3 + 'px'}">
+                                        <span class="text-sm">{{ item.message }}</span>
+                                        <span class="text-xs font-light">{{ item.createAt | date:'dd/MM/yyyy, h:mm:ss a' }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <ng-template #sendByMe>
+                            <div class="flex flex-row space-x-2 justify-end">
+                                <div class="flex flex-col space-y-2">
+                                    <div class="bg-blue-custom text-white max-w-full w-max p-2 flex flex-col space-y-1 rounded-md"
+                                        [ngStyle]="{'max-width': chatInputParentWidth*2/3 + 'px'}">
+                                        <span class="text-sm">{{ item.message }}</span>
+                                        <span class="text-xs font-light">{{ item.createAt | date:'dd/MM/yyyy, h:mm:ss a' }}</span>
+                                    </div>
+                                </div>
+                                <p-avatar [image]="currentUserAvatarRetrive" shape="circle"></p-avatar>
+                            </div>
+                        </ng-template>
+                    </div>
+                </div>
+            </div>
+            <ng-template #emptyMessage>
+                <div class="flex h-full w-full justify-center items-center flex-col space-y-4">
+                    <img src="/assets/images/chat.png" alt="" srcset="" class="h-1/4" 
+                        (click)="imageClick()">
+                    <span>Hãy chọn cuộc hội thoại</span>
+                </div>
+            </ng-template>
+        </div>
+        <div class="flex flex-col w-full" #chatInputParent>
+            <div class="fixed h-20 border-t border-t-b-custom bottom-0 col-span-2 bg-white" 
+                [ngStyle]="{'width': chatInputParentWidth + 'px'}">
+                <div class="w-full flex flex-row items-center space-x-4 mt-3 pb-2">
+                    <input pInputText [(ngModel)]="message" class="w-full" [disabled]="selectedChatId == 0"
+                        placeholder="Viết tin nhắn..." (keydown.enter)="sendMessage()">
+                    <button pButton pRipple [disabled]="selectedChatId == 0" pTooltip="Gửi tin nhắn"
+                        class="p-button-text p-button-rounded w-auto" icon="pi pi-send" (click)="sendMessage()"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="lg:col-span-1 h-full overflow-y-auto hidden lg:flex lg:flex-col w-full pl-2 border-l border-l-b-custom">
+        <div class="flex flex-row items-center justify-between pb-4">
+            <span class="font-bold text-xl mt-2">Danh sách đoạn chat</span>
+            <button pButton pRipple class="p-button-success p-button-rounded" 
+                icon="pi pi-plus" pTooltip="Đoạn chat mới" (click)="newChatRoomDialogVisible=true;sidebarVisible=false;getListChatUserEnable()"></button>
+        </div>
+        <div *ngIf="chatRooms.length > 0;else emptyChatRoom" class="w-full">
+            <div *ngFor="let item of chatRooms" class="w-full">
+                <div class="flex flex-row w-full items-center space-x-4 px-2 border-y border-y-b-custom py-2 cursor-pointer hover:bg-b-custom" 
+                    [ngClass]="selectedChatId==item.id ? 'bg-gray-300' : 'bg-white'"
+                    (click)="selectedChatId=item.id;onChatRoomSelect(item)">
+                    <p-avatar [image]="item.avatarRetrive" shape="circle"></p-avatar>
+                    <div class="flex flex-col space-y-1">
+                        <span class="font-bold">{{ item.fullName }}</span>
+                        <span class="text-sm font-light">{{ getLastMessageOfChatRoom(item) }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <ng-template #emptyChatRoom>
+            <span class="italic text-lg">Không tìm thấy đoạn chat nào.</span>
+        </ng-template>
+    </div>
+</div>

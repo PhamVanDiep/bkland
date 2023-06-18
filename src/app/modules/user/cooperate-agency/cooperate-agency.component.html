@@ -1,9 +1,140 @@
+<p-confirmDialog [style]="{width: innerWidth > 640 ? '50vw' : '100vh'}"></p-confirmDialog>
 <div class="w-full flex flex-col px-4 lg:px-6 space-y-6">
-    <div class="flex flex-row w-full justify-between items-center mt-4 px-2 py-2 border border-gray-custom rounded-lg shadow-lg">
+    <div
+        class="flex flex-row w-full justify-between items-center mt-4 px-2 py-2 border border-gray-custom rounded-lg shadow-lg">
         <span class="text-base font-bold">{{ isAgency ? 'Cập nhật thông tin đăng ký' : 'Bạn chưa là môi giới?' }}</span>
-        <button pButton pRipple [ngClass]="isAgency ? 'p-button-primary' : 'p-button-success'" 
-            [label]="isAgency ? 'Cập nhật' : 'Đăng ký'" 
-            (click)="register()"></button>
+        <button pButton pRipple [ngClass]="isAgency ? 'p-button-primary' : 'p-button-success'"
+            [label]="isAgency ? 'Cập nhật' : 'Đăng ký'" (click)="register()"></button>
     </div>
-    <span class="text-xl font-bold"></span>
+    <div class="flex flex-row w-full justify-between items-center">
+        <span class="text-xl font-bold">{{ isAgency ? 'Danh sách bài đăng nhờ giúp đỡ' : 'Danh sách bài đăng đã nhờ giúp đỡ'
+        }}</span>
+        <button pButton pRipple *ngIf="!isAgency"
+        class="p-button-success p-button-rounded" icon="pi pi-plus" (click)="newRequest()"></button>
+    </div>
+    <div *ngIf="isAgency;else normalUser">
+        <p-table [value]="agencyRequested" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[10, 25, 50]"
+            currentPageReportTemplate="{first} đến {last} trên {totalRecords} bản ghi">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th pFrozenColumn>#</th>
+                    <th>Tiêu đề</th>
+                    <th>Bán/Cho thuê</th>
+                    <th>Loại</th>
+                    <th>Người đăng</th>
+                    <th>Số điện thoại</th>
+                    <th>Giá</th>
+                    <th>Trạng thái</th>
+                    <th></th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rep let-index="rowIndex">
+                <tr>
+                    <th>
+                        <span class="text-sm font-normal">{{ index + 1 }}</span>
+                    </th>
+                    <th>
+                        <span class="text-sm font-normal">{{ rep.title }}</span>
+                    </th>
+                    <th>
+                        <span class="text-sm font-normal">{{ rep.isSell == 1 ? 'Bán' : 'Cho thuê' }}</span>
+                    </th>
+                    <th>
+                        <span class="text-sm font-normal">{{ genType(rep.type) }}</span>
+                    </th>
+                    <th class="text-start">
+                        <span class="text-sm font-normal">
+                            {{ rep.fullName }}
+                        </span>
+                    </th>
+                    <th class="text-start">
+                        <span class="text-sm font-normal">{{ rep.phoneNumber }}</span>
+                    </th>
+                    <th class="text-start">
+                        <span class="text-sm font-normal">{{ rep.price + (rep.isSell ? ' tỷ VNĐ' : ' triệu VNĐ')
+                            }}</span>
+                    </th>
+                    <th class="text-start">
+                        <p-tag [value]="getStatusValue(rep.status)" [severity]="getStatusSeverity(rep.status)"></p-tag>
+                    </th>
+                    <th>
+                        <button pButton pRipple class="p-button-text p-button-info p-button-rounded"
+                            pTooltip="Xem bài viết" icon="pi pi-info-circle" (click)="viewPost(rep.id)"></button>
+                        <button pButton pRipple class="p-button-text p-button-success p-button-rounded"
+                            pTooltip="Nhận lời môi giới cho bài viết" icon="pi pi-check"
+                            (click)="acceptPost(rep)" *ngIf="rep.status === 'DA_GUI_YEU_CAU'"></button>
+                        <button pButton pRipple class="p-button-text p-button-danger p-button-rounded"
+                            pTooltip="Từ chối môi giới" icon="pi pi-times" (click)="rejectPost(rep)"
+                            *ngIf="rep.status === 'DA_GUI_YEU_CAU'"></button>
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td>Không có dữ liệu.</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+    <ng-template #normalUser>
+        <p-table [value]="userRequestSents" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[10, 25, 50]"
+            currentPageReportTemplate="{first} đến {last} trên {totalRecords} bản ghi">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th pFrozenColumn>#</th>
+                    <th>Tiêu đề</th>
+                    <th>Bán/Cho thuê</th>
+                    <th>Loại</th>
+                    <th>Nhà môi giới</th>
+                    <th>Số điện thoại</th>
+                    <th>Giá</th>
+                    <th>Trạng thái</th>
+                    <th></th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rep let-index="rowIndex">
+                <tr>
+                    <th>
+                        <span class="text-sm font-normal">{{ index + 1 }}</span>
+                    </th>
+                    <th>
+                        <span class="text-sm font-normal">{{ rep.title }}</span>
+                    </th>
+                    <th>
+                        <span class="text-sm font-normal">{{ rep.isSell == 1 ? 'Bán' : 'Cho thuê' }}</span>
+                    </th>
+                    <th>
+                        <span class="text-sm font-normal">{{ genType(rep.type) }}</span>
+                    </th>
+                    <th class="text-start">
+                        <span class="text-sm font-normal">
+                            {{ rep.fullName }}
+                        </span>
+                    </th>
+                    <th class="text-start">
+                        <span class="text-sm font-normal">{{ rep.phoneNumber }}</span>
+                    </th>
+                    <th class="text-start">
+                        <span class="text-sm font-normal">{{ rep.price + (rep.isSell ? ' tỷ VNĐ' : ' triệu VNĐ')
+                            }}</span>
+                    </th>
+                    <th class="text-start">
+                        <p-tag [value]="getStatusValue(rep.status)" [severity]="getStatusSeverity(rep.status)"></p-tag>
+                    </th>
+                    <th>
+                        <button pButton pRipple class="p-button-text p-button-info p-button-rounded"
+                            pTooltip="Xem bài viết" icon="pi pi-info-circle" (click)="viewPost(rep.id)"></button>
+                        <button pButton pRipple class="p-button-text p-button-danger p-button-rounded" 
+                            *ngIf="rep.status == 'DA_GUI_YEU_CAU' ? true : false"
+                            pTooltip="Hủy yêu cầu" icon="pi pi-times" (click)="cancelRequest(rep)"></button>
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td>Không có dữ liệu.</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </ng-template>
 </div>

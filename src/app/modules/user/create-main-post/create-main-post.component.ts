@@ -264,17 +264,19 @@ export class CreateMainPostComponent implements OnInit, OnDestroy {
           }
         })
     } else {
-      this._specialAccountService.agencyInfo(this.realEstatePost.ownerId.id)
-        .pipe(takeUntil(this._unsubscribe))
-        .subscribe((response: APIResponse) => {
-          if (response.status === HttpStatusCode.Ok) {
-            response.data.districts.forEach((e: any) => {
-              this.lstSelectedDistrictCodes.push(e.code);
-            })
-          } else {
-            this._messageService.errorMessage(response.message);
-          }
-        })
+      if (this.isAgency) {
+        this._specialAccountService.agencyInfo(this.realEstatePost.ownerId.id)
+          .pipe(takeUntil(this._unsubscribe))
+          .subscribe((response: APIResponse) => {
+            if (response.status === HttpStatusCode.Ok) {
+              response.data.districts.forEach((e: any) => {
+                this.lstSelectedDistrictCodes.push(e.code);
+              })
+            } else {
+              this._messageService.errorMessage(response.message);
+            }
+          }) 
+      }
     }
   }
 

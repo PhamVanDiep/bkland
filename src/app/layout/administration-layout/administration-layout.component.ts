@@ -4,7 +4,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { NavigationEnd, Router } from '@angular/router';
 import { DeviceDetectorService, DeviceInfo } from 'ngx-device-detector';
 import { MenuItem } from 'primeng/api';
-import { ReplaySubject, filter, takeUntil } from 'rxjs';
+import { ReplaySubject, filter, firstValueFrom, takeUntil } from 'rxjs';
 import { EMAIL_VERIFY_TYPE } from 'src/app/core/constants/email-verify.constant';
 import { ADMIN_NAV, ENTERPRISE_NAV, HEADER_NAV, USER_NAV } from 'src/app/core/constants/navigation.constant';
 import { ROLE } from 'src/app/core/constants/role.constant';
@@ -171,13 +171,12 @@ export class AdministrationLayoutComponent implements OnInit, OnDestroy {
       })
   }
 
-  retriveAvatar(path: string): void {
+  async retriveAvatar(path: string) {
     if (path == undefined || path == null || path.length == 0) {
       this.avatarUrl = '/assets/images/user.png'
     } else if (path.includes(environment.BASE_URL_NO_AUTH)) {
-      this._mediaService.retriveImage(path)
-        .pipe(takeUntil(this._unsubscribe))
-        .subscribe((response: APIResponse) => {
+      await firstValueFrom(this._mediaService.retriveImage(path).pipe(takeUntil(this._unsubscribe))) 
+        .then((response: APIResponse) => {
           if (response.status === HttpStatusCode.Ok) {
             this.avatarUrl = this._domSanitizer.bypassSecurityTrustResourceUrl(`data:${response.data.type};base64,${response.data.body}`);
           } else {
@@ -187,6 +186,7 @@ export class AdministrationLayoutComponent implements OnInit, OnDestroy {
     } else {
       this.avatarUrl = this.user.avatarUrl;
     }
+    this._mediaService.setAvatar(this.avatarUrl);
   }
 
   navigatePage(path: string): void {

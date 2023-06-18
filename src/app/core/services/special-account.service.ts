@@ -66,4 +66,13 @@ export class SpecialAccountService {
             }
         });
     }
+
+    listAgencyByRepDistrict(repId: string): Observable<APIResponse> {
+        let accessToken = localStorage.getItem('accessToken') || '';
+        return this._httpClient.get<APIResponse>(`${environment.BASE_URL_AUTH}/special-account/rep/${repId}`, {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        });
+    }
 }
