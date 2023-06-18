@@ -1,5 +1,6 @@
 import { HttpStatusCode } from '@angular/common/http';
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmEventType, ConfirmationService, MenuItem } from 'primeng/api';
 import { ReplaySubject, takeUntil } from 'rxjs';
 import { STATUS } from 'src/app/core/constants/status.constant';
@@ -36,7 +37,9 @@ export class MainPostComponent implements OnInit, OnDestroy {
     private _loadingService: LoadingService,
     private _messageService: MessageService,
     private _realEstatePostService: RealEstatePostService,
-    private _confirmationService: ConfirmationService
+    private _confirmationService: ConfirmationService,
+    private _router: Router,
+    private _route: ActivatedRoute
   ) {
     this._appTitleService.setTitle(this.title);
     this.items = [
@@ -116,7 +119,7 @@ export class MainPostComponent implements OnInit, OnDestroy {
   }
 
   viewPost(): void {
-    
+    this._router.navigate([`./${this.selectedRep.id}`], { relativeTo: this._route });
   }
 
   showOrHidePost(): void {

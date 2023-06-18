@@ -14,6 +14,7 @@ import { ManageForumComponent } from "../app-common/create-forum-post/manage-for
 import { CreateForumPostComponent } from "../app-common/create-forum-post/create-forum-post.component";
 import { ChatComponent } from "../app-common/chat/chat.component";
 import { NewRequestComponent } from "./cooperate-agency/new-request/new-request.component";
+import { AdministrativeViewComponent } from "../app-common/real-estate-post-view/administrative-view/administrative-view.component";
 
 export const route: Route[] = [
     {
@@ -81,6 +82,10 @@ export const route: Route[] = [
             {
                 path: 'new-request',
                 component: NewRequestComponent
+            },
+            {
+                path: ':id',
+                component: AdministrativeViewComponent
             }
         ]
     },

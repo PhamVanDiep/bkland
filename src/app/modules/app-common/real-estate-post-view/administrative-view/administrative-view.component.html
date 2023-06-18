@@ -1,0 +1,8 @@
+<div class="w-full flex flex-col space-y-6 mt-4 lg:px-6">
+    <div class="flex flex-row space-x-4 items-center">
+        <button pButton pRipple pTooltip="Quay lại" class="p-button-text p-button-rounded p-button-secondary"
+            icon="pi pi-chevron-left" (click)="goBack()"></button>
+        <span class="font-bold text-lg">{{ 'Thông tin chi tiết bài viết' }}</span>
+    </div>
+    <app-rep-detail [postId]="postId" [increaseView]="false"></app-rep-detail>
+</div>

@@ -1,0 +1,256 @@
+<div class="w-full flex flex-col space-y-4 mb-4">
+    <div class="flex flex-col space-y-2">
+        <span class="font-bold text-2xl">{{ realEstatePost?.basePost.realEstatePost.title }}</span>
+        <span>{{ realEstatePost?.basePost.realEstatePost.addressShow }}</span>
+    </div>
+    <hr class="w-full" width="1" color="#ced4da">
+    <div class="w-full flex flex-col md:flex-row md:justify-between space-y-2 md:space-y-0">
+        <div class="flex flex-row space-x-4">
+            <div class="flex flex-col space-y-1">
+                <span class="text-sm">{{ 'Mức giá' }}</span>
+                <span class="font-bold">{{ realEstatePost?.basePost.realEstatePost.price + ' ' +
+                    (realEstatePost?.basePost.realEstatePost.sell ? 'tỷ VNĐ' : 'triệu VNĐ') }}</span>
+                <span class="text-sm font-light">{{ calculatePricePerM2() }}</span>
+            </div>
+            <div class="flex flex-col space-y-1">
+                <span class="text-sm">{{ 'Diện tích' }}</span>
+                <span class="font-bold">{{ realEstatePost?.basePost.realEstatePost.area + ' m2' }}</span>
+                <span class="text-sm font-light" *ngIf="!isPlot()">{{ floorNoOrNoFloor() }}</span>
+            </div>
+            <div class="flex flex-col space-y-1" *ngIf="!isPlot()">
+                <span class="text-sm">{{ 'Phòng ngủ' }}</span>
+                <span class="font-bold">{{ realEstatePost?.basePost.noBedroom + ' PN' }}</span>
+            </div>
+        </div>
+        <hr class="w-full block md:hidden" width="1" color="#ced4da">
+        <div class="flex flex-row space-x-6 items-center" *ngIf="increaseView">
+            <button pButton pRipple class="p-button-text p-button-rounded p-button-warning" pTooltip="Báo cáo"
+                icon="pi pi-exclamation-triangle"></button>
+            <i class="pi pi-heart-fill cursor-pointer" pTooltip="Quan tâm"></i>
+            <button pButton pRipple class="p-button-text p-button-rounded p-button-secondary" pTooltip="Bình luận"
+                icon="pi pi-comment"></button>
+        </div>
+    </div>
+    <hr class="w-full" width="1" color="#ced4da">
+    <div class="text-center">
+        <p-image [src]="images[0]" [preview]="false" (click)="displayBasic=true;"
+            class="hover:opacity-60 hover:cursor-pointer">
+            <ng-template pTemplate="indicator">
+                <span>{{ '+' + (images.length - 1) }}</span>
+            </ng-template>
+        </p-image>
+        <span class="font-bold text-white text-2xl md:text-6xl absolute top-[50%] left-[50%]"
+            style="transform: translate(-50%, -50%)">{{ '+' + (images.length - 1) }}</span>
+    </div>
+    <p-galleria [value]="images" [(visible)]="displayBasic" [responsiveOptions]="responsiveOptions"
+        [containerStyle]="{ 'max-width': '850px' }" [numVisible]="7" [circular]="true" [fullScreen]="true"
+        [showItemNavigators]="true" [showThumbnails]="false">
+        <ng-template pTemplate="item" let-item>
+            <img [src]="item" style="width: 100%; display: block;" />
+        </ng-template>
+    </p-galleria>
+    <hr class="w-full" width="1" color="#ced4da">
+    <div class="flex flex-col space-y-2">
+        <span class="text-lg font-semibold">{{ 'Xem trên bản đồ' }}</span>
+        <hr class="w-full" width="1" color="#ced4da">
+        <google-map width="100%" [center]="center" [zoom]="zoom">
+            <map-marker [position]="position" [options]="markerOptions"></map-marker>
+        </google-map>
+    </div>
+    <hr class="w-full" width="1" color="#ced4da">
+    <div class="flex flex-col space-y-2">
+        <span class="text-lg font-semibold">{{ 'Thông tin mô tả' }}</span>
+        <hr class="w-full" width="1" color="#ced4da">
+        <pre class="break-words">{{ realEstatePost?.basePost.realEstatePost.description }}</pre>
+    </div>
+    <hr class="w-full" width="1" color="#ced4da">
+    <div class="flex flex-col space-y-2">
+        <span class="text-lg font-semibold">{{ 'Đặc điểm của bất động sản' }}</span>
+        <hr class="w-full" width="1" color="#ced4da">
+        <div class="flex flex-col md:flex-row md:space-x-4 w-full" *ngIf="isApartment()">
+            <div class="flex flex-col w-full">
+                <div class="flex flex-row w-full py-2">
+                    <div class="flex flex-row w-full space-x-4">
+                        <img [src]="'/assets/images/post/compass.png'" alt="" class="w-6 h-6">
+                        <span class="font-bold">{{ 'Hướng nhà' }}</span>
+                    </div>
+                    <div class="w-full">
+                        <span>{{ getRepDirection() }}</span>
+                    </div>
+                </div>
+                <div class="flex flex-row w-full py-2">
+                    <div class="flex flex-row w-full space-x-4">
+                        <img [src]="'/assets/images/post/bathroom.png'" alt="" class="w-6 h-6">
+                        <span class="font-bold">{{ 'Số phòng tắm' }}</span>
+                    </div>
+                    <div class="w-full">
+                        <span>{{ realEstatePost?.basePost.noBathroom }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="flex flex-col w-full">
+                <div class="flex flex-row w-full py-2">
+                    <div class="flex flex-row w-full space-x-4">
+                        <img [src]="'/assets/images/post/compass.png'" alt="" class="w-6 h-6">
+                        <span class="font-bold">{{ 'Hướng ban công' }}</span>
+                    </div>
+                    <div class="w-full">
+                        <span>{{ getBalconyDirection() }}</span>
+                    </div>
+                </div>
+                <div class="flex flex-row w-full py-2">
+                    <div class="flex flex-row w-full space-x-4">
+                        <img [src]="'/assets/images/post/bedroom.png'" alt="" class="w-6 h-6">
+                        <span class="font-bold">{{ 'Số phòng ngủ' }}</span>
+                    </div>
+                    <div class="w-full">
+                        <span>{{ realEstatePost?.basePost.noBedroom + ' m' }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="flex flex-col md:flex-row md:space-x-4 w-full" *ngIf="isHouse()">
+            <div class="flex flex-col w-full">
+                <div class="flex flex-row w-full py-2">
+                    <div class="flex flex-row w-full space-x-4">
+                        <img [src]="'/assets/images/post/compass.png'" alt="" class="w-6 h-6">
+                        <span class="font-bold">{{ 'Hướng nhà' }}</span>
+                    </div>
+                    <div class="w-full">
+                        <span>{{ getRepDirection() }}</span>
+                    </div>
+                </div>
+                <div class="flex flex-row w-full py-2">
+                    <div class="flex flex-row w-full space-x-4">
+                        <img [src]="'/assets/images/post/bathroom.png'" alt="" class="w-6 h-6">
+                        <span class="font-bold">{{ 'Số phòng tắm' }}</span>
+                    </div>
+                    <div class="w-full">
+                        <span>{{ realEstatePost?.basePost.noBathroom }}</span>
+                    </div>
+                </div>
+                <div class="flex flex-row w-full py-2">
+                    <div class="flex flex-row w-full space-x-4">
+                        <img [src]="'/assets/images/post/width.png'" alt="" class="w-6 h-6">
+                        <span class="font-bold">{{ 'Kích thước mặt tiền' }}</span>
+                    </div>
+                    <div class="w-full">
+                        <span>{{ realEstatePost?.basePost.frontWidth + ' m' }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="flex flex-col w-full">
+                <div class="flex flex-row w-full py-2">
+                    <div class="flex flex-row w-full space-x-4">
+                        <img [src]="'/assets/images/post/compass.png'" alt="" class="w-6 h-6">
+                        <span class="font-bold">{{ 'Hướng ban công' }}</span>
+                    </div>
+                    <div class="w-full">
+                        <span>{{ getBalconyDirection() }}</span>
+                    </div>
+                </div>
+                <div class="flex flex-row w-full py-2">
+                    <div class="flex flex-row w-full space-x-4">
+                        <img [src]="'/assets/images/post/bedroom.png'" alt="" class="w-6 h-6">
+                        <span class="font-bold">{{ 'Số phòng ngủ' }}</span>
+                    </div>
+                    <div class="w-full">
+                        <span>{{ realEstatePost?.basePost.noBedroom }}</span>
+                    </div>
+                </div>
+                <div class="flex flex-row w-full py-2">
+                    <div class="flex flex-row w-full space-x-4">
+                        <img [src]="'/assets/images/post/width.png'" alt="" class="w-6 h-6">
+                        <span class="font-bold">{{ 'Kích thước mặt hậu' }}</span>
+                    </div>
+                    <div class="w-full">
+                        <span>{{ realEstatePost?.basePost.behindWidth }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="flex flex-col md:flex-row md:space-x-4 w-full" *ngIf="isPlot()">
+            <div class="flex flex-col w-full">
+                <div class="flex flex-row w-full py-2">
+                    <div class="flex flex-row w-full space-x-4">
+                        <img [src]="'/assets/images/post/compass.png'" alt="" class="w-6 h-6">
+                        <span class="font-bold">{{ 'Hướng' }}</span>
+                    </div>
+                    <div class="w-full">
+                        <span>{{ getRepDirection() }}</span>
+                    </div>
+                </div>
+                <div class="flex flex-row w-full py-2">
+                    <div class="flex flex-row w-full space-x-4">
+                        <img [src]="'/assets/images/post/width.png'" alt="" class="w-6 h-6">
+                        <span class="font-bold">{{ 'Kích thước mặt tiền' }}</span>
+                    </div>
+                    <div class="w-full">
+                        <span>{{ realEstatePost?.basePost.frontWidth + ' m' }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="flex flex-col w-full">
+                <div class="flex flex-row w-full py-2">
+                    <div class="flex flex-row w-full space-x-4">
+                        <img [src]="'/assets/images/post/area.png'" alt="" class="w-6 h-6">
+                        <span class="font-bold">{{ 'Diện tích' }}</span>
+                    </div>
+                    <div class="w-full">
+                        <span>{{ realEstatePost?.basePost.realEstatePost.area + ' m2' }}</span>
+                    </div>
+                </div>
+                <div class="flex flex-row w-full py-2">
+                    <div class="flex flex-row w-full space-x-4">
+                        <img [src]="'/assets/images/post/width.png'" alt="" class="w-6 h-6">
+                        <span class="font-bold">{{ 'Kích thước mặt hậu' }}</span>
+                    </div>
+                    <div class="w-full">
+                        <span>{{ realEstatePost?.basePost.behindWidth }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="flex flex-col space-y-1" *ngIf="!isPlot()">
+            <span class="font-bold">{{ 'Thông tin nội thất:' }}</span>
+            <span>{{ realEstatePost?.basePost.furniture }}</span>
+        </div>
+        <div class="flex flex-col space-y-1"  *ngIf="isApartment()">
+            <span class="font-bold">{{ 'Thông tin xây dựng:' }}</span>
+            <span>{{ realEstatePost?.basePost.construction }}</span>
+        </div>
+    </div>
+    <hr class="w-full" width="1" color="#ced4da">
+    <div class="flex flex-col space-y-2">
+        <span class="text-lg font-semibold">{{ 'Lịch sử biến động giá' }}</span>
+        <hr class="w-full" width="1" color="#ced4da">
+        <p-timeline [value]="priceFluctuations" layout="horizontal" class="w-full">
+            <ng-template pTemplate="content" let-event>
+                <small class="p-text-secondary">{{ event.createAt | date:'dd/MM/yyyy, h:mm:ss a' }}</small>
+            </ng-template>
+            <ng-template pTemplate="opposite" let-event>
+                {{ event.price + ' ' +
+                (realEstatePost?.basePost.realEstatePost.sell ? 'tỷ VNĐ' : 'triệu VNĐ') }}
+            </ng-template>
+        </p-timeline>
+    </div>
+    <hr class="w-full" width="1" color="#ced4da">
+    <div class="flex flex-col space-y-2">
+        <span class="text-lg font-semibold">{{ 'Thông tin khác' }}</span>
+        <hr class="w-full" width="1" color="#ced4da">
+        <div class="flex flex-row w-full justify-between">
+            <div class="flex flex-col space-y-2">
+                <span>{{ 'Ngày đăng' }}</span>
+                <span class="font-bold">{{ realEstatePost?.basePost.realEstatePost.createAt | date:'dd/MM/yyyy, h:mm:ss a'}}</span>
+            </div>
+            <div class="flex flex-col space-y-2">
+                <span>{{ 'Ngày hết hạn' }}</span>
+                <span class="font-bold">{{ getExpireDate() }}</span>
+            </div>
+            <div class="flex flex-col space-y-2">
+                <span>{{ 'Độ ưu tiên' }}</span>
+                <span class="font-bold">{{ getPriority()}}</span>
+            </div>
+        </div>
+    </div>
+</div>
