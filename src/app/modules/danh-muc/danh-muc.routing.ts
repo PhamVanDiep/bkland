@@ -1,11 +1,11 @@
 import { Route } from "@angular/router";
-import { LandingPageComponent } from "./landing-page.component";
+import { DanhMucComponent } from "./danh-muc.component";
 import { RealEstatePostViewComponent } from "../app-common/real-estate-post-view/real-estate-post-view.component";
 
-export const route: Route[] = [
+export const routes: Route[] = [
     {
         path: '',
-        component: LandingPageComponent
+        component: DanhMucComponent
     },
     {
         path: ':id',

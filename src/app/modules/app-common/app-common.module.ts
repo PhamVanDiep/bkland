@@ -38,6 +38,11 @@ import { ChatComponent } from './chat/chat.component';
 import { SocketioService } from 'src/app/core/services/socketio.service';
 import { SidebarModule } from 'primeng/sidebar';
 import { RadioButtonModule } from 'primeng/radiobutton';
+import { RealEstatePostViewComponent } from './real-estate-post-view/real-estate-post-view.component';
+import { RepDetailComponent } from './real-estate-post-view/rep-detail/rep-detail.component';
+import { GoogleMapsModule } from '@angular/google-maps';
+import { TimelineModule } from 'primeng/timeline';
+import { AdministrativeViewComponent } from './real-estate-post-view/administrative-view/administrative-view.component';
 
 @NgModule({
   declarations: [
@@ -49,7 +54,10 @@ import { RadioButtonModule } from 'primeng/radiobutton';
     ManageConfigComponent,
     CreateReportComponent,
     CommentComponent,
-    ChatComponent
+    ChatComponent,
+    RealEstatePostViewComponent,
+    RepDetailComponent,
+    AdministrativeViewComponent
   ],
   imports: [
     CommonModule,
@@ -75,7 +83,9 @@ import { RadioButtonModule } from 'primeng/radiobutton';
     MultiSelectModule,
     InputSwitchModule,
     SidebarModule,
-    RadioButtonModule
+    RadioButtonModule,
+    GoogleMapsModule,
+    TimelineModule
   ],
   exports: [
     CreateForumPostComponent,
@@ -86,7 +96,10 @@ import { RadioButtonModule } from 'primeng/radiobutton';
     ManageConfigComponent,
     CreateReportComponent,
     CommentComponent,
-    ChatComponent
+    ChatComponent,
+    RealEstatePostViewComponent,
+    RepDetailComponent,
+    AdministrativeViewComponent
   ],
   providers: [
     ForumPostService,

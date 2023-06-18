@@ -416,9 +416,6 @@ export class CreateMainPostComponent implements OnInit, OnDestroy {
     } else {
       this.priorities = PRIORITY_DROPDOWN;
       this.periods = PERIOD_DROPDOWN;
-      this.realEstatePost.period = 15;
-      this.realEstatePost.priority = 1;
-
       return false;
     }
   }

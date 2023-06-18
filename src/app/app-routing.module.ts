@@ -108,6 +108,66 @@ const routes: Routes = [
         loadChildren: () => import('src/app/modules/forum/forum.module').then(m => m.ForumModule)
       }
     ]
+  },
+  {
+    path: 'mua-ban/nha-dat',
+    component: MainLayoutComponent,
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('src/app/modules/danh-muc/danh-muc.module').then(m => m.DanhMucModule)
+      }
+    ]
+  },
+  {
+    path: 'mua-ban/chung-cu',
+    component: MainLayoutComponent,
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('src/app/modules/danh-muc/danh-muc.module').then(m => m.DanhMucModule)
+      }
+    ]
+  },
+  {
+    path: 'mua-ban/dat-nen',
+    component: MainLayoutComponent,
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('src/app/modules/danh-muc/danh-muc.module').then(m => m.DanhMucModule)
+      }
+    ]
+  },
+  {
+    path: 'cho-thue/nha-dat',
+    component: MainLayoutComponent,
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('src/app/modules/danh-muc/danh-muc.module').then(m => m.DanhMucModule)
+      }
+    ]
+  },
+  {
+    path: 'cho-thue/chung-cu',
+    component: MainLayoutComponent,
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('src/app/modules/danh-muc/danh-muc.module').then(m => m.DanhMucModule)
+      }
+    ]
+  },
+  {
+    path: 'cho-thue/dat-nen',
+    component: MainLayoutComponent,
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('src/app/modules/danh-muc/danh-muc.module').then(m => m.DanhMucModule)
+      }
+    ]
   }
 ];
 

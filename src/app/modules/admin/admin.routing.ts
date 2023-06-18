@@ -13,6 +13,7 @@ import { ReportComponent } from "./report/report.component";
 import { ReportDetailComponent } from "./report/report-detail/report-detail.component";
 import { ForumPostDetailComponent } from "./forum-post-detail/forum-post-detail.component";
 import { ChatComponent } from "../app-common/chat/chat.component";
+import { AdministrativeViewComponent } from "../app-common/real-estate-post-view/administrative-view/administrative-view.component";
 
 export const route: Route[] = [
     {
@@ -35,7 +36,16 @@ export const route: Route[] = [
             },
             {
                 path: 'main',
-                component: MainPostComponent
+                children: [
+                    {
+                        path: '',
+                        component: MainPostComponent
+                    },
+                    {
+                        path: ':id',
+                        component: AdministrativeViewComponent
+                    }
+                ]
             },
             {
                 path: 'info',

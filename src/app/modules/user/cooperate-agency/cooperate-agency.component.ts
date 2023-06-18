@@ -111,7 +111,7 @@ export class CooperateAgencyComponent implements OnInit, OnDestroy {
   }
 
   viewPost(id: string): void {
-
+    this._router.navigate([`./${id}`], { relativeTo: this._route });
   }
 
   acceptPost(rep: any): void {
