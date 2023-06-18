@@ -1,0 +1,44 @@
+<p-dialog header="Nhắn tin" [(visible)]="display"
+    [style]="{width: innerWidth <= 640 ? '100vw' : '30vw', 'height': '80vh'}" [baseZIndex]="100" [modal]="true"
+    (onHide)="hideDialog()">
+    <div class="w-full flex flex-col space-y-4 px-2">
+        <div *ngIf="messages.length > 0;else emptyComment" class="w-full flex flex-col space-y-4" #listMessages>
+            <div *ngFor="let item of messages">
+                <div *ngIf="item.createBy != userDeviceId;else sendByMe">
+                    <div class="flex flex-row space-x-2">
+                        <p-avatar [image]="'/assets/images/favicon.png'" shape="circle"></p-avatar>
+                        <div class="w-full flex flex-col space-y-2">
+                            <div class="bg-gray-300 w-max p-2 flex flex-col space-y-1 rounded-md max-w-[70%]">
+                                <span class="text-sm">{{ item.message }}</span>
+                                <span class="text-xs font-light">{{ item.createAt | date:'dd/MM/yyyy, h:mm:ss a'
+                                    }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <ng-template #sendByMe>
+                    <div class="flex flex-row space-x-2 justify-end">
+                        <div class="bg-blue-custom text-white w-max p-2 flex flex-col space-y-1 rounded-md max-w-[70%]">
+                            <span class="text-sm">{{ item.message }}</span>
+                            <span class="text-xs font-light">{{ item.createAt | date:'dd/MM/yyyy, h:mm:ss a' }}</span>
+                        </div>
+                        <p-avatar [image]="'/assets/images/user.png'" shape="circle"></p-avatar>
+                    </div>
+                </ng-template>
+            </div>
+        </div>
+        <ng-template #emptyComment>
+            <span>Bạn có điều gì cần giải đáp, hãy gửi tin nhắn tới quản trị viên.</span>
+        </ng-template>
+    </div>
+    <ng-template pTemplate="footer">
+        <div class="w-full flex flex-row space-x-4 justify-between h-full items-center">
+            <input pInputText [(ngModel)]="message" placeholder="Viết tin nhắn..." class="w-full"
+                (keydown.enter)="sendMessage()">
+            <div class="p-2 cursor-pointer flex justify-center items-center" pTooltip="Gửi tin nhắn"
+                (click)="sendMessage()">
+                <i class="pi pi-send text-blue-custom"></i>
+            </div>
+        </div>
+    </ng-template>
+</p-dialog>

@@ -35,6 +35,9 @@ import { CreateReportComponent } from './create-report/create-report.component';
 import { PostReportService } from 'src/app/core/services/post-report.service';
 import { CommentComponent } from './comment/comment.component';
 import { ChatComponent } from './chat/chat.component';
+import { SocketioService } from 'src/app/core/services/socketio.service';
+import { SidebarModule } from 'primeng/sidebar';
+import { RadioButtonModule } from 'primeng/radiobutton';
 
 @NgModule({
   declarations: [
@@ -70,7 +73,9 @@ import { ChatComponent } from './chat/chat.component';
     DropdownModule,
     EditorModule,
     MultiSelectModule,
-    InputSwitchModule
+    InputSwitchModule,
+    SidebarModule,
+    RadioButtonModule
   ],
   exports: [
     CreateForumPostComponent,
@@ -88,7 +93,8 @@ import { ChatComponent } from './chat/chat.component';
     InfoPostService,
     PaymentService,
     ConfirmationService,
-    PostReportService
+    PostReportService,
+    SocketioService
   ]
 })
 export class AppCommonModule { }

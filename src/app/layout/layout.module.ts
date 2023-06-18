@@ -22,11 +22,13 @@ import { ToastModule } from 'primeng/toast';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ChargeService } from '../core/services/charge.service';
 import { InputTextModule } from 'primeng/inputtext';
+import { ChatDialogComponent } from './main-layout/chat-dialog/chat-dialog.component';
 
 @NgModule({
   declarations: [
     MainLayoutComponent,
-    AdministrationLayoutComponent
+    AdministrationLayoutComponent,
+    ChatDialogComponent
   ],
   imports: [
     CommonModule,

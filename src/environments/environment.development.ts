@@ -4,6 +4,7 @@ export const environment = {
     BASE_URL_AUTH: "http://localhost:7979/api/v1",
     BASE_URL_NO_AUTH: "http://localhost:7979/api/no-auth",
     API_URL: "http://localhost:7979/api",
+    SOCKET_ENDPOINT: 'https://bkland-chat-server-6277f14e77d1.herokuapp.com',
     // PUSH_NOTIFY_BASE_URL: "https://be-springboot-firebase-pn.herokuapp.com/api/v1",
     FirebaseConfig: {
         apiKey: "AIzaSyBYCvmgD_N8kUGYHN6Vnh7mNMxwX1ffoiU",

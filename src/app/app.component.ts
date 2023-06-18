@@ -5,7 +5,7 @@ import { PushNotificationService } from './core/services/push-notification.servi
 import { DeviceDetectorService, DeviceInfo } from 'ngx-device-detector';
 import { UserToken } from './core/models/user-token.model';
 import { MessageService } from 'primeng/api';
-import { NotificationMessage } from './core/models/message.model';
+import { NotificationMessage } from './core/models/chat.model';
 import { LoadingService } from './core/services/loading.service';
 import { MessageService as MessageServiceCustomize } from './core/services/message.service';
 

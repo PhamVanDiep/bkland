@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { APIResponse } from '../models/api-response.model';
 import { environment } from 'src/environments/environment';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -9,8 +9,18 @@ import { DomSanitizer } from '@angular/platform-browser';
     providedIn: 'root'
 })
 export class MediaService {
+    private _avatar: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+
     private accessToken: string;
 
+    get avatar$(): Observable<any> {
+        return this._avatar.asObservable();
+    }
+
+    setAvatar(avatar: any): void {
+        this._avatar.next(avatar);
+    }
+    
     constructor(
         private _httpClient: HttpClient,
         private _domSanitizer: DomSanitizer

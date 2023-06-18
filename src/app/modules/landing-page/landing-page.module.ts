@@ -11,6 +11,7 @@ import { RippleModule } from 'primeng/ripple';
 import { TooltipModule } from 'primeng/tooltip';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { ChatDialogComponent } from '../../layout/main-layout/chat-dialog/chat-dialog.component';
 
 
 @NgModule({

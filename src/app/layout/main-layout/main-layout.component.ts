@@ -15,6 +15,7 @@ import { SignUpRequest } from 'src/app/core/models/sign-up.model';
 import { UserDeviceToken } from 'src/app/core/models/user-device-token.model';
 import { AboutService } from 'src/app/core/services/about.service';
 import { AuthService } from 'src/app/core/services/auth.service';
+import { ChatService } from 'src/app/core/services/chat.service';
 import { LoadingService } from 'src/app/core/services/loading.service';
 import { MediaService } from 'src/app/core/services/media.service';
 import { MessageService } from 'src/app/core/services/message.service';
@@ -56,6 +57,11 @@ export class MainLayoutComponent implements OnInit, OnDestroy{
   onResize(event: any) {
     this.innerWidth = window.innerWidth;
   }
+
+  chatRoomId: number;
+  displayChatDialog: boolean;
+  userDeviceId: string;
+
   constructor(
     private _router: Router,
     private _authService: AuthService,
@@ -66,7 +72,8 @@ export class MainLayoutComponent implements OnInit, OnDestroy{
     private _aboutService: AboutService,
     private _noAuthService: NoAuthService,
     private _mediaService: MediaService,
-    private _domSanitizer: DomSanitizer
+    private _domSanitizer: DomSanitizer,
+    private _chatService: ChatService
   ) {
     let _roles = localStorage.getItem('roles') || '';
     this.roles = _roles.split(',');
@@ -121,6 +128,8 @@ export class MainLayoutComponent implements OnInit, OnDestroy{
     this.newPasswordAgain = '';
     this.verifyOTP = '';
     this.responseOTP = '';
+    this.displayChatDialog = false;
+    this.userDeviceId = '';
   }
 
   ngOnDestroy(): void {
@@ -297,5 +306,27 @@ export class MainLayoutComponent implements OnInit, OnDestroy{
       return true;
     }
     return false;
+  }
+
+  chatWithAdmin(): void {
+    if (this._authService.isAuthenticated()) {
+      this._router.navigate(['user/chat']);
+    } else {
+      this.userDeviceId = this.deviceInfo.userAgent.replaceAll(' ', '');
+      this._chatService.findAnonymousChatRoom(this.userDeviceId)
+        .pipe(takeUntil(this._unsubscribe))
+        .subscribe((response: APIResponse) => {
+          if (response.status === HttpStatusCode.Ok) {
+            this.chatRoomId = response.data.id;
+            this.displayChatDialog = true;
+          } else {
+            this._messageService.errorMessage(response.message);
+          }
+        })
+    }
+  }
+
+  onHideChatDialog(event: any): void {
+    this.displayChatDialog = false;
   }
 }
