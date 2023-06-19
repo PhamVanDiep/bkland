@@ -6,6 +6,7 @@ import { DIRECTION, DIRECTION_DROPDOWN } from 'src/app/core/constants/direction.
 import { PRIORITY_DROPDOWN } from 'src/app/core/constants/priority.constant';
 import { TYPE } from 'src/app/core/constants/type.constant';
 import { APIResponse } from 'src/app/core/models/api-response.model';
+import { CommentService } from 'src/app/core/services/comment.service';
 import { LoadingService } from 'src/app/core/services/loading.service';
 import { MediaService } from 'src/app/core/services/media.service';
 import { MessageService } from 'src/app/core/services/message.service';
@@ -66,7 +67,8 @@ export class RepDetailComponent implements OnInit, OnDestroy, OnChanges {
     private _messageService: MessageService,
     private _realEstatePostService: RealEstatePostService,
     private _mediaService: MediaService,
-    private _datePipe: DatePipe
+    private _datePipe: DatePipe,
+    private _commentService: CommentService
   ) {
     this.images = [];
     this.displayBasic = false;
@@ -139,6 +141,7 @@ export class RepDetailComponent implements OnInit, OnDestroy, OnChanges {
 
   ngOnInit(): void {
     // throw new Error('Method not implemented.');
+    this._commentService.hideComment();
   }
 
   isPlot(): boolean {
@@ -226,7 +229,8 @@ export class RepDetailComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   comment(): void {
-    this.displayComment = true;
+    this._commentService.showComment();
+    this._commentService.setPostId(this.realEstatePost?.basePost.realEstatePost.id);
   }
 
   ngOnDestroy(): void {

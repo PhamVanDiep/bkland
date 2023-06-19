@@ -126,4 +126,8 @@ export class RealEstatePostService {
             }
         });
     }
+
+    findContactOfPost(id: string): Observable<any> {
+        return this._httpClient.get<APIResponse>(`${environment.BASE_URL_NO_AUTH}/real-estate-post/contact?id=${id}`);
+    }
 }
