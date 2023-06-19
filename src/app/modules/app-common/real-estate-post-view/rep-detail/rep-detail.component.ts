@@ -58,6 +58,9 @@ export class RepDetailComponent implements OnInit, OnDestroy, OnChanges {
   position: google.maps.LatLngLiteral;
   priceFluctuations: any[];
 
+  displayCreateReportDialog: boolean;
+  displayComment: boolean;
+
   constructor(
     private _loadingService: LoadingService,
     private _messageService: MessageService,
@@ -70,6 +73,8 @@ export class RepDetailComponent implements OnInit, OnDestroy, OnChanges {
     this.innerWidth = window.innerWidth;
     this.zoom = 18;
     this.priceFluctuations = [];
+    this.displayCreateReportDialog = false;
+    this.displayComment = false;
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -214,6 +219,14 @@ export class RepDetailComponent implements OnInit, OnDestroy, OnChanges {
     let date = new Date(this.realEstatePost?.basePost.realEstatePost.createAt);
     date.setDate(date.getDate() + this.realEstatePost?.basePost.realEstatePost.period);
     return this._datePipe.transform(date, "dd/MM/yyyy hh:mm:ss a")?.toString() || '';
+  }
+
+  report(): void {
+    this.displayCreateReportDialog = true;
+  }
+
+  comment(): void {
+    this.displayComment = true;
   }
 
   ngOnDestroy(): void {
