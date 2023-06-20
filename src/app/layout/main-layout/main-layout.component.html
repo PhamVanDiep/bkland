@@ -6,6 +6,28 @@
     (hideEvent)="onHideChatDialog($event)"
     >
 </app-chat-dialog>
+<p-overlayPanel #op>
+    <ng-template pTemplate="content">
+        <div *ngIf="lstInterestedPosts.length > 0;else emptyIP">
+            <div *ngFor="let item of lstInterestedPosts">
+                <div class="flex flex-col space-y-2 border-b border-b-custom p-2 bg-white hover:bg-b-custom cursor-pointer"
+                    (click)="viewDetail(item.id, item.isSell, item.type)">
+                    <span class="font-bold">{{ item.title.length > 30 ? (item.title.substr(0, 30) + '...') : item.title }}</span>
+                    <span>{{ item.addressShow.length > 30 ? (item.addressShow.substr(0, 30) + '...') : item.addressShow }}</span>
+                    <div class="flex flex-row space-x-6">
+                        <span class="text-sm">{{ item.isSell ? 'Bán' : 'Cho thuê' }}</span>
+                        <span class="text-sm">{{ genTypeName(item.type) }}</span>
+                        <span class="text-sm font-semibold">{{ item.isSell ? (item.price + ' tỷ VNĐ') : (item.price + ' triệu VNĐ') }}</span>
+                        <span class="text-sm">{{ item.area + 'm2' }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <ng-template #emptyIP>
+            <span class="italic">{{ 'Bạn chưa quan tâm bài viết nào.' }}</span>
+        </ng-template>
+    </ng-template>
+</p-overlayPanel>
 <div class="w-full flex flex-col">
     <div class="w-full h-16 fixed flex flex-row z-[999]">
         <p-menubar [model]="items" class="bg-white w-full">
@@ -17,7 +39,7 @@
                 <div class="flex flex-row space-x-4">
                     <p-avatar class="cursor-pointer mt-1" icon="pi pi-heart" 
                         pBadge [value]="noInterestedPost"
-                        [style]="{ 'background-color': '#ffffff', color: '#000000' }"></p-avatar>
+                        [style]="{ 'background-color': '#ffffff', color: '#000000' }" (click)="showInterested();op.toggle($event)"></p-avatar>
                     <div *ngIf="!isAuth">
                         <span class="font-semibold text-sm cursor-pointer" (click)="navigatePage('/register')">Đăng ký</span>
                         <span class="mx-2">|</span>

@@ -7,6 +7,7 @@ import { MenuItem } from 'primeng/api';
 import { ReplaySubject, takeUntil } from 'rxjs';
 import { EMAIL_VERIFY_TYPE } from 'src/app/core/constants/email-verify.constant';
 import { HEADER_NAV } from 'src/app/core/constants/navigation.constant';
+import { TYPE, TYPE_DROPDOWN } from 'src/app/core/constants/type.constant';
 import { About } from 'src/app/core/models/about.model';
 import { APIResponse } from 'src/app/core/models/api-response.model';
 import { EmailVerify } from 'src/app/core/models/email-verify.model';
@@ -20,6 +21,7 @@ import { LoadingService } from 'src/app/core/services/loading.service';
 import { MediaService } from 'src/app/core/services/media.service';
 import { MessageService } from 'src/app/core/services/message.service';
 import { NoAuthService } from 'src/app/core/services/no-auth.service';
+import { RealEstatePostService } from 'src/app/core/services/real-estate-post.service';
 import { UserService } from 'src/app/core/services/user.service';
 import { environment } from 'src/environments/environment';
 
@@ -62,6 +64,8 @@ export class MainLayoutComponent implements OnInit, OnDestroy{
   displayChatDialog: boolean;
   userDeviceId: string;
 
+  lstInterestedPosts: any[];
+
   constructor(
     private _router: Router,
     private _authService: AuthService,
@@ -73,7 +77,8 @@ export class MainLayoutComponent implements OnInit, OnDestroy{
     private _noAuthService: NoAuthService,
     private _mediaService: MediaService,
     private _domSanitizer: DomSanitizer,
-    private _chatService: ChatService
+    private _chatService: ChatService,
+    private _realEstatePostService: RealEstatePostService
   ) {
     let _roles = localStorage.getItem('roles') || '';
     this.roles = _roles.split(',');
@@ -130,6 +135,8 @@ export class MainLayoutComponent implements OnInit, OnDestroy{
     this.responseOTP = '';
     this.displayChatDialog = false;
     this.userDeviceId = '';
+    this.deviceInfo = this._deviceDetectorService.getDeviceInfo();
+    this.lstInterestedPosts = [];
   }
 
   ngOnDestroy(): void {
@@ -158,12 +165,13 @@ export class MainLayoutComponent implements OnInit, OnDestroy{
               }, 500);
             } else {
               this._messageService.errorMessage(response.message);
+              this.getInterestedPostsOfUser('', this.deviceInfo.userAgent.replaceAll(' ', ''));
             }
           })
+      } else {
+        this.getInterestedPostsOfUser('', this.deviceInfo.userAgent.replaceAll(' ', ''));
       }
     }
-
-    this.deviceInfo = this._deviceDetectorService.getDeviceInfo();
 
     this._aboutService.getAboutInfo()
       .pipe(takeUntil(this._unsubscribe))
@@ -173,6 +181,12 @@ export class MainLayoutComponent implements OnInit, OnDestroy{
         } else {
           this._messageService.errorMessage(response.message);
         }
+      });
+
+    this._realEstatePostService.interestPosts$
+      .pipe(takeUntil(this._unsubscribe))
+      .subscribe((response: number) => {
+        this.noInterestedPost = response.toString();
       })
   }
 
@@ -183,6 +197,7 @@ export class MainLayoutComponent implements OnInit, OnDestroy{
         // console.log(response);
         if (response.status === HttpStatusCode.Ok) {
           this.user = response.data;
+          this.getInterestedPostsOfUser(this.user.id, '');
           this.emailVerify = this.user.email;
           if (response.data.avatarUrl != undefined && response.data.avatarUrl != null && response.data.avatarUrl.length > 0) {
             if (this.user.avatarUrl.includes(environment.BASE_URL_NO_AUTH)) {
@@ -199,6 +214,19 @@ export class MainLayoutComponent implements OnInit, OnDestroy{
               this.avatarUrl = this.user.avatarUrl;
             }
           }
+        } else {
+          this._messageService.errorMessage(response.message);
+        }
+      })
+  }
+
+  getInterestedPostsOfUser(userId: string, deviceInfo: string): void {
+    this._realEstatePostService.countByUserIdAndDeviceInfo(userId, deviceInfo)
+      .pipe(takeUntil(this._unsubscribe))
+      .subscribe((response: APIResponse) => {
+        if (response.status === HttpStatusCode.Ok) {
+          this.noInterestedPost = response.data;
+          this._realEstatePostService.setInterestPosts(+this.noInterestedPost);
         } else {
           this._messageService.errorMessage(response.message);
         }
@@ -328,5 +356,64 @@ export class MainLayoutComponent implements OnInit, OnDestroy{
 
   onHideChatDialog(event: any): void {
     this.displayChatDialog = false;
+  }
+
+  showInterested(): void {
+    if (this._authService.isAuthenticated()) {
+      this._router.navigate(['user/focus']);
+    } else {
+      this._realEstatePostService.findByUserIdAndDeviceInfo('', this.deviceInfo.userAgent.replaceAll(' ', ''))
+        .pipe(takeUntil(this._unsubscribe))
+        .subscribe((response: APIResponse) => {
+          if (response.status === HttpStatusCode.Ok) {
+            this.lstInterestedPosts = response.data;
+          } else {
+            this._messageService.errorMessage(response.data);
+          }
+        })
+    } 
+  }
+
+  genTypeName(type: string): string {
+    let types = TYPE_DROPDOWN;
+    let response = '';
+    types.forEach(e => {
+      if (e.key === type) {
+        response = e.value;
+      }
+    });
+    return response;
+  }
+
+  viewDetail(postId: string, isSell: boolean, type: string): void {
+    if (isSell) {
+      switch (type) {
+        case TYPE.APARTMENT:
+          this._router.navigate([`mua-ban/chung-cu/${postId}`])
+          break;
+        case TYPE.HOUSE:
+          this._router.navigate([`mua-ban/nha-dat/${postId}`])
+          break;
+        case TYPE.PLOT:
+          this._router.navigate([`mua-ban/dat-nen/${postId}`])
+          break;
+        default:
+          break;
+      }
+    } else {
+      switch (type) {
+        case TYPE.APARTMENT:
+          this._router.navigate([`cho-thue/chung-cu/${postId}`])
+          break;
+        case TYPE.HOUSE:
+          this._router.navigate([`cho-thue/nha-dat/${postId}`])
+          break;
+        case TYPE.PLOT:
+          this._router.navigate([`cho-thue/dat-nen/${postId}`])
+          break;
+        default:
+          break;
+      }
+    }
   }
 }

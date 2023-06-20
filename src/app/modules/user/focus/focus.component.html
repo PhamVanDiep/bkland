@@ -1,0 +1,78 @@
+<p-confirmDialog [style]="{width: innerWidth > 640 ? '50vw' : '100vh'}"></p-confirmDialog>
+<div class="w-full flex flex-col px-4 lg:px-6 space-y-6 pt-4">
+    <span class="text-xl font-bold">Danh sách bài viết đã quan tâm</span>
+    <p-table
+        [value]="lstInterestedPosts"
+        [paginator]="true"
+        [rows]="10"
+        [rowsPerPageOptions]="[10, 25, 50]"
+        currentPageReportTemplate="{first} đến {last} trên {totalRecords} bản ghi"
+    >
+        <ng-template pTemplate="header">
+            <tr>
+                <th pFrozenColumn>#</th>
+                <th>Tiêu đề</th>
+                <th>Địa chỉ trên bài viết</th>
+                <th>Giá</th>
+                <th>Diện tích</th>
+                <th>Bán/Cho thuê</th>
+                <th>Loại BĐS</th>
+                <th></th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-item let-index="rowIndex">
+            <tr>
+                <th>
+                    <span class="text-sm font-normal">
+                        {{ index + 1 }}
+                    </span>
+                </th>
+                <th>
+                    <span class="text-sm font-normal">
+                        {{ item.title }}
+                    </span>
+                </th>
+                <th>
+                    <span class="text-sm font-normal">
+                        {{ item.addressShow }}
+                    </span>
+                </th>
+                <th>
+                    <span class="text-sm font-normal">
+                        {{ item.isSell ? (item.price + ' tỷ VNĐ') : (item.price + ' triệu VNĐ') }}
+                    </span>
+                </th>
+                <th>
+                    <span class="text-sm font-normal">
+                        {{ item.area + 'm2' }}
+                    </span>
+                </th>
+                <th>
+                    <span class="text-sm font-normal">
+                        {{ item.isSell ? 'Bán' : 'Cho thuê' }}
+                    </span>
+                </th>
+                <th>
+                    <span class="text-sm font-normal">
+                        {{ genTypeName(item.type) }}
+                    </span>
+                </th>
+                <th>
+                    <div class="flex flex-row justify-end">
+                        <button pButton pRipple pTooltip="Xem thông tin chi tiết"
+                            class="p-button-rounded p-button-text p-button-info" icon="pi pi-eye"
+                            (click)="viewPostDetail(item.id)"></button>
+                        <button pButton pRipple pTooltip="Khóa/Mở khóa tài khoản"
+                            class="p-button-rounded p-button-text p-button-danger" icon="pi pi-trash"
+                            (click)="removeInterested(item.id)"></button>
+                    </div>
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td>Không có dữ liệu.</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

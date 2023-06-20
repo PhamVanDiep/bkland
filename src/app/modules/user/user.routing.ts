@@ -15,8 +15,22 @@ import { CreateForumPostComponent } from "../app-common/create-forum-post/create
 import { ChatComponent } from "../app-common/chat/chat.component";
 import { NewRequestComponent } from "./cooperate-agency/new-request/new-request.component";
 import { AdministrativeViewComponent } from "../app-common/real-estate-post-view/administrative-view/administrative-view.component";
+import { FocusComponent } from "./focus/focus.component";
 
 export const route: Route[] = [
+    {
+        path: 'focus',
+        children: [
+            {
+                path: '',
+                component: FocusComponent
+            },
+            {
+                path: ':id',
+                component: AdministrativeViewComponent
+            }
+        ]
+    },
     {
         path: 'create-post',
         component: CreateMainPostComponent

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { APIResponse } from '../models/api-response.model';
 import { environment } from 'src/environments/environment';
 
@@ -8,6 +8,16 @@ import { environment } from 'src/environments/environment';
     providedIn: 'root'
 })
 export class RealEstatePostService {
+    private _interestPosts: BehaviorSubject<number> = new BehaviorSubject<number>(0);
+
+    get interestPosts$(): Observable<any> {
+        return this._interestPosts.asObservable();
+    }
+
+    setInterestPosts(res: number): void {
+        this._interestPosts.next(res);
+    }
+
     private accessToken: string;
 
     constructor(
@@ -129,5 +139,30 @@ export class RealEstatePostService {
 
     findContactOfPost(id: string): Observable<any> {
         return this._httpClient.get<APIResponse>(`${environment.BASE_URL_NO_AUTH}/real-estate-post/contact?id=${id}`);
+    }
+
+    anonymousInterested(body: any): Observable<APIResponse> {
+        return this._httpClient.post<APIResponse>(`${environment.BASE_URL_NO_AUTH}/real-estate-post/interested`, body);
+    }
+
+    userInterested(body: any): Observable<APIResponse> {
+        let accessToken = localStorage.getItem('accessToken') || '';
+        return this._httpClient.post<APIResponse>(`${environment.BASE_URL_AUTH}/real-estate-post/interested`, body, {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        });
+    }
+
+    findByUserIdAndDeviceInfo(userId: string, deviceInfo: string): Observable<APIResponse> {
+        return this._httpClient.get<APIResponse>(`${environment.BASE_URL_NO_AUTH}/real-estate-post/interested?userId=${userId}&deviceInfo=${deviceInfo}`);
+    }
+
+    countByUserIdAndDeviceInfo(userId: string, deviceInfo: string): Observable<APIResponse> {
+        return this._httpClient.get<APIResponse>(`${environment.BASE_URL_NO_AUTH}/real-estate-post/interested/count?userId=${userId}&deviceInfo=${deviceInfo}`);
+    }
+
+    isInterested(userId: string, realEstatePostId: string, deviceInfo: string): Observable<APIResponse> {
+        return this._httpClient.get<APIResponse>(`${environment.BASE_URL_NO_AUTH}/real-estate-post/isInterested?userId=${userId}&deviceInfo=${deviceInfo}&realEstatePostId=${realEstatePostId}`);
     }
 }

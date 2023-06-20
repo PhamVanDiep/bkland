@@ -38,7 +38,10 @@
         <div class="flex flex-row space-x-6 items-center" *ngIf="increaseView">
             <button pButton pRipple class="p-button-text p-button-rounded p-button-warning" pTooltip="Báo cáo"
                 icon="pi pi-exclamation-triangle" (click)="report()"></button>
-            <i class="pi pi-heart-fill cursor-pointer" pTooltip="Quan tâm"></i>
+            <i class="pi pi-heart-fill cursor-pointer" 
+                [ngClass]="isInterested ? 'text-blue-custom' : 'text-black'" 
+                pTooltip="Quan tâm"
+                (click)="onInterest()"></i>
             <button pButton pRipple class="p-button-text p-button-rounded p-button-secondary" pTooltip="Bình luận"
                 icon="pi pi-comment" (click)="comment()"></button>
         </div>

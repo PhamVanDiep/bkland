@@ -82,6 +82,11 @@ export class RealEstatePostViewComponent implements OnInit, OnDestroy {
     }
   }
 
+  copyFunc(): void {
+    let phoneNumber = this.showPhoneNumber ? this.contact?.phoneNumber : (this.contact?.phoneNumber.substr(0,7) + "***");
+    this._clipboardService.copyFromContent(phoneNumber);
+  }
+
   ngOnDestroy(): void {
     // throw new Error('Method not implemented.');
     this._unsubscribe.next(null);

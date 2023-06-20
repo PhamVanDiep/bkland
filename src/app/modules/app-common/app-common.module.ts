@@ -43,7 +43,7 @@ import { RepDetailComponent } from './real-estate-post-view/rep-detail/rep-detai
 import { GoogleMapsModule } from '@angular/google-maps';
 import { TimelineModule } from 'primeng/timeline';
 import { AdministrativeViewComponent } from './real-estate-post-view/administrative-view/administrative-view.component';
-import { ClipboardModule } from 'ngx-clipboard';
+import { ClipboardModule, ClipboardService } from 'ngx-clipboard';
 
 @NgModule({
   declarations: [
@@ -109,7 +109,8 @@ import { ClipboardModule } from 'ngx-clipboard';
     PaymentService,
     ConfirmationService,
     PostReportService,
-    SocketioService
+    SocketioService,
+    ClipboardService
   ]
 })
 export class AppCommonModule { }

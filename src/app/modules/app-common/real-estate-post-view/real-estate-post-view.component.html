@@ -7,7 +7,7 @@
         <div class="p-2 flex flex-row justify-between items-center bg-blue-custom rounded-md w-full">
             <span class="text-white">{{ showPhoneNumber ? contact?.phoneNumber : (contact?.phoneNumber.substr(0,7) + "***") }}</span>
             <span class="text-white font-bold cursor-pointer" *ngIf="!showPhoneNumber" (click)="showPhoneNumberFunc()">{{ 'Hiện số' }}</span>
-            <i class="pi pi-copy text-white cursor-pointer" pTooltip="Sao chép"></i>
+            <i class="pi pi-copy text-white cursor-pointer" pTooltip="Sao chép" (click)="copyFunc()"></i>
         </div>
     </div>
 </div>
