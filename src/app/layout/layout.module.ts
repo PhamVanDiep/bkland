@@ -23,6 +23,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ChargeService } from '../core/services/charge.service';
 import { InputTextModule } from 'primeng/inputtext';
 import { ChatDialogComponent } from './main-layout/chat-dialog/chat-dialog.component';
+import { RealEstatePostService } from '../core/services/real-estate-post.service';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 
 @NgModule({
   declarations: [
@@ -47,7 +49,8 @@ import { ChatDialogComponent } from './main-layout/chat-dialog/chat-dialog.compo
     ProgressSpinnerModule,
     ToastModule,
     FontAwesomeModule,
-    InputTextModule
+    InputTextModule,
+    OverlayPanelModule
   ],
   exports: [
     MainLayoutComponent,
@@ -57,7 +60,8 @@ import { ChatDialogComponent } from './main-layout/chat-dialog/chat-dialog.compo
     UserService,
     AboutService,
     NoAuthService,
-    ChargeService
+    ChargeService,
+    RealEstatePostService
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA

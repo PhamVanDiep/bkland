@@ -34,6 +34,7 @@ import { PaymentService } from 'src/app/core/services/payment.service';
 import { PriceFluctuationComponent } from './price-fluctuation/price-fluctuation.component';
 import { AppCommonModule } from '../app-common/app-common.module';
 import { NewRequestComponent } from './cooperate-agency/new-request/new-request.component';
+import { FocusComponent } from './focus/focus.component';
 
 @NgModule({
   declarations: [
@@ -46,6 +47,7 @@ import { NewRequestComponent } from './cooperate-agency/new-request/new-request.
     RegisterComponent,
     PriceFluctuationComponent,
     NewRequestComponent,
+    FocusComponent,
   ],
   imports: [
     CommonModule,

@@ -1,11 +1,15 @@
 import { DatePipe } from '@angular/common';
 import { HttpStatusCode } from '@angular/common/http';
 import { Component, HostListener, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { DeviceDetectorService, DeviceInfo } from 'ngx-device-detector';
 import { ReplaySubject, firstValueFrom, takeUntil } from 'rxjs';
 import { DIRECTION, DIRECTION_DROPDOWN } from 'src/app/core/constants/direction.constant';
 import { PRIORITY_DROPDOWN } from 'src/app/core/constants/priority.constant';
 import { TYPE } from 'src/app/core/constants/type.constant';
 import { APIResponse } from 'src/app/core/models/api-response.model';
+import { Interested } from 'src/app/core/models/interested.model';
+import { AuthService } from 'src/app/core/services/auth.service';
+import { CommentService } from 'src/app/core/services/comment.service';
 import { LoadingService } from 'src/app/core/services/loading.service';
 import { MediaService } from 'src/app/core/services/media.service';
 import { MessageService } from 'src/app/core/services/message.service';
@@ -58,18 +62,36 @@ export class RepDetailComponent implements OnInit, OnDestroy, OnChanges {
   position: google.maps.LatLngLiteral;
   priceFluctuations: any[];
 
+  displayCreateReportDialog: boolean;
+  displayComment: boolean;
+
+  deviceInfo: DeviceInfo;
+  deviceInfoAgent: string;
+  userId: string;
+  isInterested: boolean;
+  noInterest: number;
+
   constructor(
     private _loadingService: LoadingService,
     private _messageService: MessageService,
     private _realEstatePostService: RealEstatePostService,
     private _mediaService: MediaService,
-    private _datePipe: DatePipe
+    private _datePipe: DatePipe,
+    private _commentService: CommentService,
+    private _authService: AuthService,
+    private _deviceDetectorService: DeviceDetectorService,
   ) {
     this.images = [];
     this.displayBasic = false;
     this.innerWidth = window.innerWidth;
     this.zoom = 18;
     this.priceFluctuations = [];
+    this.displayCreateReportDialog = false;
+    this.displayComment = false;
+    this.isInterested = false;
+    this.deviceInfo = this._deviceDetectorService.getDeviceInfo();
+    this.deviceInfoAgent = this.deviceInfo.userAgent.replaceAll(' ', '');
+    this.noInterest = 0;
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -119,6 +141,30 @@ export class RepDetailComponent implements OnInit, OnDestroy, OnChanges {
             }
           })
       }
+      if (this._authService.isAuthenticated()) {
+        this.userId = JSON.parse(window.atob((localStorage.getItem('accessToken') || '').split('.')[1])).id;
+        this._realEstatePostService.isInterested(this.userId, this.postId, '')
+          .pipe(takeUntil(this._unsubscribe))
+          .subscribe((response: APIResponse) => {
+            this._loadingService.loading(false);
+            if (response.status === HttpStatusCode.Ok) {
+              this.isInterested = response.data;
+            } else {
+              this._messageService.errorMessage(response.message);
+            }
+          });
+      } else {
+        this._realEstatePostService.isInterested('', this.postId, this.deviceInfoAgent)
+          .pipe(takeUntil(this._unsubscribe))
+          .subscribe((response: APIResponse) => {
+            this._loadingService.loading(false);
+            if (response.status === HttpStatusCode.Ok) {
+              this.isInterested = response.data;
+            } else {
+              this._messageService.errorMessage(response.message);
+            }
+          });
+      }
     }
   }
 
@@ -134,6 +180,12 @@ export class RepDetailComponent implements OnInit, OnDestroy, OnChanges {
 
   ngOnInit(): void {
     // throw new Error('Method not implemented.');
+    this._commentService.hideComment();
+    this._realEstatePostService.interestPosts$
+      .pipe(takeUntil(this._unsubscribe))
+      .subscribe((response: number) => {
+        this.noInterest = response;
+      });
   }
 
   isPlot(): boolean {
@@ -214,6 +266,58 @@ export class RepDetailComponent implements OnInit, OnDestroy, OnChanges {
     let date = new Date(this.realEstatePost?.basePost.realEstatePost.createAt);
     date.setDate(date.getDate() + this.realEstatePost?.basePost.realEstatePost.period);
     return this._datePipe.transform(date, "dd/MM/yyyy hh:mm:ss a")?.toString() || '';
+  }
+
+  report(): void {
+    this.displayCreateReportDialog = true;
+  }
+
+  comment(): void {
+    this._commentService.showComment();
+    this._commentService.setPostId(this.realEstatePost?.basePost.realEstatePost.id);
+  }
+
+  onInterest(): void {
+    if (this._authService.isAuthenticated()) {
+      this._realEstatePostService.userInterested({
+        realEstatePostId: this.postId
+      }).pipe(takeUntil(this._unsubscribe))
+        .subscribe((response: APIResponse) => {
+          if (response.status === HttpStatusCode.Ok) {
+            if (response.message === "DELETED") {
+              this.isInterested = false;
+              this.noInterest--;
+              this._realEstatePostService.setInterestPosts(this.noInterest);
+            } else {
+              this.isInterested = true;
+              this.noInterest++;
+              this._realEstatePostService.setInterestPosts(this.noInterest);
+            }
+          } else {
+            this._messageService.errorMessage(response.message);
+          }
+        })
+    } else {
+      this._realEstatePostService.anonymousInterested({
+        realEstatePostId: this.postId,
+        deviceInfo: this.deviceInfoAgent
+      }).pipe(takeUntil(this._unsubscribe))
+        .subscribe((response: APIResponse) => {
+          if (response.status === HttpStatusCode.Ok) {
+            if (response.message === "DELETED") {
+              this.isInterested = false;
+              this.noInterest--;
+              this._realEstatePostService.setInterestPosts(this.noInterest);
+            } else {
+              this.isInterested = true;
+              this.noInterest++;
+              this._realEstatePostService.setInterestPosts(this.noInterest);
+            }
+          } else {
+            this._messageService.errorMessage(response.message);
+          }
+        })
+    }
   }
 
   ngOnDestroy(): void {

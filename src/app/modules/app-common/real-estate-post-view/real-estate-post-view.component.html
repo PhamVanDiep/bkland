@@ -1,3 +1,13 @@
-<div class="w-full flex flex-col">
-    <app-rep-detail [postId]="postId" [increaseView]="false"></app-rep-detail>
+<div class="w-full flex flex-col md:flex-row space-y-6 md:space-y-0 md:space-x-4">
+    <app-rep-detail class="w-full md:w-3/4" [postId]="postId" [increaseView]="true"></app-rep-detail>
+    <div class="w-full md:w-1/4 flex flex-col border border-b-custom py-4 px-2 space-y-2 h-fit rounded-md items-center">
+        <p-avatar [image]="contact?.avatarUrl"></p-avatar>
+        <span class="text-sm font-light">{{ 'Thông tin liên hệ' }}</span>
+        <span class="font-bold">{{ contact?.fullName }}</span>
+        <div class="p-2 flex flex-row justify-between items-center bg-blue-custom rounded-md w-full">
+            <span class="text-white">{{ showPhoneNumber ? contact?.phoneNumber : (contact?.phoneNumber.substr(0,7) + "***") }}</span>
+            <span class="text-white font-bold cursor-pointer" *ngIf="!showPhoneNumber" (click)="showPhoneNumberFunc()">{{ 'Hiện số' }}</span>
+            <i class="pi pi-copy text-white cursor-pointer" pTooltip="Sao chép" (click)="copyFunc()"></i>
+        </div>
+    </div>
 </div>

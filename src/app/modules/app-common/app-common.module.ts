@@ -43,6 +43,7 @@ import { RepDetailComponent } from './real-estate-post-view/rep-detail/rep-detai
 import { GoogleMapsModule } from '@angular/google-maps';
 import { TimelineModule } from 'primeng/timeline';
 import { AdministrativeViewComponent } from './real-estate-post-view/administrative-view/administrative-view.component';
+import { ClipboardModule, ClipboardService } from 'ngx-clipboard';
 
 @NgModule({
   declarations: [
@@ -85,7 +86,8 @@ import { AdministrativeViewComponent } from './real-estate-post-view/administrat
     SidebarModule,
     RadioButtonModule,
     GoogleMapsModule,
-    TimelineModule
+    TimelineModule,
+    ClipboardModule
   ],
   exports: [
     CreateForumPostComponent,
@@ -107,7 +109,8 @@ import { AdministrativeViewComponent } from './real-estate-post-view/administrat
     PaymentService,
     ConfirmationService,
     PostReportService,
-    SocketioService
+    SocketioService,
+    ClipboardService
   ]
 })
 export class AppCommonModule { }

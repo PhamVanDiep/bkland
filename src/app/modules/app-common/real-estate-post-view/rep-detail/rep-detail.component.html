@@ -1,3 +1,15 @@
+<app-create-report 
+    [isForumPost]="false" 
+    [displayCreateReportDialog]="displayCreateReportDialog" 
+    [postId]="realEstatePost?.basePost.realEstatePost.id"
+    (hideEvent)="displayCreateReportDialog=false">
+</app-create-report>
+<app-comment 
+    [display]="displayComment" 
+    [postId]="realEstatePost?.basePost.realEstatePost.id" 
+    [postType]="'FORUM_POST'" 
+    (hideEvent)="displayComment=false">
+</app-comment>
 <div class="w-full flex flex-col space-y-4 mb-4">
     <div class="flex flex-col space-y-2">
         <span class="font-bold text-2xl">{{ realEstatePost?.basePost.realEstatePost.title }}</span>
@@ -25,10 +37,13 @@
         <hr class="w-full block md:hidden" width="1" color="#ced4da">
         <div class="flex flex-row space-x-6 items-center" *ngIf="increaseView">
             <button pButton pRipple class="p-button-text p-button-rounded p-button-warning" pTooltip="Báo cáo"
-                icon="pi pi-exclamation-triangle"></button>
-            <i class="pi pi-heart-fill cursor-pointer" pTooltip="Quan tâm"></i>
+                icon="pi pi-exclamation-triangle" (click)="report()"></button>
+            <i class="pi pi-heart-fill cursor-pointer" 
+                [ngClass]="isInterested ? 'text-blue-custom' : 'text-black'" 
+                pTooltip="Quan tâm"
+                (click)="onInterest()"></i>
             <button pButton pRipple class="p-button-text p-button-rounded p-button-secondary" pTooltip="Bình luận"
-                icon="pi pi-comment"></button>
+                icon="pi pi-comment" (click)="comment()"></button>
         </div>
     </div>
     <hr class="w-full" width="1" color="#ced4da">
