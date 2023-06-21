@@ -20,7 +20,9 @@ export class AppUpdateService {
             .subscribe((response: any) => {
                 switch (response.type) {
                     case 'VERSION_DETECTED':
-                        if (confirm('A new version is available. Do you want to update?')) {
+                        if (confirm('Đã tìm thấy phiên bản mới. Bạn có muốn cập nhật?')) {
+                            this.reload.next(true);
+                        } else {
                             this.reload.next(true);
                         }
                         break;

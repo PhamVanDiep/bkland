@@ -1,9 +1,9 @@
 export const environment = {
     production: true,
     PUSH_NOTIFY_BASE_URL: "http://localhost:7979/api/v1",
-    BASE_URL_AUTH: "http://localhost:7979/api/v1",
-    BASE_URL_NO_AUTH: "http://localhost:7979/api/no-auth",
-    API_URL: "http://localhost:7979/api",
+    BASE_URL_AUTH: "https://bkland-api-a973686b4258.herokuapp.com/api/v1",
+    BASE_URL_NO_AUTH: "https://bkland-api-a973686b4258.herokuapp.com/api/no-auth",
+    API_URL: "https://bkland-api-a973686b4258.herokuapp.com/api",
     SOCKET_ENDPOINT: 'https://bkland-chat-server-6277f14e77d1.herokuapp.com',
     // PUSH_NOTIFY_BASE_URL: "https://be-springboot-firebase-pn.herokuapp.com/api/v1",
     FirebaseConfig: {
