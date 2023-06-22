@@ -1,9 +1,11 @@
 <p-confirmDialog [style]="{width: innerWidth > 640 ? '50vw' : '100vh'}"></p-confirmDialog>
 <p-menu #menu [model]="items" [popup]="true"></p-menu>
 <div class="w-full flex flex-col px-4 lg:px-6 space-y-6">
-    <div class="flex flex-row w-full justify-between items-center mt-4">
+    <div class="flex flex-row w-full justify-between items-center mt-6 md:mt-4">
         <span class="font-bold text-2xl">Danh sách bài đăng đã tạo</span>
-        <button pButton class="p-button-success" icon="pi pi-plus" label="Tạo bài đăng" (click)="createPost()"></button>
+        <button pButton class="p-button-success" 
+            icon="pi pi-plus" [ngClass]="innerWidth > 640 ? '' : 'p-button-rouneded'"
+            [label]="innerWidth > 640 ? 'Tạo bài đăng' : ''" (click)="createPost()"></button>
     </div>
     <div class="w-full flex flex-col space-y-4">
         <div class="w-full flex flex-col space-y-4" *ngIf="realEstatePosts.length > 0; else emptyREPs">
