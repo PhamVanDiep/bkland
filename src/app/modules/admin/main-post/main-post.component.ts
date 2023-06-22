@@ -171,7 +171,6 @@ export class MainPostComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this._loadingService.loading(true);
     this._confirmationService.confirm(
       {
         message: this.genMessage(),

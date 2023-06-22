@@ -3,6 +3,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ReplaySubject, takeUntil } from 'rxjs';
 import { CHARGE_STATUS, PAY_METHOD } from 'src/app/core/constants/pay.constant';
+import { VNPAY_RESPONSE_CODE } from 'src/app/core/constants/vnpay.constant';
 import { APIResponse } from 'src/app/core/models/api-response.model';
 import { Charge } from 'src/app/core/models/charge.model';
 import { ChargeService } from 'src/app/core/services/charge.service';
@@ -19,6 +20,8 @@ export class VnpaySuccessComponent implements OnInit, OnDestroy {
   charge: Charge;
   isSuccess: boolean;
 
+  vnpResponseCodes: any;
+
   constructor(
     private _router: Router,
     private _route: ActivatedRoute,
@@ -27,6 +30,7 @@ export class VnpaySuccessComponent implements OnInit, OnDestroy {
     private _chargeService: ChargeService
   ) {
     this.isSuccess = false;
+    this.vnpResponseCodes = VNPAY_RESPONSE_CODE;
   }
 
   ngOnInit(): void {
@@ -34,7 +38,21 @@ export class VnpaySuccessComponent implements OnInit, OnDestroy {
     this._loadingService.loading(true);
     this._route.queryParams.pipe(takeUntil(this._unsubscribe))
       .subscribe((params: any) => {
-        let amount = params.vnp_Amount;
+        let vnp_ResponseCode = params.vnp_ResponseCode;
+        if (params.vnp_ResponseCode == '00') {
+          this.payAPI(params);
+        } else {
+          this.vnpResponseCodes.forEach((e: any) => {
+            if (e.key === vnp_ResponseCode) {
+              this._messageService.errorMessage(e.value);
+            }
+          });
+        }
+      })
+  }
+
+  payAPI(params: any): void {
+    let amount = params.vnp_Amount;
         let userId = params.vnp_OrderInfo;
         if (amount == undefined
           || amount == null
@@ -88,7 +106,6 @@ export class VnpaySuccessComponent implements OnInit, OnDestroy {
               this._messageService.errorMessage(response1.message);
             }
           })
-      })
   }
 
   ngOnDestroy(): void {
