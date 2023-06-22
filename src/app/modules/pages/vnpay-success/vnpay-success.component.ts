@@ -42,6 +42,7 @@ export class VnpaySuccessComponent implements OnInit, OnDestroy {
         if (params.vnp_ResponseCode == '00') {
           this.payAPI(params);
         } else {
+          this._loadingService.loading(false);
           this.vnpResponseCodes.forEach((e: any) => {
             if (e.key === vnp_ResponseCode) {
               this._messageService.errorMessage(e.value);
