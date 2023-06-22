@@ -23,7 +23,7 @@ html {
 
 .progress-spinner {
     position: fixed;
-    z-index: 999;
+    z-index: 9999 !important;
     height: 2em;
     width: 2em;
     overflow: show;

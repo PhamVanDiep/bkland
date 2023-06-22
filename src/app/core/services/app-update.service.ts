@@ -26,13 +26,13 @@ export class AppUpdateService {
                             this.reload.next(true);
                         }
                         break;
-                    // case 'VERSION_READY':
-                    //     console.log(`Current app version: ${response.currentVersion.hash}`);
-                    //     console.log(`New app version ready for use: ${response.latestVersion.hash}`);
-                    //     break;
-                    // case 'VERSION_INSTALLATION_FAILED':
-                    //     console.log(`Failed to install app version '${response.version.hash}': ${response.error}`);
-                    //     break;
+                    case 'VERSION_READY':
+                        console.log(`Current app version: ${response.currentVersion.hash}`);
+                        console.log(`New app version ready for use: ${response.latestVersion.hash}`);
+                        break;
+                    case 'VERSION_INSTALLATION_FAILED':
+                        console.log(`Failed to install app version '${response.version.hash}': ${response.error}`);
+                        break;
                     default:
                         break;
                 }

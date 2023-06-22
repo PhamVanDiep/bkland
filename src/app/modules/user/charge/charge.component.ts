@@ -94,7 +94,7 @@ export class ChargeComponent implements OnInit, OnDestroy{
 
   ngOnInit(): void {
     // throw new Error('Method not implemented.');
-    this._httpClient.get("http://api.ipify.org/?format=json")
+    this._httpClient.get(environment.DEVICE_IP_URL)
       .pipe(takeUntil(this._unsubscribe))
       .subscribe((response: any) => {
         this.ipAddress = response.ip;
