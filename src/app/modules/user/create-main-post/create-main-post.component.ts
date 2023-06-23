@@ -171,7 +171,7 @@ export class CreateMainPostComponent implements OnInit, OnDestroy {
       furniture: '',
       noBathroom: 0,
       noBedroom: 0,
-      realEstatePost: this.realEstatePost
+      realEstatePostId: this.realEstatePost.id
     }
     this.house = {
       id: 0,
@@ -238,7 +238,7 @@ export class CreateMainPostComponent implements OnInit, OnDestroy {
               this.apartment.furniture = basePost.furniture;
               this.apartment.noBathroom = basePost.noBathroom;
               this.apartment.noBedroom = basePost.noBedroom;
-              this.apartment.realEstatePost = basePost.realEstatePost;
+              this.apartment.realEstatePostId = basePost.realEstatePost.id;
             } else if (this.realEstatePost.type === TYPE.HOUSE) {
               this.house.balconyDirection = basePost.balconyDirection;
               this.house.behindWidth = basePost.behindWidth;
@@ -521,7 +521,7 @@ export class CreateMainPostComponent implements OnInit, OnDestroy {
         this._messageService.successMessage(postResponse.message);
         this._router.navigate(['user/post/main']);
       } else {
-        this._messageService.successMessage(postResponse.message);
+        this._messageService.errorMessage(postResponse.message);
       }
     }
   }

@@ -1,8 +1,6 @@
-import { RealEstatePost } from "./real-estate-post.model";
-
 export interface Apartment {
     id: number;
-    realEstatePost: RealEstatePost;
+    realEstatePostId: string;
     floorNo: number;
     noBedroom: number;
     noBathroom: number;
