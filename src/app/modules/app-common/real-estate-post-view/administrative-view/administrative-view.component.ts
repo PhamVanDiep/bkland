@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ClipboardService } from 'ngx-clipboard';
 import { ReplaySubject, firstValueFrom, takeUntil } from 'rxjs';
 import { APIResponse } from 'src/app/core/models/api-response.model';
+import { AppTitleService } from 'src/app/core/services/app-title.service';
 import { LoadingService } from 'src/app/core/services/loading.service';
 import { MediaService } from 'src/app/core/services/media.service';
 import { MessageService } from 'src/app/core/services/message.service';
@@ -17,6 +18,7 @@ import { environment } from 'src/environments/environment';
 })
 export class AdministrativeViewComponent implements OnInit, OnDestroy {
   private _unsubscribe: ReplaySubject<any> = new ReplaySubject<any>();
+  private tiltle: string = 'Thông tin chi tiết bài viết';
 
   postId: string;
   contact: any;
@@ -29,7 +31,10 @@ export class AdministrativeViewComponent implements OnInit, OnDestroy {
     private _messageService: MessageService,
     private _mediaService: MediaService,
     private _clipboardService: ClipboardService,
-  ) {}
+    private _appTitleService: AppTitleService
+  ) {
+    this._appTitleService.setTitle(this.tiltle);
+  }
 
   ngOnInit(): void {
     // throw new Error('Method not implemented.');

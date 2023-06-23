@@ -29,8 +29,8 @@ export class MainPostComponent implements OnInit, OnDestroy {
 
   items: MenuItem[];
 
-  realEstatePosts: RealEstatePost[];
-  selectedRep: RealEstatePost;
+  realEstatePosts: any[];
+  selectedRep: any;
 
   constructor(
     private _appTitleService: AppTitleService,

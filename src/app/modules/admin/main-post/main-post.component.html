@@ -30,19 +30,21 @@
                 </th>
                 <th class="text-start">
                     <span class="text-sm font-normal">
-                        {{ rep.ownerId.firstName + ' ' + rep.ownerId.middleName + ' ' + rep.ownerId.lastName }}
+                        {{ rep.fullName }}
                     </span>
                 </th>
                 <th class="text-start">
-                    <span class="text-sm font-normal">{{ rep.ownerId.phoneNumber }}</span>
+                    <span class="text-sm font-normal">{{ rep.phoneNumber }}</span>
                 </th>
                 <th class="text-start">
                     <span class="text-sm font-normal">{{ rep.price + (rep.sell ? ' tỷ VNĐ' : ' triệu VNĐ') }}</span>
                 </th>
-                <th>
+                <th class="text-center">
                     <span class="text-sm font-normal">{{ rep.area }}</span>
                 </th>
-                <th>{{ rep.createAt | date:'dd/MM/yyyy, h:mm:ss a' }}</th>
+                <th>
+                    <span class="text-sm font-normal">{{ rep.createAt | date:'dd/MM/yyyy, h:mm:ss a' }}</span>
+                </th>
                 <th class="text-start">
                     <p-tag [value]="getStatusValue(rep.status)" [severity]="getStatusSeverity(rep.status)"></p-tag>
                 </th>

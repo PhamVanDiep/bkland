@@ -3,7 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { NotificationMessage } from "../models/chat.model";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
 import { environment } from "src/environments/environment";
-import { Observable, ReplaySubject } from "rxjs";
+import { BehaviorSubject, Observable, ReplaySubject } from "rxjs";
 import { UserToken } from "../models/user-token.model";
 
 @Injectable({
@@ -11,7 +11,8 @@ import { UserToken } from "../models/user-token.model";
 })
 export class PushNotificationService {
     private pushNotifyToken: ReplaySubject<string> = new ReplaySubject<string>();
-    private message: ReplaySubject<any> = new ReplaySubject<any>();
+    private message: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+
     private PN_FIREBASE_URL: string = 'https://fcm.googleapis.com/fcm/send';
     private FCM_KEY: string = 'AAAAQHd6Jxs:APA91bGAxydZmPaHEfVY7ZM8kh_k6engPxiYImUjZ37B96AfIFH9sW5IheYnjrdzu5DZ76rB2ML8Ul-RI_Ufr3xGOXU7gowMrH0SPMblAHb_RsqSk9C-CNB4AzN1jPosu1k6gZBgQr_w';
 

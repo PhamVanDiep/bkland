@@ -7,7 +7,7 @@ import { PERIOD_DROPDOWN } from 'src/app/core/constants/period.constant';
 import { PRIORITY_DROPDOWN } from 'src/app/core/constants/priority.constant';
 import { ROLE } from 'src/app/core/constants/role.constant';
 import { STATUS } from 'src/app/core/constants/status.constant';
-import { POST_TYPE, TYPE, TYPE_DROPDOWN } from 'src/app/core/constants/type.constant';
+import { POST_TYPE, TYPE, TYPE_DROPDOWN, TYPE_HIRE_DROPDOWN, TYPE_SELL_DROPDOWN } from 'src/app/core/constants/type.constant';
 import { Apartment } from 'src/app/core/models/apartment.model';
 import { APIResponse } from 'src/app/core/models/api-response.model';
 import { District } from 'src/app/core/models/district.model';
@@ -278,6 +278,14 @@ export class CreateMainPostComponent implements OnInit, OnDestroy {
           }) 
       }
     }
+
+    if (!this.isUpdate) {
+      if (this.realEstatePost.sell) {
+        this.realEstateTypes = TYPE_SELL_DROPDOWN;
+      } else {
+        this.realEstateTypes = TYPE_HIRE_DROPDOWN;
+      }
+    }
   }
 
   nullable(field: string): boolean {
@@ -333,7 +341,18 @@ export class CreateMainPostComponent implements OnInit, OnDestroy {
   }
 
   changeIsSell(sell: boolean): void {
+    if (this.isUpdate) {
+      return;
+    }
     this.realEstatePost.sell = sell;
+    if (sell) {
+      this.realEstateTypes = TYPE_SELL_DROPDOWN;
+    } else {
+      this.realEstateTypes = TYPE_HIRE_DROPDOWN;
+      if (this.realEstatePost.type == TYPE.PLOT) {
+        this.realEstatePost.type = TYPE.APARTMENT;
+      }
+    }
     this.calcPayVal();
   }
 

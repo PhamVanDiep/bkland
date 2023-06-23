@@ -3,6 +3,7 @@ import { AppUpdateService } from './core/services/app-update.service';
 import { MessageService } from 'primeng/api';
 import { LoadingService } from './core/services/loading.service';
 import { MessageService as MessageServiceCustomize } from './core/services/message.service';
+import { PushNotificationService } from './core/services/push-notification.service';
 
 @Component({
   selector: 'app-root',
@@ -16,7 +17,8 @@ export class AppComponent implements OnInit {
     private _appUpdateService: AppUpdateService,
     private _messageService: MessageService,
     private _messageServiceCustomize: MessageServiceCustomize,
-    public _loadingService: LoadingService
+    public _loadingService: LoadingService,
+    public _pushNotifyService: PushNotificationService
   ) {
     this._appUpdateService.update();
   }
@@ -36,7 +38,13 @@ export class AppComponent implements OnInit {
 
     this._messageServiceCustomize.message$
       .subscribe((response: any) => {
+        this._messageService.clear();
         this._messageService.add(response);
+      });
+    this._pushNotifyService.listen();
+    this._pushNotifyService.message$
+      .subscribe((response: any) => {
+        console.log(response);
       })
   }
 

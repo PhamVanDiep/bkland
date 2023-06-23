@@ -8,10 +8,10 @@
     <div class="w-full flex flex-col space-y-4 px-2">
         <div *ngIf="comments.length > 0;else emptyComment" class="w-full flex flex-col space-y-4">
             <div *ngFor="let item of comments">
-                <div class="flex flex-row space-x-2">
+                <div class="flex flex-row space-x-2 max-w-full">
                     <p-avatar [image]="item.avatarUrl" shape="circle"></p-avatar>
                     <div class="w-full flex flex-col space-y-2">
-                        <div class="bg-gray-300 w-max p-2 flex flex-col space-y-1 rounded-md" 
+                        <div class="bg-gray-300 w-fit p-2 flex flex-col space-y-1 rounded-md" 
                             (click)="menu.toggle($event); this.selectedCommentResponse = item;">
                             <span class="font-bold text-sm">{{ item.fullName }}</span>
                             <span class="text-sm">{{ item.content }}</span>
