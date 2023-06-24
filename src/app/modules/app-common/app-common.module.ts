@@ -44,6 +44,7 @@ import { GoogleMapsModule } from '@angular/google-maps';
 import { TimelineModule } from 'primeng/timeline';
 import { AdministrativeViewComponent } from './real-estate-post-view/administrative-view/administrative-view.component';
 import { ClipboardModule, ClipboardService } from 'ngx-clipboard';
+import { ClientViewComponent } from './real-estate-post-view/client-view/client-view.component';
 
 @NgModule({
   declarations: [
@@ -58,7 +59,8 @@ import { ClipboardModule, ClipboardService } from 'ngx-clipboard';
     ChatComponent,
     RealEstatePostViewComponent,
     RepDetailComponent,
-    AdministrativeViewComponent
+    AdministrativeViewComponent,
+    ClientViewComponent
   ],
   imports: [
     CommonModule,
@@ -101,7 +103,8 @@ import { ClipboardModule, ClipboardService } from 'ngx-clipboard';
     ChatComponent,
     RealEstatePostViewComponent,
     RepDetailComponent,
-    AdministrativeViewComponent
+    AdministrativeViewComponent,
+    ClientViewComponent
   ],
   providers: [
     ForumPostService,

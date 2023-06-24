@@ -194,10 +194,6 @@ export const HEADER_NAV = [
             {
                 label: "Chung cư",
                 routerLink: '/cho-thue/chung-cu'
-            },
-            {
-                label: "Đất nền",
-                routerLink: '/cho-thue/dat-nen'
             }
         ]
     },

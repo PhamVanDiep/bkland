@@ -165,4 +165,12 @@ export class RealEstatePostService {
     isInterested(userId: string, realEstatePostId: string, deviceInfo: string): Observable<APIResponse> {
         return this._httpClient.get<APIResponse>(`${environment.BASE_URL_NO_AUTH}/real-estate-post/isInterested?userId=${userId}&deviceInfo=${deviceInfo}&realEstatePostId=${realEstatePostId}`);
     }
+
+    detailPageData(sell: number, type: string, limit: number, offset: number, userId: string, deviceInfo: string): Observable<APIResponse> {
+        return this._httpClient.get<APIResponse>(`${environment.BASE_URL_NO_AUTH}/real-estate-post/detailPageData?sell=${sell}&type=${type}&limit=${limit}&offset=${offset}&userId=${userId}&deviceInfo=${deviceInfo}`);
+    }
+
+    countTotalBySellAndTypeClient(sell: number, type: string): Observable<APIResponse> {
+        return this._httpClient.get<APIResponse>(`${environment.BASE_URL_NO_AUTH}/real-estate-post/countTotalBySellAndTypeClient?sell=${sell}&type=${type}`);
+    }
 }

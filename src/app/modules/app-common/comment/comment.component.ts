@@ -242,7 +242,7 @@ export class CommentComponent implements OnInit, OnDestroy {
           })
       } else {
         this._loadingService.loading(true);
-        if (this._authService.isAuthenticated()) {
+        if (!this._authService.isAuthenticated()) {
           this._commentService.noAuthCreate(this.newComment)
             .pipe(takeUntil(this._unsubscribe))
             .subscribe((response: APIResponse) => {

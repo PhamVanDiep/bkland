@@ -42,10 +42,6 @@ export const TYPE_HIRE_DROPDOWN = [
     {
         key: TYPE.APARTMENT,
         value: 'Chung cư'
-    },
-    {
-        key: TYPE.PLOT,
-        value: 'Đất nền'
     }
 ];
 

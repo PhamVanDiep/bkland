@@ -1,0 +1,43 @@
+<div class="w-full flex flex-col space-y-4 pb-4 border rounded-sm border-b-custom shadow-lg hover:shadow-blue-custom cursor-pointer">
+    <div class="w-full" (click)="viewDetail()">
+        <img [src]="rep?.imageRetrive" alt="Hình ảnh minh họa" class="w-full max-h-[30vh]">
+    </div>
+    <div class="w-full flex flex-col space-y-2 px-2" (click)="viewDetail()">
+        <div class="w-full">
+            <span class="font-bold">{{ rep?.title.toUpperCase() }}</span>
+        </div>
+        <div class="w-full">
+            <span class="font-light text-sm">{{ rep?.addressShow }}</span>
+        </div>
+        <div class="flex flex-row space-x-4 items-center">
+            <span class="font-bold text-blue-custom text-sm">{{ rep?.price + (sell ? ' tỷ VNĐ' : ' triệu VNĐ') }}</span>
+            <span class="font-bold text-lg">{{ '-' }}</span>
+            <span class="font-bold text-blue-custom text-sm">{{ rep?.area + ' m2' }}</span>
+        </div>
+        <div class="w-full">
+            <span class="font-light text-sm" [pTooltip]="rep?.description">
+                {{ rep?.description.length > 100 ? rep?.description.substr(0, 100) + '...' : rep?.description }}
+            </span>
+        </div>
+    </div>
+    <hr class="w-full" width="1" color="#ced4da">
+    <div class="w-full flex flex-col md:flex-row md:justify-between md:items-center px-2 space-y-2 md:space-y-0">
+        <div class="flex flex-row items-center space-x-4">
+            <p-avatar [image]="rep?.avatarRetrive" shape="circle"></p-avatar>
+            <div class="flex flex-col space-y-1">
+                <span class="font-semibold text-sm">{{ rep?.fullName }}</span>
+                <span class="font-light text-sm">{{ rep?.createAt | date:'dd/MM/yyyy, h:mm:ss a' }}</span>
+            </div>
+        </div>
+        <div class="flex flex-row space-x-4">
+            <div class="p-2 bg-blue-custom rounded-md flex flex-row items-center space-x-2" (click)="copyFunc()">
+                <i class="pi pi-phone text-white"></i>
+                <span class="font-bold text-white text-sm">{{ showPhoneNumber ? rep?.phoneNumber : (rep?.phoneNumber.substr(0,7) + "***") }}</span>
+                <span class="font-bold text-white text-sm" *ngIf="!showPhoneNumber" (click)="showPhoneNumberFunc()">{{ 'Hiện số' }}</span>
+            </div>
+            <div class="p-2 border border-b-custom rounded-lg" pTooltip="Quan tâm" (click)="onInterest()">
+                <i class="pi" [ngClass]="rep?.interested ? 'text-blue-custom pi-heart-fill' : 'pi-heart'"></i>
+            </div>
+        </div>
+    </div>
+</div>
