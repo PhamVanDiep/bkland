@@ -12,8 +12,13 @@ html {
     height: 100%;
 }
 
+@font-face {
+    font-family: 'bkland-font';
+    src: url('../src/assets/font/Roboto/Roboto-Regular.ttf');
+}
+
 * {
-    font-family: 'Roboto', sans-serif;
+    font-family: 'bkland-font';
 }
 
 .p-menubar {
@@ -108,7 +113,7 @@ pre {
     white-space: -pre-wrap;      /* Opera 4-6 */
     white-space: -o-pre-wrap;    /* Opera 7 */
     word-wrap: break-word;       /* Internet Explorer 5.5+ */
-    font-family: 'Roboto', sans-serif;
+    font-family: 'bkland-font';
 }
 
 .p-timeline-left .p-timeline-event-opposite {

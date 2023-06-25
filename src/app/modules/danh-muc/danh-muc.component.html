@@ -4,5 +4,16 @@
             <app-client-view class="w-full" [rep]="item" [sell]="sell" (onView)="viewDetail($event)"></app-client-view>
         </div>
         <p-paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="10" [totalRecords]="totalRecords"></p-paginator>
+        <div class="w-full flex flex-col space-y-4">
+            <span class="text-2xl font-bold">{{ 'Dự án nổi bật' }}</span>
+            <hr class="w-full" width="1" color="#ced4da">
+            <app-info-post-carousel [type]="duAnType" [items]="3"></app-info-post-carousel>
+            <div class="w-full flex items-center justify-center">
+                <div class="p-3 border border-b-custom rounded-md hover:border-blue-custom w-fit cursor-pointer" 
+                    (click)="navigateToDuAn()">
+                    <span class="text-blue-custom">{{ 'Xem thêm' }}</span>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

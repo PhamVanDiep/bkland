@@ -69,4 +69,12 @@ export class InfoPostService {
     findByInfoType(id: number): Observable<any> {
         return this._httpClient.get<APIResponse>(`${environment.BASE_URL_NO_AUTH}/info-post/info-type/${id}`);
     }
+
+    getHomePagePosts(): Observable<APIResponse> {
+        return this._httpClient.get<APIResponse>(`${environment.BASE_URL_NO_AUTH}/info-post/homepage`);
+    }
+
+    getHomePageDuAnPosts(): Observable<APIResponse> {
+        return this._httpClient.get<APIResponse>(`${environment.BASE_URL_NO_AUTH}/info-post/homepage-du-an`);
+    }
 }

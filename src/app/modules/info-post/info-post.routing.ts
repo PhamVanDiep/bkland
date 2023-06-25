@@ -72,5 +72,9 @@ export const route: Route[] = [
                 component: InfoPostDetailComponent
             }
         ]
+    },
+    {
+        path: 'view/:id',
+        component: InfoPostDetailComponent
     }
 ]

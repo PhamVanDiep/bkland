@@ -85,7 +85,7 @@
         </div>
     </div>
 </p-overlayPanel>
-<div class="flex w-full flex-col">
+<div class="flex w-full flex-col space-y-6">
     <div class="flex flex-col w-full mt-4 space-y-2">
         <div class="flex flex-row">
             <div class="w-1/5">
@@ -127,6 +127,98 @@
             <div class="w-auto">
                 <button pButton pRipple icon="pi pi-sync" pTooltip="Đặt lại"
                     class="p-button-text p-button-rounded p-button-secondary"></button>
+            </div>
+        </div>
+    </div>
+    <div class="w-full flex flex-col space-y-4">
+        <span class="text-2xl font-bold">{{ 'Tin tức' }}</span>
+        <hr class="w-full" width="1" color="#ced4da">
+        <div class="w-full flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-6">
+            <div class="w-full flex flex-col space-y-2 cursor-pointer" (click)="viewInfoPost(firstInfoPost?.id)">
+                <div class="w-full">
+                    <img [src]="firstImageRetrive" alt="Hình ảnh minh họa" class="w-full">
+                </div>
+                <span class="font-semibold text-lg">{{ firstInfoPost?.title }}</span>
+                <div class="w-full flex flex-row justify-between">
+                    <span class="text-sm italic">{{ firstInfoPost?.fullName }}</span>
+                    <span class="text-sm italic">{{ firstInfoPost?.createAt | date:'dd/MM/yyyy, h:mm:ss a' }}</span>
+                </div>
+            </div>
+            <div class="w-full flex flex-col justify-between">
+                <div *ngFor="let item of lstInfoPosts;let i = index">
+                    <div class="w-full flex flex-col space-y-1 cursor-pointer py-4" 
+                        [ngClass]="i < lstInfoPosts.length - 1 ? 'border-b border-b-custom' : ''" 
+                        (click)="viewInfoPost(item?.id)"  (mouseover)="setTinTucImg(item?.id)">
+                        <span class="text-lg font-semibold hover:font-light">{{ item?.title }}</span>
+                        <div class="w-full flex flex-row justify-between">
+                            <span class="text-sm italic">{{ item?.fullName }}</span>
+                            <span class="text-sm italic">{{ item?.createAt | date:'dd/MM/yyyy, h:mm:ss a' }}</span>
+                        </div>
+                    </div> 
+                </div>
+            </div>
+        </div>
+        <div class="w-full flex items-center justify-center">
+            <div class="p-3 border border-b-custom rounded-md hover:border-blue-custom w-fit cursor-pointer" 
+                (click)="navigateToInfoPostPage()">
+                <span class="text-blue-custom">{{ 'Xem thêm' }}</span>
+            </div>
+        </div>
+    </div>
+    <div class="w-full flex flex-col space-y-4">
+        <span class="text-2xl font-bold">{{ 'Dự án bất động sản nổi bật' }}</span>
+        <hr class="w-full" width="1" color="#ced4da">
+        <div class="w-full flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-6">
+            <div class="w-full flex flex-col space-y-2 cursor-pointer" (click)="viewInfoPost(firstDuAnInfoPost?.id)">
+                <div class="w-full">
+                    <img [src]="firstDuAnImageRetrive" alt="Hình ảnh minh họa" class="w-full">
+                </div>
+                <span class="font-semibold text-lg">{{ firstDuAnInfoPost?.title }}</span>
+                <div class="w-full flex flex-row justify-between">
+                    <span class="text-sm italic">{{ firstDuAnInfoPost?.fullName }}</span>
+                    <span class="text-sm italic">{{ firstDuAnInfoPost?.createAt | date:'dd/MM/yyyy, h:mm:ss a' }}</span>
+                </div>
+            </div>
+            <div class="w-full flex flex-col">
+                <div *ngFor="let item of lstDuAnInfoPosts;let i = index">
+                    <div class="w-full flex flex-col space-y-1 cursor-pointer py-4" 
+                        [ngClass]="i < lstDuAnInfoPosts.length - 1 ? 'border-b border-b-custom' : ''" 
+                        (click)="viewInfoPost(item?.id)" (mouseover)="setDuAnImg(item?.id)">
+                        <span class="text-lg font-semibold hover:font-light">{{ item?.title }}</span>
+                        <div class="w-full flex flex-row justify-between">
+                            <span class="text-sm italic">{{ item?.fullName }}</span>
+                            <span class="text-sm italic">{{ item?.createAt | date:'dd/MM/yyyy, h:mm:ss a' }}</span>
+                        </div>
+                    </div> 
+                </div>
+            </div>
+        </div>
+        <div class="w-full flex items-center justify-center">
+            <div class="p-3 border border-b-custom rounded-md hover:border-blue-custom w-fit cursor-pointer" 
+                (click)="navigateToDuAnPage()">
+                <span class="text-blue-custom">{{ 'Xem thêm' }}</span>
+            </div>
+        </div>
+    </div>
+    <div class="w-full flex flex-col space-y-4">
+        <span class="text-2xl font-bold">{{ 'Được quan tâm nhiều nhất' }}</span>
+        <hr class="w-full" width="1" color="#ced4da">
+        <app-rep-carousel [type]="mostInterestedType"></app-rep-carousel>
+        <div class="w-full flex items-center justify-center">
+            <div class="p-3 border border-b-custom rounded-md hover:border-blue-custom w-fit cursor-pointer" 
+                (click)="navigateToMuaBanNhaDat()">
+                <span class="text-blue-custom">{{ 'Xem thêm' }}</span>
+            </div>
+        </div>
+    </div>
+    <div class="w-full flex flex-col space-y-4">
+        <span class="text-2xl font-bold">{{ 'Được xem nhiều nhất' }}</span>
+        <hr class="w-full" width="1" color="#ced4da">
+        <app-rep-carousel [type]="mostViewType"></app-rep-carousel>
+        <div class="w-full flex items-center justify-center">
+            <div class="p-3 border border-b-custom rounded-md hover:border-blue-custom w-fit cursor-pointer" 
+                (click)="navigateToMuaBanNhaDat()">
+                <span class="text-blue-custom">{{ 'Xem thêm' }}</span>
             </div>
         </div>
     </div>

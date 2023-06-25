@@ -3,7 +3,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DeviceDetectorService, DeviceInfo } from 'ngx-device-detector';
 import { ReplaySubject, takeUntil } from 'rxjs';
-import { TYPE } from 'src/app/core/constants/type.constant';
+import { CAROUSEL_TYPE, TYPE } from 'src/app/core/constants/type.constant';
 import { APIResponse } from 'src/app/core/models/api-response.model';
 import { AppTitleService } from 'src/app/core/services/app-title.service';
 import { AuthService } from 'src/app/core/services/auth.service';
@@ -30,6 +30,7 @@ export class DanhMucComponent implements OnInit, OnDestroy {
   totalRecords: number;
   first: number;
   currMaxPage: number;
+  duAnType: string;
 
   constructor(
     private _appTitleService: AppTitleService,
@@ -53,6 +54,7 @@ export class DanhMucComponent implements OnInit, OnDestroy {
     this.totalRecords = 0;
     this.first = 0;
     this.currMaxPage = 0;
+    this.duAnType = CAROUSEL_TYPE.DU_AN;
   }
 
   ngOnInit(): void {
@@ -144,6 +146,10 @@ export class DanhMucComponent implements OnInit, OnDestroy {
     this._router.navigate([`./${event}`], { relativeTo: this._route });
   }
 
+  navigateToDuAn(): void {
+    this._router.navigate(['tien-ich/du-an']);
+  }
+  
   ngOnDestroy(): void {
     // throw new Error('Method not implemented.');
     this._unsubscribe.next(null);

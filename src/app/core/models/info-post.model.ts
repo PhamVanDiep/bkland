@@ -34,4 +34,5 @@ export interface InfoPostResponse {
 export interface TinTucResponse {
     infoType: InfoType;
     infoPosts: InfoPostResponse[];
+    currInfoPosts: InfoPostResponse[];
 }

@@ -49,3 +49,10 @@ export const POST_TYPE = {
     REAL_ESTATE_POST: 'REAL_ESTATE_POST',
     FORUM_POST: 'FORUM_POST'
 }
+
+export const CAROUSEL_TYPE = {
+    BEST_INTERESTED: 'BEST_INTERESTED',
+    BEST_VIEW: 'BEST_VIEW',
+    TIN_TUC: 'TIN_TUC',
+    DU_AN: 'DU_AN'
+}

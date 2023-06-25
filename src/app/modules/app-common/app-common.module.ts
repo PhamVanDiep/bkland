@@ -45,6 +45,9 @@ import { TimelineModule } from 'primeng/timeline';
 import { AdministrativeViewComponent } from './real-estate-post-view/administrative-view/administrative-view.component';
 import { ClipboardModule, ClipboardService } from 'ngx-clipboard';
 import { ClientViewComponent } from './real-estate-post-view/client-view/client-view.component';
+import { RepCarouselComponent } from './rep-carousel/rep-carousel.component';
+import { CarouselModule } from 'primeng/carousel';
+import { InfoPostCarouselComponent } from './info-post-carousel/info-post-carousel.component';
 
 @NgModule({
   declarations: [
@@ -60,7 +63,9 @@ import { ClientViewComponent } from './real-estate-post-view/client-view/client-
     RealEstatePostViewComponent,
     RepDetailComponent,
     AdministrativeViewComponent,
-    ClientViewComponent
+    ClientViewComponent,
+    RepCarouselComponent,
+    InfoPostCarouselComponent
   ],
   imports: [
     CommonModule,
@@ -89,7 +94,8 @@ import { ClientViewComponent } from './real-estate-post-view/client-view/client-
     RadioButtonModule,
     GoogleMapsModule,
     TimelineModule,
-    ClipboardModule
+    ClipboardModule,
+    CarouselModule
   ],
   exports: [
     CreateForumPostComponent,
@@ -104,7 +110,9 @@ import { ClientViewComponent } from './real-estate-post-view/client-view/client-
     RealEstatePostViewComponent,
     RepDetailComponent,
     AdministrativeViewComponent,
-    ClientViewComponent
+    ClientViewComponent,
+    RepCarouselComponent,
+    InfoPostCarouselComponent
   ],
   providers: [
     ForumPostService,

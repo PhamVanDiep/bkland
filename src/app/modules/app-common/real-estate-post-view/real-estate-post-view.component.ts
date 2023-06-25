@@ -3,6 +3,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ClipboardService } from 'ngx-clipboard';
 import { ReplaySubject, firstValueFrom, takeUntil } from 'rxjs';
+import { CAROUSEL_TYPE } from 'src/app/core/constants/type.constant';
 import { APIResponse } from 'src/app/core/models/api-response.model';
 import { AppTitleService } from 'src/app/core/services/app-title.service';
 import { LoadingService } from 'src/app/core/services/loading.service';
@@ -21,10 +22,12 @@ import { environment } from 'src/environments/environment';
 })
 export class RealEstatePostViewComponent implements OnInit, OnDestroy {
   private _unsubscribe: ReplaySubject<any> = new ReplaySubject<any>();
+  private title: string = 'Thông tin chi tiết bài viết';
 
   postId: string;
   contact: any;
   showPhoneNumber: boolean;
+  mostInterestedType: string;
 
   constructor(
     private _loadingService: LoadingService,
@@ -37,6 +40,8 @@ export class RealEstatePostViewComponent implements OnInit, OnDestroy {
     private _mediaService: MediaService
   ) {
     this.showPhoneNumber = false;
+    this.mostInterestedType = CAROUSEL_TYPE.BEST_INTERESTED;
+    this._appTitleService.setTitle(this.title);
   }
 
   ngOnInit(): void {

@@ -5,6 +5,7 @@ import { route } from './info-post.routing';
 import { InfoPostComponent } from './info-post.component';
 import { InfoPostDetailComponent } from './info-post-detail/info-post-detail.component';
 import { AvatarModule } from 'primeng/avatar';
+import { PaginatorModule } from 'primeng/paginator';
 
 
 
@@ -16,7 +17,8 @@ import { AvatarModule } from 'primeng/avatar';
   imports: [
     CommonModule,
     RouterModule.forChild(route),
-    AvatarModule
+    AvatarModule,
+    PaginatorModule
   ]
 })
 export class InfoPostModule { }

@@ -1,0 +1,24 @@
+<p-carousel 
+[value]="infoPosts" 
+[numVisible]="items" 
+[numScroll]="items" 
+[circular]="false" 
+[responsiveOptions]="responsiveOptions">
+    <ng-template let-infoPost pTemplate="item">
+        <div class="flex flex-col space-y-2 border border-b-custom rounded-lg pb-2 cursor-pointer mx-4 overflow-y-auto"
+            (click)="viewDetail(infoPost?.id)">
+            <div class="w-full h-[25vh]">
+                <img [src]="infoPost?.imageRetrive" alt="Hình ảnh minh họa" class="w-full h-[25vh]">
+            </div>
+            <div class="px-2 flex flex-col space-y-2">
+                <span class="font-bold h-[5vh] mb-4" [pTooltip]="infoPost?.title">
+                    {{ infoPost?.title.length > 50 ? infoPost?.title.slice(0, 50) + '...' : infoPost?.title }}
+                </span>
+                <div class="flex flex-row w-full space-x-4 justify-between">
+                    <span class="text-sm">{{ infoPost?.fullName }}</span>
+                    <span class="text-sm">{{ infoPost?.createAt | date:'dd/MM/yyyy, hh:mm:ss a' }}</span>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+</p-carousel>
