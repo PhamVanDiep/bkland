@@ -35,6 +35,7 @@ import { PriceFluctuationComponent } from './price-fluctuation/price-fluctuation
 import { AppCommonModule } from '../app-common/app-common.module';
 import { NewRequestComponent } from './cooperate-agency/new-request/new-request.component';
 import { FocusComponent } from './focus/focus.component';
+import { PaginatorModule } from 'primeng/paginator';
 
 @NgModule({
   declarations: [
@@ -71,7 +72,8 @@ import { FocusComponent } from './focus/focus.component';
     MenuModule,
     ConfirmDialogModule,
     MultiSelectModule,
-    AppCommonModule
+    AppCommonModule,
+    PaginatorModule
   ],
   providers: [
     ConfirmationService,

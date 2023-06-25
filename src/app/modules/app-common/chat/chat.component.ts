@@ -242,6 +242,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
           this.selectedChatRoom = newChatRoom;
           this.selectedChatId = response.data.id;
           this.onChatRoomSelect(newChatRoom);
+          this.messages = [];
           this.newChatRoomDialogVisible = false;
         } else {
           this._messageService.errorMessage(response.message);

@@ -239,13 +239,13 @@
     <div class="flex flex-col space-y-2">
         <span class="text-lg font-semibold">{{ 'Lịch sử biến động giá' }}</span>
         <hr class="w-full" width="1" color="#ced4da">
-        <p-timeline [value]="priceFluctuations" layout="horizontal" class="w-full">
+        <p-timeline [value]="priceFluctuations" layout="horizontal" class="max-w-full w-auto">
             <ng-template pTemplate="content" let-event>
                 <small class="p-text-secondary">{{ event.createAt | date:'dd/MM/yyyy, h:mm:ss a' }}</small>
             </ng-template>
             <ng-template pTemplate="opposite" let-event>
-                {{ event.price + ' ' +
-                (realEstatePost?.basePost.realEstatePost.sell ? 'tỷ VNĐ' : 'triệu VNĐ') }}
+                <small class="font-bold">{{ event.price + ' ' +
+                    (realEstatePost?.basePost.realEstatePost.sell ? 'tỷ VNĐ' : 'triệu VNĐ') }}</small>
             </ng-template>
         </p-timeline>
     </div>

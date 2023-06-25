@@ -10,7 +10,7 @@
     <div class="w-full flex flex-col space-y-4">
         <div class="w-full flex flex-col space-y-4" *ngIf="realEstatePosts.length > 0; else emptyREPs">
             <div class="flex flex-col w-full border border-gray-custom cursor-pointer px-2 py-2 rounded-lg" 
-                *ngFor="let item of realEstatePosts" (click)="menu.toggle($event); selectedREP=item">
+                *ngFor="let item of currRealEstatePosts" (click)="menu.toggle($event); selectedREP=item">
                 <div class="w-full flex flex-col md:flex-row md:items-center justify-between">
                     <span class="font-bold text-lg md:w-2/3">{{ item.title }}</span>
                     <span class="md:w-1/6">{{ item.sell ? 'Bán' : 'Cho thuê' }}</span>
@@ -21,10 +21,21 @@
                     <span class="text-red-600 text-sm md:w-1/6">{{ !item.enable ? 'Đã ẩn' : '' }}</span>
                     <p-tag class="md:w-1/6 text-end" [value]="getStatusValue(item.status)" [severity]="getStatusSeverity(item.status)"></p-tag>
                 </div>
+                <div class="w-full flex flex-col md:flex-row md:items-center justify-between">
+                    <span class="text-sm">{{ 'Số lượt xem: ' + item.view }}</span>
+                    <span class="text-sm">{{ 'Số lượt xem thông tin liên hệ: ' + item.clickedView }}</span>
+                    <span class="text-sm">{{ 'Ngày tạo: ' + (item.createAt | date:'dd/MM/yyyy, h:mm:ss a') }}</span>
+                </div>
+                <div class="w-full flex flex-col md:flex-row md:items-center justify-between">
+                    <span class="text-sm">{{ 'Số lượt quan tâm: ' + getNoOfInterest(item.id) }}</span>
+                    <span class="text-sm">{{ 'Số lượt bình luận: ' + getNoOfComments(item.id) }}</span>
+                    <span class="text-sm" *ngIf="item.updateAt != null">{{ 'Cập nhật lần cuối: ' + (item.updateAt | date:'dd/MM/yyyy, h:mm:ss a') }}</span>
+                </div>
             </div>
         </div>
         <ng-template #emptyREPs>
             <span class="italic">Bạn chưa có bài đăng nào.</span>
         </ng-template>
     </div>
+    <p-paginator (onPageChange)="onPageChange($event)" [first]="0" [rows]="10" [totalRecords]="realEstatePosts.length"></p-paginator>
 </div>

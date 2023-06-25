@@ -173,4 +173,8 @@ export class RealEstatePostService {
     countTotalBySellAndTypeClient(sell: number, type: string): Observable<APIResponse> {
         return this._httpClient.get<APIResponse>(`${environment.BASE_URL_NO_AUTH}/real-estate-post/countTotalBySellAndTypeClient?sell=${sell}&type=${type}`);
     }
+
+    countNoOfInterestAndComment(id: string): Observable<APIResponse> {
+        return this._httpClient.get<APIResponse>(`${environment.BASE_URL_NO_AUTH}/real-estate-post/interestAndComment?postId=${id}`);
+    }
 }

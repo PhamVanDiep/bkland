@@ -4,6 +4,7 @@ import { MessageService } from 'primeng/api';
 import { LoadingService } from './core/services/loading.service';
 import { MessageService as MessageServiceCustomize } from './core/services/message.service';
 import { PushNotificationService } from './core/services/push-notification.service';
+import { SwUpdate } from '@angular/service-worker';
 
 @Component({
   selector: 'app-root',
@@ -14,20 +15,43 @@ export class AppComponent implements OnInit {
   loading: boolean = false;
 
   constructor(
-    private _appUpdateService: AppUpdateService,
+    // private _appUpdateService: AppUpdateService,
+    private _swUpdate: SwUpdate,
     private _messageService: MessageService,
     private _messageServiceCustomize: MessageServiceCustomize,
     public _loadingService: LoadingService,
     public _pushNotifyService: PushNotificationService
   ) {
-    this._appUpdateService.update();
+    // this._appUpdateService.update();
   }
 
   ngOnInit(): void {
-    this._appUpdateService.reload$
-      .subscribe((response: boolean) => {
-        if (response) {
-          this.reload();
+    // this._appUpdateService.reload$
+    //   .subscribe((response: boolean) => {
+    //     if (response) {
+    //       this.reload();
+    //     }
+    //   });
+
+    this._swUpdate.versionUpdates
+      .subscribe((response: any) => {
+        switch (response.type) {
+          case 'VERSION_DETECTED':
+            if (confirm('Đã tìm thấy phiên bản mới. Bạn có muốn cập nhật?')) {
+              this.reload();
+            } else {
+              this.reload();
+            }
+            break;
+          case 'VERSION_READY':
+            console.log(`Current app version: ${response.currentVersion.hash}`);
+            console.log(`New app version ready for use: ${response.latestVersion.hash}`);
+            break;
+          case 'VERSION_INSTALLATION_FAILED':
+            console.log(`Failed to install app version '${response.version.hash}': ${response.error}`);
+            break;
+          default:
+            break;
         }
       });
 

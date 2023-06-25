@@ -61,7 +61,16 @@ export const route: Route[] = [
             },
             {
                 path: 'main',
-                component: ManageMainPostComponent
+                children: [
+                    {
+                        path: '',
+                        component: ManageMainPostComponent
+                    },
+                    {
+                        path: ':id',
+                        component: AdministrativeViewComponent
+                    }
+                ]
             },
             {
                 path: 'info',

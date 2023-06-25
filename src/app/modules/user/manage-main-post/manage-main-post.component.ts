@@ -23,8 +23,10 @@ export class ManageMainPostComponent implements OnInit, OnDestroy {
   private title: string  = 'Quản lý bài đăng bán/cho thuê';
 
   realEstatePosts: RealEstatePost[];
+  currRealEstatePosts: RealEstatePost[];
   items: MenuItem[];
   selectedREP: RealEstatePost;
+  postInfos: any[];
 
   innerWidth: any;
   @HostListener('window:resize', ['$event'])
@@ -41,10 +43,19 @@ export class ManageMainPostComponent implements OnInit, OnDestroy {
     private _route: ActivatedRoute,
     private _confirmationService: ConfirmationService
   ) {
+    this.postInfos = [];
     this.innerWidth = window.innerWidth;
     this._appTitleService.setTitle(this.title);
     this.realEstatePosts = [];
+    this.currRealEstatePosts = [];
     this.items = [
+      {
+        label: 'Xem trước',
+        icon: 'pi pi-fw pi-info-circle',
+        command: () => {
+          this.viewPost(this.selectedREP.id);
+        }
+      },
       {
         label: 'Cập nhật',
         icon: 'pi pi-fw pi-pencil',
@@ -75,6 +86,23 @@ export class ManageMainPostComponent implements OnInit, OnDestroy {
         this._loadingService.loading(false);
         if (response.status === HttpStatusCode.Ok) {
           this.realEstatePosts = response.data;
+          if (this.realEstatePosts.length > 10) {
+            this.currRealEstatePosts = this.realEstatePosts.slice(0, 10);
+          }
+          this.realEstatePosts.forEach(e => {
+            this._realEsatePostService.countNoOfInterestAndComment(e.id)
+              .pipe(takeUntil(this._unsubscribe))
+              .subscribe((response: APIResponse) => {
+                if (response.status === HttpStatusCode.Ok) {
+                  this.postInfos.push({
+                    key: e.id,
+                    data: response.data
+                  });
+                } else {
+                  this._messageService.errorMessage(response.message);
+                }
+              })
+          })
         } else {
           this._messageService.errorMessage(response.message);
         }
@@ -117,6 +145,10 @@ export class ManageMainPostComponent implements OnInit, OnDestroy {
     } else {
       return 'warning';
     } 
+  }
+
+  viewPost(id: string): void {
+    this._router.navigate([`./${id}`], { relativeTo: this._route });
   }
 
   redirectToPost(id: string): void {
@@ -195,6 +227,35 @@ export class ManageMainPostComponent implements OnInit, OnDestroy {
           this._messageService.errorMessage(response.message);
         }
       })
+  }
+
+  onPageChange(event: any): void {
+    let selectedPage = event.page;
+    if (selectedPage == event.pageCount - 1) {
+      this.currRealEstatePosts = this.realEstatePosts.slice(selectedPage*10, this.realEstatePosts.length); 
+    } else {
+      this.currRealEstatePosts = this.realEstatePosts.slice(selectedPage*10, (selectedPage + 1)*10); 
+    }
+  }
+
+  getNoOfComments(id: string): any {
+    let res = 0;
+    this.postInfos.forEach(e => {
+      if (e.key == id) {
+        res = e.data.noOfComment;
+      }
+    });
+    return res;
+  }
+
+  getNoOfInterest(id: string): any {
+    let res = 0;
+    this.postInfos.forEach(e => {
+      if (e.key == id) {
+        res = e.data.noOfInterest;
+      }
+    });
+    return res;
   }
 
   ngOnDestroy(): void {

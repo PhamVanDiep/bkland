@@ -7,6 +7,6 @@ import { Component } from '@angular/core';
 })
 export class ForbiddenComponent {
   back(): void {
-    history.go(-2);
+    history.go(history.length > 1 ? -2 : -1);
   }
 }
