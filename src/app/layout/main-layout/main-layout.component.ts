@@ -238,6 +238,7 @@ export class MainLayoutComponent implements OnInit, OnDestroy{
   }
 
   logout(): void {
+    this._loadingService.loading(true);
     let _id = JSON.parse(window.atob((localStorage.getItem('accessToken') || '').split('.')[1])).id;
     let logoutRequest: UserDeviceToken = {
       id: 0,
@@ -255,6 +256,7 @@ export class MainLayoutComponent implements OnInit, OnDestroy{
     this._authService.logout(logoutRequest)
       .pipe(takeUntil(this._unsubscribe))
       .subscribe((response: APIResponse) => {
+        this._loadingService.loading(false);
         if (response.status === HttpStatusCode.Ok) {
           localStorage.clear();
           this.navigatePage('/login');

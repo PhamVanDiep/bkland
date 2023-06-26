@@ -204,6 +204,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
   }
 
   logoutRequest(): void {
+    this._loadingService.loading(true);
     localStorage.clear();
     let logoutRequest: UserDeviceToken = {
       id: 0,
@@ -220,6 +221,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
     this._authService.logout(logoutRequest)
       .pipe(takeUntil(this._unsubscribe))
       .subscribe((response: APIResponse) => {
+        this._loadingService.loading(false);
         this._router.navigate(['login']);
       });
   }

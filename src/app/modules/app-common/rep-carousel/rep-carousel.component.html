@@ -11,10 +11,10 @@
             </div>
             <div class="px-2 flex flex-col space-y-2">
                 <span class="font-bold h-[5vh] mb-4" [pTooltip]="rep?.title" (click)="viewDetail(rep?.id)">
-                    {{ rep?.title.length > 50 ? rep?.title.slice(0, 50) + '...' : rep?.title }}
+                    {{ rep?.title.length > 30 ? rep?.title.slice(0, 30) + '...' : rep?.title }}
                 </span>
                 <span class="text-sm h-[5vh]" [pTooltip]="rep?.addressShow" (click)="viewDetail(rep?.id)">
-                    {{ rep?.addressShow.length > 50 ? rep?.addressShow.slice(0, 50) + '...' : rep?.addressShow }}
+                    {{ rep?.addressShow.length > 30 ? rep?.addressShow.slice(0, 30) + '...' : rep?.addressShow }}
                 </span>
                 <div class="flex flex-row w-full space-x-4" (click)="viewDetail(rep?.id)">
                     <span class="font-semibold text-blue-custom">{{ rep?.price + (rep?.sell == 1 ? ' tỷ VNĐ' : ' triệu VNĐ') }}</span>

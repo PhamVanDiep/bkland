@@ -20,6 +20,7 @@ import { UserDeviceTokenService } from 'src/app/core/services/user-device-token.
 import { UserDeviceToken } from 'src/app/core/models/user-device-token.model';
 import { DeviceDetectorService, DeviceInfo } from 'ngx-device-detector';
 import { MessageService } from 'src/app/core/services/message.service';
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Component({
   selector: 'app-sign-in',
@@ -62,6 +63,7 @@ export class SignInComponent implements OnInit, OnDestroy {
     private _noAuthService: NoAuthService,
     private _userDeviceTokenService: UserDeviceTokenService,
     private _deviceDetectorService: DeviceDetectorService,
+    private _jwtHelperService: JwtHelperService
   ) {
     this._appTitleService.setTitle(this.title);
     if (this._authService.isAuthenticated()) {
@@ -93,27 +95,29 @@ export class SignInComponent implements OnInit, OnDestroy {
 
     this._socialAuthService.signOut();
 
+    // @ts-ignore
+    google.accounts.id.initialize({
+      client_id: "276882401051-qmrklqqvuuht57jdcutjvs9bq5cuiihf.apps.googleusercontent.com",
+      callback: this.handleCredentialResponse.bind(this),
+      auto_select: false,
+      cancel_on_tap_outside: true,
+    });
+
+    // @ts-ignore
+    google.accounts.id.renderButton(
+      // @ts-ignore
+      document.getElementById("google-button"),
+      { theme: "outline", size: "large", width: "100%" }
+    );
+
+    // @ts-ignore
+    google.accounts.id.prompt((notification: PromptMomentNotification) => { });
+
     this._socialAuthService.authState
       .pipe(takeUntil(this._unsubscribe))
       .subscribe((user) => {
         if (user != null) {
-          this.socialUser = user;
-          // console.log(this.socialUser);
-          this._authService.checkEmailExist(this.socialUser.email)
-            .subscribe((response: APIResponse) => {
-              if (response.status === HttpStatusCode.Ok) {
-                this.login = {
-                  username: this.socialUser.email + "_user_bkland",
-                  password: this.socialUser.email + "_password_bkland",
-                  deviceInfo: this.deviceInfo.userAgent
-                }
-                this.loginRequest();
-              } else if (response.status === HttpStatusCode.NoContent) {
-                this.registerGoogleAccount();
-              } else if (response.status === HttpStatusCode.BadRequest) {
-                this._messageService.errorMessage(response.message);
-              }
-            })
+          this.loginWithGoogle(user);
         }
       });
   }
@@ -148,6 +152,7 @@ export class SignInComponent implements OnInit, OnDestroy {
           this._userDeviceTokenService.createUserDeviceToken(userDeviceToken)
             .pipe(takeUntil(this._unsubscribe))
             .subscribe((response1: APIResponse) => {
+              this._loadingService.loading(false);
               if (response1.status === HttpStatusCode.Ok) {
                 let redir = 'home';
                 if (loginResponse.roles.includes(ROLE.ROLE_ADMIN)) {
@@ -160,17 +165,48 @@ export class SignInComponent implements OnInit, OnDestroy {
               }
             });
         } else {
+          this._loadingService.loading(false);
           this._messageService.errorMessage(response.message);
         }
-        this._loadingService.loading(false);
       })
   }
 
-  // loginWithGoogle(): void {
-  //   this._socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID);
-  // }
+  loginWithGoogle(user: any): void {
+    this._loadingService.loading(true);
+    this.socialUser = user;
+    this._authService.checkEmailExist(this.socialUser.email)
+      .subscribe((response: APIResponse) => {
+        if (response.status === HttpStatusCode.Ok) {
+          this.login = {
+            username: this.socialUser.email + "_user_bkland",
+            password: this.socialUser.email + "_password_bkland",
+            deviceInfo: this.deviceInfo.userAgent
+          }
+          this.loginRequest();
+        } else if (response.status === HttpStatusCode.NoContent) {
+          this.registerGoogleAccount();
+        } else if (response.status === HttpStatusCode.BadRequest) {
+          this._loadingService.loading(false);
+          this._messageService.errorMessage(response.message);
+        }
+      })
+  }
+
+  async handleCredentialResponse(response: any) {
+    this._loadingService.loading(true);
+    let decoded = this._jwtHelperService.decodeToken(response.credential);
+    let user = {
+      email: decoded.email
+    }
+    if (response != null) {
+      this.loginWithGoogle(user);
+    } else {
+      this._loadingService.loading(false);
+    }
+  }
 
   registerGoogleAccount(): void {
+    this._loadingService.loading(true);
     let _id = uuid.v4()
     let registerRequest: SignUpRequest = {
       id: _id,
@@ -213,6 +249,7 @@ export class SignInComponent implements OnInit, OnDestroy {
           this.loginRequest();
         } else {
           this._messageService.errorMessage(response.message);
+          this._loadingService.loading(false);
         }
       })
   }

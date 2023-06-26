@@ -6,7 +6,7 @@ import { AppComponent } from './app.component';
 import { AppTitleService } from './core/services/app-title.service';
 import { AppUpdateService } from './core/services/app-update.service';
 import { PushNotificationService } from './core/services/push-notification.service';
-import { ServiceWorkerModule } from '@angular/service-worker';
+import { ServiceWorkerModule, SwUpdate } from '@angular/service-worker';
 import { HttpClientModule } from '@angular/common/http';
 import { initializeApp } from 'firebase/app';
 import { environment } from 'src/environments/environment';
@@ -58,7 +58,8 @@ initializeApp(environment.FirebaseConfig);
     AuthService,
     LoadingService,
     MessageServiceCustomize,
-    BaseService
+    BaseService,
+    SwUpdate
   ],
   bootstrap: [AppComponent]
 })

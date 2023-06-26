@@ -15,6 +15,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { SocialLoginModule, SocialAuthServiceConfig, GoogleLoginProvider } from '@abacritt/angularx-social-login';
 import { DialogModule } from 'primeng/dialog';
 import { UserDeviceTokenService } from 'src/app/core/services/user-device-token.service';
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 @NgModule({
   declarations: [
@@ -48,7 +49,8 @@ import { UserDeviceTokenService } from 'src/app/core/services/user-device-token.
     },
     AppTitleService,
     AuthService,
-    UserDeviceTokenService
+    UserDeviceTokenService,
+    JwtHelperService
   ]
 })
 export class SignInModule { }
