@@ -77,4 +77,12 @@ export class InfoPostService {
     getHomePageDuAnPosts(): Observable<APIResponse> {
         return this._httpClient.get<APIResponse>(`${environment.BASE_URL_NO_AUTH}/info-post/homepage-du-an`);
     }
+
+    countByInfoType(infoTypeId: number): Observable<APIResponse> {
+        return this._httpClient.get<APIResponse>(`${environment.BASE_URL_NO_AUTH}/info-post/countByInfoType?infoTypeId=${infoTypeId}`);
+    }
+
+    loadMore(infoTypeId: number, limit: number, page: number): Observable<APIResponse> {
+        return this._httpClient.get<APIResponse>(`${environment.BASE_URL_NO_AUTH}/info-post/load-more?infoTypeId=${infoTypeId}&limit=${limit}&page=${page}`);
+    }
 }

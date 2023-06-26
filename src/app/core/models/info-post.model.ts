@@ -35,4 +35,6 @@ export interface TinTucResponse {
     infoType: InfoType;
     infoPosts: InfoPostResponse[];
     currInfoPosts: InfoPostResponse[];
+    totalRecords: number;
+    selectedPages: number[];
 }

@@ -3,9 +3,9 @@
         <div class="w-full">
             <span class="text-xl font-bold">{{ tinTucResponse.infoType.name }}</span>
         </div>
-        <div *ngIf="tinTucResponse.infoPosts.length > 0;else emptyInfoPost" class="px-4 md:px-0 pb-2 md:py-2 space-y-4">
+        <div *ngIf="tinTucResponse.currInfoPosts.length > 0;else emptyInfoPost" class="px-4 md:px-0 pb-2 md:py-2 space-y-4">
             <div class="w-full flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-4 rounded-sm shadow-lg cursor-pointer" 
-                *ngFor="let infoPost of tinTucResponse.infoPosts"
+                *ngFor="let infoPost of tinTucResponse.currInfoPosts"
                 (click)="showDetail(infoPost.id)">
                 <img [src]="infoPost.retriveImage" 
                     class="w-full md:max-w-[25%] h-auto max-h-[20vh] rounded-t-sm md:rounded-lg">
@@ -21,6 +21,13 @@
                     <span class="text-sm">{{ infoPost.description }}</span>
                 </div>
             </div>
+            <p-paginator 
+                (onPageChange)="onPageChange($event, tinTucResponse)" 
+                [first]="0" [rows]="5" 
+                [totalRecords]="tinTucResponse.totalRecords" 
+                [pageLinkSize]="2"
+                [showFirstLastIcon]="false">
+            </p-paginator>
         </div>
         <ng-template #emptyInfoPost>
             <span class="italic">Không có bài viết nào.</span>

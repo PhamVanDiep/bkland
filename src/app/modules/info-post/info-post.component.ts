@@ -69,6 +69,9 @@ export class InfoPostComponent implements OnInit, OnDestroy {
             this.tinTucResponses.push(response.data);
           }
           this.tinTucResponses.forEach(e => {
+            e.currInfoPosts = e.infoPosts;
+            e.selectedPages = [];
+            e.selectedPages.push(0);
             e.infoPosts.forEach(ee => {
               this._mediaService.retriveImage(ee.imageUrl)
                 .pipe(takeUntil(this._unsubscribe))
@@ -79,9 +82,18 @@ export class InfoPostComponent implements OnInit, OnDestroy {
                     ee.retriveImage = '';
                     this._messageService.errorMessage(response1.message);
                   }
-                })
-            })
-          })
+                });
+            });
+            this._infoPostService.countByInfoType(e.infoType.id)
+              .pipe(takeUntil(this._unsubscribe))
+              .subscribe((response2: APIResponse) => {
+                if (response2.status === HttpStatusCode.Ok) {
+                  e.totalRecords = response2.data;
+                } else {
+                  this._messageService.errorMessage(response2.message);
+                }
+              });
+          });
         } else {
           this._messageService.errorMessage(response.message);
         }
@@ -90,6 +102,43 @@ export class InfoPostComponent implements OnInit, OnDestroy {
 
   showDetail(id: number): void {
     this._router.navigate([`./detail/${id}`], { relativeTo: this._route });
+  }
+
+  onPageChange(event: any, tinTucResponse: TinTucResponse): void {
+    let selectedPage = event.page;
+    if (!tinTucResponse.selectedPages.includes(selectedPage)) {
+      tinTucResponse.selectedPages.push(selectedPage);
+      this._loadingService.loading(true);
+      this._infoPostService.loadMore(tinTucResponse.infoType.id, 5, selectedPage)
+        .pipe(takeUntil(this._unsubscribe))
+        .subscribe((response: APIResponse) => {
+          this._loadingService.loading(false);
+          if (response.status === HttpStatusCode.Ok) {
+            response.data.forEach((e: any) => {
+              this._mediaService.retriveImage(e.imageUrl)
+                .pipe(takeUntil(this._unsubscribe))
+                .subscribe((response1: APIResponse) => {
+                  if (response1.status === HttpStatusCode.Ok) {
+                    e.retriveImage = this._domSanitizer.bypassSecurityTrustResourceUrl(`data:${response1.data.type};base64,${response1.data.body}`);
+                  } else {
+                    e.retriveImage = '';
+                    this._messageService.errorMessage(response1.message);
+                  }
+                });
+            })
+            tinTucResponse.currInfoPosts = response.data;
+            tinTucResponse.infoPosts = [...tinTucResponse.infoPosts, ...response.data];
+          } else {
+            this._messageService.errorMessage(response.message);
+          }
+        })
+    } else {
+      if (selectedPage == event.pageCount - 1) {
+        tinTucResponse.currInfoPosts = tinTucResponse.infoPosts.slice(selectedPage * 5, tinTucResponse.totalRecords);
+      } else {
+        tinTucResponse.currInfoPosts = tinTucResponse.infoPosts.slice(selectedPage * 5, (selectedPage + 1) * 5);
+      }
+    }
   }
 
   ngOnDestroy(): void {

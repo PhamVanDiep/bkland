@@ -12,7 +12,7 @@
             </div>
             <div class="px-2 flex flex-col space-y-2">
                 <span class="font-bold h-[5vh] mb-4" [pTooltip]="infoPost?.title">
-                    {{ infoPost?.title.length > 50 ? infoPost?.title.slice(0, 50) + '...' : infoPost?.title }}
+                    {{ infoPost?.title.length > 30 ? infoPost?.title.slice(0, 30) + '...' : infoPost?.title }}
                 </span>
                 <div class="flex flex-row w-full space-x-4 justify-between">
                     <span class="text-sm">{{ infoPost?.fullName }}</span>
