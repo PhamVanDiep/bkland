@@ -34,7 +34,7 @@
               "src/styles.css"
             ],
             "scripts": [],
-            "serviceWorker": false,
+            "serviceWorker": true,
             "ngswConfigPath": "ngsw-config.json",
             "allowedCommonJsDependencies": [
               "quill"
