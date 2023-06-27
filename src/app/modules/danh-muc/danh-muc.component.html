@@ -1,5 +1,6 @@
 <div class="w-full mt-6 md:mt-4 flex items-center justify-center pb-6 md:pb-4">
-    <div class="w-full lg:w-[50vw] flex flex-col space-y-6 items-center">
+    <div class="w-full lg:w-[50vw] flex flex-col space-y-6 items-center" id="my-container">
+        <span class="text-2xl font-bold">{{ title }}</span>
         <div *ngFor="let item of currRealEstatePosts" class="w-full">
             <app-client-view class="w-full" [rep]="item" [sell]="sell" (onView)="viewDetail($event)"></app-client-view>
         </div>

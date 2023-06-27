@@ -23,6 +23,7 @@ import { MessageService } from 'src/app/core/services/message.service';
 import { NoAuthService } from 'src/app/core/services/no-auth.service';
 import { RealEstatePostService } from 'src/app/core/services/real-estate-post.service';
 import { UserService } from 'src/app/core/services/user.service';
+import Util from 'src/app/core/utils/util';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -188,6 +189,10 @@ export class MainLayoutComponent implements OnInit, OnDestroy{
       .subscribe((response: number) => {
         this.noInterestedPost = response.toString();
       })
+  }
+
+  onActivate(event: any): void {
+    Util.scrollToTop();
   }
 
   getUserInfo(): void {

@@ -10,6 +10,7 @@ import { InfoPostService } from 'src/app/core/services/info-post.service';
 import { LoadingService } from 'src/app/core/services/loading.service';
 import { MediaService } from 'src/app/core/services/media.service';
 import { MessageService } from 'src/app/core/services/message.service';
+import Util from 'src/app/core/utils/util';
 
 @Component({
   selector: 'app-info-post',
@@ -105,6 +106,9 @@ export class InfoPostComponent implements OnInit, OnDestroy {
   }
 
   onPageChange(event: any, tinTucResponse: TinTucResponse): void {
+    if (this.tinTucResponses.length <= 1) {
+      Util.scrollToTop();
+    }
     let selectedPage = event.page;
     if (!tinTucResponse.selectedPages.includes(selectedPage)) {
       tinTucResponse.selectedPages.push(selectedPage);

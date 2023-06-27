@@ -152,7 +152,7 @@ export const ENTERPRISE_NAV = [
     {
         label: 'Nhắn tin',
         icon: 'pi pi-comments',
-        routerLink: 'user/message'
+        routerLink: 'user/chat'
     },
     {
         label: 'Quản lý tài khoản',

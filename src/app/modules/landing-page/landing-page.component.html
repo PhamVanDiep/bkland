@@ -1,35 +1,42 @@
 <p-overlayPanel #aroundOP>
     <div class="w-full flex flex-col space-y-4">
         <div class="flex flex-col">
-            <p-dropdown placeholder="Tỉnh/Thành"></p-dropdown>
+            <p-dropdown placeholder="Tỉnh/Thành" optionLabel="fullName" optionValue="code"
+                [filter]="true" filterBy="fullName"
+                [options]="provinces" [(ngModel)]="searchRequest.provinceCode" (ngModelChange)="getDistrictsInProvince()"></p-dropdown>
         </div>
         <div class="flex flex-col">
-            <p-dropdown placeholder="Quận/Huyện"></p-dropdown>
+            <p-multiSelect placeholder="Quận/Huyện" [options]="districts" optionLabel="fullName" optionValue="code"
+                [filter]="true" filterBy="fullName" [(ngModel)]="searchRequest.districtCode" (ngModelChange)="getWardsInDistrict()"
+            ></p-multiSelect>
         </div>
         <div class="flex flex-col">
-            <p-dropdown placeholder="Xã/Phường"></p-dropdown>
+            <p-multiSelect placeholder="Xã/Phường" [options]="wards" optionLabel="fullName" optionValue="code"
+                [filter]="true" filterBy="fullName" [(ngModel)]="searchRequest.wardCode">
+            </p-multiSelect>
         </div>
         <div class="flex flex-row justify-between items-center mt-4">
-            <button pButton pRipple icon="pi pi-sync" pTooltip="Đặt lại"
+            <button pButton pRipple icon="pi pi-sync" pTooltip="Đặt lại" 
+                (click)="searchRequest.provinceCode=null;searchRequest.districtCode=[];searchRequest.wardCode=[]"
                 class="p-button-text p-button-rounded p-button-secondary"></button>
-            <button pButton pRipple class="p-button-text p-button-raised" label="Áp dụng"></button>
+            <button pButton pRipple class="p-button-text p-button-raised" label="Áp dụng" (click)="onSearch()"></button>
         </div>
     </div>
 </p-overlayPanel>
 <p-overlayPanel #areaOP>
     <div class="w-full flex flex-col space-y-6">
         <span class="p-float-label">
-            <p-inputNumber inputId="integeronly"></p-inputNumber>
+            <p-inputNumber inputId="integeronly" [(ngModel)]="searchRequest.startArea"></p-inputNumber>
             <label htmlFor="number-input">Từ (m2)</label>
         </span>
         <span class="p-float-label">
-            <p-inputNumber inputId="integeronly"></p-inputNumber>
+            <p-inputNumber inputId="integeronly" [(ngModel)]="searchRequest.endArea"></p-inputNumber>
             <label htmlFor="number-input">Đến (m2)</label>
         </span>
         <div class="flex flex-row justify-between items-center">
-            <button pButton pRipple icon="pi pi-sync" pTooltip="Đặt lại"
+            <button pButton pRipple icon="pi pi-sync" pTooltip="Đặt lại" (click)="searchRequest.startArea=null;searchRequest.endArea=null"
                 class="p-button-text p-button-rounded p-button-secondary"></button>
-            <button pButton pRipple class="p-button-text p-button-raised" label="Áp dụng"></button>
+            <button pButton pRipple class="p-button-text p-button-raised" label="Áp dụng" (click)="onSearch()"></button>
         </div>
     </div>
 </p-overlayPanel>
@@ -37,17 +44,17 @@
     <div class="w-full flex flex-col">
         <div class="w-full flex flex-col space-y-6">
             <span class="p-float-label">
-                <p-inputNumber inputId="locale-vn" mode="decimal" locale="en-VN" [minFractionDigits]="2"></p-inputNumber>
+                <p-inputNumber inputId="locale-vn" mode="decimal" locale="en-VN" [minFractionDigits]="2" [(ngModel)]="searchRequest.startPrice"></p-inputNumber>
                 <label htmlFor="number-input">{{ 'Từ (tỷ VNĐ)' }}</label>
             </span>
             <span class="p-float-label">
-                <p-inputNumber inputId="locale-vn" mode="decimal" locale="en-VN" [minFractionDigits]="2"></p-inputNumber>
+                <p-inputNumber inputId="locale-vn" mode="decimal" locale="en-VN" [minFractionDigits]="2" [(ngModel)]="searchRequest.endPrice"></p-inputNumber>
                 <label htmlFor="number-input">{{ 'Đến (triệu VNĐ)' }}</label>
             </span>
             <div class="flex flex-row justify-between items-center">
-                <button pButton pRipple icon="pi pi-sync" pTooltip="Đặt lại"
+                <button pButton pRipple icon="pi pi-sync" pTooltip="Đặt lại" (click)="searchRequest.startPrice=null;searchRequest.endPrice=null"
                     class="p-button-text p-button-rounded p-button-secondary"></button>
-                <button pButton pRipple class="p-button-text p-button-raised" label="Áp dụng"></button>
+                <button pButton pRipple class="p-button-text p-button-raised" label="Áp dụng" (click)="onSearch()"></button>
             </div>
         </div>
     </div>
@@ -57,75 +64,88 @@
         <div class="flex flex-col space-y-2">
             <span class="text-sm font-bold">Số phòng ngủ</span>
             <div class="flex flex-row space-x-4">
-                <div class="rounded-lg bg-gray-custom p-2 w-auto cursor-pointer">
+                <div class="rounded-lg p-2 w-auto cursor-pointer" 
+                    (click)="onSelectBedroom(1)" 
+                    [ngClass]="searchRequest.noOfBedrooms.includes(1) ? 'bg-blue-custom text-white' : 'bg-gray-custom text-text-corlor-custom'">
                     <span>1</span>
                 </div>
-                <div class="rounded-lg bg-gray-custom p-2 w-auto cursor-pointer">
+                <div class="rounded-lg p-2 w-auto cursor-pointer"
+                    (click)="onSelectBedroom(2)" 
+                    [ngClass]="searchRequest.noOfBedrooms.includes(2) ? 'bg-blue-custom text-white' : 'bg-gray-custom text-text-corlor-custom'">
                     <span>2</span>
                 </div>
-                <div class="rounded-lg bg-gray-custom p-2 w-auto cursor-pointer">
+                <div class="rounded-lg p-2 w-auto cursor-pointer"
+                    (click)="onSelectBedroom(3)" 
+                    [ngClass]="searchRequest.noOfBedrooms.includes(3) ? 'bg-blue-custom text-white' : 'bg-gray-custom text-text-corlor-custom'">
                     <span>3</span>
                 </div>
-                <div class="rounded-lg bg-gray-custom p-2 w-auto cursor-pointer">
+                <div class="rounded-lg p-2 w-auto cursor-pointer"
+                    (click)="onSelectBedroom(4)" 
+                    [ngClass]="searchRequest.noOfBedrooms.includes(4) ? 'bg-blue-custom text-white' : 'bg-gray-custom text-text-corlor-custom'">
                     <span>4</span>
                 </div>
-                <div class="rounded-lg bg-gray-custom p-2 w-auto cursor-pointer">
+                <div class="rounded-lg p-2 w-auto cursor-pointer"
+                    (click)="onSelectBedroom(5)" 
+                    [ngClass]="searchRequest.noOfBedrooms.includes(5) ? 'bg-blue-custom text-white' : 'bg-gray-custom text-text-corlor-custom'">
                     <span>5+</span>
                 </div>
             </div>
         </div>
         <span class="p-float-label">
-            <p-multiSelect placeholder="Chọn hướng" optionLabel="name" inputId="float-label"></p-multiSelect>
+            <p-multiSelect placeholder="Chọn hướng" optionLabel="value" [(ngModel)]="searchRequest.direction"
+                inputId="float-label" optionValue="key" [options]="lstDirections"></p-multiSelect>
             <label for="float-label">Hướng</label>
         </span>
         <div class="flex flex-row justify-between items-center">
-            <button pButton pRipple icon="pi pi-sync" pTooltip="Đặt lại"
+            <button pButton pRipple icon="pi pi-sync" pTooltip="Đặt lại" (click)="searchRequest.noOfBedrooms=[];"
                 class="p-button-text p-button-rounded p-button-secondary"></button>
-            <button pButton pRipple class="p-button-text p-button-raised" label="Áp dụng"></button>
+            <button pButton pRipple class="p-button-text p-button-raised" label="Áp dụng" (click)="onSearch()"></button>
         </div>
     </div>
 </p-overlayPanel>
-<div class="flex w-full flex-col space-y-6 pb-4">
+<div class="md:flex w-full flex-col space-y-6 pb-4 hidden">
     <div class="flex flex-col w-full mt-4 space-y-2">
         <div class="flex flex-row">
             <div class="w-1/5">
-                <p-dropdown placeholder="Danh mục"></p-dropdown>
+                <p-dropdown placeholder="Danh mục" [options]="lstDanhMuc" [(ngModel)]="searchRequest.sell"
+                    optionLabel="value" optionValue="key"></p-dropdown>
             </div>
             <div class="w-1/5">
-                <p-dropdown placeholder="Loại BĐS"></p-dropdown>
+                <p-dropdown placeholder="Loại BĐS" [options]="lstLoaiBDS" [(ngModel)]="searchRequest.type"
+                    optionLabel="value" optionValue="key"></p-dropdown>
             </div>
             <div class="w-3/5 flex flex-row">
                 <div class="w-full">
-                    <input pInputText class="w-full" placeholder="Nhập từ khóa...">
+                    <input pInputText class="w-full" placeholder="Nhập từ khóa..." [(ngModel)]="searchRequest.keyword" (keydown.enter)="onSearch()">
                 </div>
                 <div class="w-fit">
-                    <button pButton pRipple icon="pi pi-search"></button>
+                    <button pButton pRipple icon="pi pi-search" (click)="onSearch()"></button>
                 </div>
             </div>
         </div>
         <div class="flex flex-row space-x-2">
             <div class="w-full flex justify-between items-center border rounded-md border-b-custom px-4 py-4 cursor-pointer hover:border-primary-clr" 
                 (click)="aroundOP.toggle($event)">
-                <span></span>
+                <span class="text-text-color-custom">{{ renderSelectedDiaDiem() }}</span>
                 <i class="pi pi-chevron-down text-icon-custom"></i>
             </div>
             <div class="w-full flex justify-between items-center border rounded-md border-b-custom px-4 py-4 cursor-pointer hover:border-primary-clr"
                 (click)="areaOP.toggle($event)">
-                <span></span>
+                <span class="text-text-color-custom">{{ renderSelectedDienTich() }}</span>
                 <i class="pi pi-chevron-down text-icon-custom"></i>
             </div>
             <div class="w-full flex justify-between items-center border rounded-md border-b-custom px-4 py-4 cursor-pointer hover:border-primary-clr"
                 (click)="priceOP.toggle($event)">
-                <span></span>
+                <span class="text-text-color-custom">{{ renderSelectedGia() }}</span>
                 <i class="pi pi-chevron-down text-icon-custom"></i>
             </div>
             <div class="w-full flex justify-between items-center border rounded-md border-b-custom px-4 py-4 cursor-pointer hover:border-primary-clr"
                 (click)="otherOP.toggle($event)">
-                <span></span>
+                <span class="text-text-color-custom">{{ renderSelectedXemThem() }}</span>
                 <i class="pi pi-chevron-down text-icon-custom"></i>
             </div>
             <div class="w-auto">
-                <button pButton pRipple icon="pi pi-sync" pTooltip="Đặt lại"
+                <button pButton pRipple icon="pi pi-sync" pTooltip="Đặt lại" (click)="this.initSearchRequest()"
                     class="p-button-text p-button-rounded p-button-secondary"></button>
             </div>
         </div>

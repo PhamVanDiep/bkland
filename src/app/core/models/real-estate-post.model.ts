@@ -43,3 +43,22 @@ export interface RealEstatePostRequest {
     apartment: Apartment;
     house: House;
 }
+
+export interface SearchRequest {
+    sell: any;
+    type: any;
+    keyword: any;
+    provinceCode: any;
+    districtCode: any[];
+    wardCode: any[];
+    startPrice: any;
+    endPrice: any;
+    startArea: any;
+    endArea: any;
+    noOfBedrooms: any[];
+    direction: any[];
+    limit: number;
+    offset: number;
+    userId: string;
+    deviceInfo: string;
+}

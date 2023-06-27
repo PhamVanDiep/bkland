@@ -9,6 +9,11 @@ import { environment } from 'src/environments/environment';
 })
 export class RealEstatePostService {
     private _interestPosts: BehaviorSubject<number> = new BehaviorSubject<number>(0);
+    private _searchBody: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+
+    get searchBody$(): Observable<any> {
+        return this._searchBody.asObservable();
+    }
 
     get interestPosts$(): Observable<any> {
         return this._interestPosts.asObservable();
@@ -18,6 +23,10 @@ export class RealEstatePostService {
         this._interestPosts.next(res);
     }
 
+    setSearchBody(body: any): void {
+        this._searchBody.next(body);
+    }
+    
     private accessToken: string;
 
     constructor(
@@ -184,5 +193,9 @@ export class RealEstatePostService {
 
     getPostsByMostView(): Observable<APIResponse> {
         return this._httpClient.get<APIResponse>(`${environment.BASE_URL_NO_AUTH}/real-estate-post/mostView`);
+    }
+
+    search(body: any): Observable<APIResponse> {
+        return this._httpClient.post<APIResponse>(`${environment.BASE_URL_NO_AUTH}/real-estate-post/search`, body);
     }
 }

@@ -25,12 +25,14 @@ export class ForumComponent implements OnInit, OnDestroy {
 
   forumPosts: ForumPost[];
   page: number;
-  private pageSize: number = 10;
+  private pageSize: number = 5;
   isMore: boolean;
 
   retriveAvatar: any;
 
   displayComment: boolean;
+
+  isLoadingMore: boolean;
 
   @HostListener("window:scroll", ["$event"])
   onWindowScroll() {
@@ -38,7 +40,8 @@ export class ForumComponent implements OnInit, OnDestroy {
     let pos = (document.documentElement.scrollTop || document.body.scrollTop) + document.documentElement.offsetHeight;
     let max = document.documentElement.scrollHeight;
     // pos/max will give you the distance between scroll bottom and and bottom of screen in percentage.
-    if (max - pos < 150 && this.isMore) {
+    if (max - pos < 150 && this.isMore && !this.isLoadingMore) {
+      this.isLoadingMore = true;
       this.fetchForumPost();
     }
   }
@@ -65,6 +68,7 @@ export class ForumComponent implements OnInit, OnDestroy {
     this.retriveAvatar = '/assets/images/user.png';
     this.displayCreateReportDialog = false;
     this.displayComment = false;
+    this.isLoadingMore = false;
   }
 
   ngOnInit(): void {
@@ -107,6 +111,7 @@ export class ForumComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this._unsubscribe))
       .subscribe((response: APIResponse) => {
         this._loadingService.loading(false);
+        this.isLoadingMore = false;
         if (response.status === HttpStatusCode.Ok) {
           this.forumPosts = [...this.forumPosts, ...response.data];
           if (response.data.length < this.pageSize) {

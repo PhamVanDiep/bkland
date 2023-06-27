@@ -25,7 +25,7 @@
         </div>
     </div>
     <div class="w-full">
-        <span>{{ forumPost.content.length > 100 && !isMore ? forumPost.content.substr(0,100) + '...' : forumPost.content }}</span>
+        <pre>{{ forumPost.content.length > 100 && !isMore ? forumPost.content.substr(0,100) + '...' : forumPost.content }}</pre>
         <span class="underline italic text-sm" *ngIf="forumPost.content.length > 100 && !isMore" (click)="isMore = true;">Xem thêm</span>
     </div>
 

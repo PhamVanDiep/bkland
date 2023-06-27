@@ -5,11 +5,13 @@ import { DeviceDetectorService, DeviceInfo } from 'ngx-device-detector';
 import { ReplaySubject, takeUntil } from 'rxjs';
 import { CAROUSEL_TYPE, TYPE } from 'src/app/core/constants/type.constant';
 import { APIResponse } from 'src/app/core/models/api-response.model';
+import { SearchRequest } from 'src/app/core/models/real-estate-post.model';
 import { AppTitleService } from 'src/app/core/services/app-title.service';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { LoadingService } from 'src/app/core/services/loading.service';
 import { MessageService } from 'src/app/core/services/message.service';
 import { RealEstatePostService } from 'src/app/core/services/real-estate-post.service';
+import Util from 'src/app/core/utils/util';
 
 @Component({
   selector: 'app-danh-muc',
@@ -18,6 +20,8 @@ import { RealEstatePostService } from 'src/app/core/services/real-estate-post.se
 })
 export class DanhMucComponent implements OnInit, OnDestroy {
   private _unsubscribe: ReplaySubject<any> = new ReplaySubject<any>();
+
+  title: string;
 
   sell: boolean;
   type: string;
@@ -31,6 +35,9 @@ export class DanhMucComponent implements OnInit, OnDestroy {
   first: number;
   currMaxPage: number;
   duAnType: string;
+
+  isSearch: boolean;
+  searchRequest: SearchRequest;
 
   constructor(
     private _appTitleService: AppTitleService,
@@ -55,6 +62,13 @@ export class DanhMucComponent implements OnInit, OnDestroy {
     this.first = 0;
     this.currMaxPage = 0;
     this.duAnType = CAROUSEL_TYPE.DU_AN;
+
+    if (this._router.url == '/tim-kiem') {
+      this.isSearch = true;
+    } else {
+      this.isSearch = false;
+    }
+    this.title = '';
   }
 
   ngOnInit(): void {
@@ -63,37 +77,63 @@ export class DanhMucComponent implements OnInit, OnDestroy {
       case '/mua-ban/nha-dat':
         this.sell = true;
         this.type = TYPE.HOUSE;
-        this._appTitleService.setTitle('Mua bán nhà đất');
+        this.title = 'Mua bán nhà đất'
+        this._appTitleService.setTitle(this.title);
         break;
       case '/mua-ban/chung-cu':
         this.sell = true;
         this.type = TYPE.APARTMENT;
-        this._appTitleService.setTitle('Mua bán chung cư');
+        this.title = 'Mua bán chung cư';
+        this._appTitleService.setTitle(this.title);
         break;
       case '/mua-ban/dat-nen':
         this.sell = true;
         this.type = TYPE.PLOT;
-        this._appTitleService.setTitle('Mua bán đất nền');
+        this.title = 'Mua bán đất nền'
+        this._appTitleService.setTitle(this.title);
         break;
       case '/cho-thue/nha-dat':
         this.sell = false;
         this.type = TYPE.HOUSE;
-        this._appTitleService.setTitle('Cho thuê nhà đất');
+        this.title = 'Cho thuê nhà đất'
+        this._appTitleService.setTitle(this.title);
         break;
       case '/cho-thue/chung-cu':
         this.sell = false;
         this.type = TYPE.APARTMENT;
-        this._appTitleService.setTitle('Cho thuê chung cư');
+        this.title = 'Cho thuê chung cư';
+        this._appTitleService.setTitle(this.title);
+        break;
+      case '/tim-kiem':
+        this.title = 'Kết quả tìm kiếm';
+        this._appTitleService.setTitle(this.title);
         break;
       default:
         this.sell = true;
         this.type = TYPE.HOUSE;
-        this._appTitleService.setTitle('Mua bán nhà đất');
+        this.title = 'Mua bán nhà đất'
+        this._appTitleService.setTitle(this.title);
         break;
     }
     this._loadingService.loading(true);
-    this.getTotalRecords();
-    this.getReps();
+    if (!this.isSearch) {
+      this.getTotalRecords();
+      this.getReps();
+    } else {
+      this.totalRecords = 20;
+      this._realEstatePostService.searchBody$
+        .pipe(takeUntil(this._unsubscribe))
+        .subscribe((searchRequest: SearchRequest) => {
+          if (searchRequest != null && this.isSearch) {
+            this.searchRequest = searchRequest;
+            this.search();
+          } else {
+            this._loadingService.loading(false);
+            this._messageService.errorMessage('Không tìm thấy thông tin yêu cầu tìm kiếm');
+            this.totalRecords = 0;
+          }
+        })
+    }
   }
 
   getTotalRecords(): void {
@@ -102,6 +142,26 @@ export class DanhMucComponent implements OnInit, OnDestroy {
       .subscribe((response: APIResponse) => {
         if (response.status === HttpStatusCode.Ok) {
           this.totalRecords = response.data;
+        } else {
+          this._messageService.errorMessage(response.message);
+        }
+      })
+  }
+
+  search(): void {
+    this._loadingService.loading(true);
+    this._realEstatePostService.search(this.searchRequest)
+      .pipe(takeUntil(this._unsubscribe))
+      .subscribe((response: APIResponse) => {
+        this._loadingService.loading(false);
+        if (response.status === HttpStatusCode.Ok) {
+          this.realEstatePosts = [...this.realEstatePosts, ...response.data];
+          if (response.data.length < 10) {
+            this.totalRecords = this.realEstatePosts.length;
+          } else {
+            this.totalRecords = this.realEstatePosts.length + 10;
+          }
+          this.currRealEstatePosts = response.data;
         } else {
           this._messageService.errorMessage(response.message);
         }
@@ -128,10 +188,16 @@ export class DanhMucComponent implements OnInit, OnDestroy {
   }
 
   onPageChange(event: any): void {
+    Util.scrollToTop();
     let selectedPage = event.page;
     if (selectedPage > this.currMaxPage) {
       this.offset = selectedPage*this.limit;
-      this.getReps();
+      if (this.isSearch) {
+        this.searchRequest.offset = this.offset;
+        this.search();
+      } else {
+        this.getReps(); 
+      }
       this.currMaxPage = selectedPage;
     } else {
       if (selectedPage == event.pageCount - 1) {
@@ -139,7 +205,7 @@ export class DanhMucComponent implements OnInit, OnDestroy {
       } else {
         this.currRealEstatePosts = this.realEstatePosts.slice(selectedPage*this.limit, (selectedPage + 1)*this.limit); 
       }
-    }
+    } 
   }
 
   viewDetail(event: any): void {

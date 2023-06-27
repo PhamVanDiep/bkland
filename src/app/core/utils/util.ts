@@ -13,4 +13,9 @@ export default class Util {
             return Math.floor(diffTime) + ' giây';
         }
     }
+
+    static scrollToTop(): void {
+        const element = document.querySelector('#my-container');
+        element?.scrollIntoView();
+    }
 }

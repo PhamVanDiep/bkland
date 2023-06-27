@@ -13,6 +13,7 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ChatDialogComponent } from '../../layout/main-layout/chat-dialog/chat-dialog.component';
 import { AppCommonModule } from '../app-common/app-common.module';
+import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -30,7 +31,8 @@ import { AppCommonModule } from '../app-common/app-common.module';
     TooltipModule,
     OverlayPanelModule,
     InputNumberModule,
-    AppCommonModule
+    AppCommonModule,
+    FormsModule
   ]
 })
 export class LandingPageModule { }

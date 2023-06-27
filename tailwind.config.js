@@ -13,7 +13,8 @@ module.exports = {
         'blue-custom': "#1890FF",
         'b-custom': "#ced4da",
         'icon-custom': "#6c757d",
-        'primary-clr': "#3B82F6"
+        'primary-clr': "#3B82F6",
+        "text-color-custom": "#495057"
       }
     },
   },
