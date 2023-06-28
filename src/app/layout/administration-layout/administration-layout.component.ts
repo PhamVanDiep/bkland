@@ -307,4 +307,8 @@ export class AdministrationLayoutComponent implements OnInit, OnDestroy {
     }
     return false;
   }
+
+  selectedRoute(route: string): boolean {
+    return this._router.url.includes(route);
+  }
 }

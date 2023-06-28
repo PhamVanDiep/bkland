@@ -9,11 +9,11 @@
         <ng-template pTemplate="content">
             <div class="w-full flex flex-col mb-4 space-y-2" *ngFor="let item of sidebarItems">
                 <div class="w-full flex flex-row space-x-4 items-center cursor-pointer" (click)="navigatePage(item.routerLink)">
-                    <i [ngClass]="item.icon"></i>
-                    <span class="font-semibold">{{ item.label }}</span>
+                    <i [ngClass]="selectedRoute(item.routerLink) ? (item.icon + ' ' + 'text-blue-custom') : item.icon"></i>
+                    <span class="font-semibold" [ngClass]="selectedRoute(item.routerLink) ? 'text-blue-custom' : ''">{{ item.label }}</span>
                 </div>
                 <div *ngFor="let it of item.items" class="ml-8 cursor-pointer" (click)="navigatePage(it.routerLink)">
-                    <span class="font-medium">{{ it.label }}</span>
+                    <span class="font-medium" [ngClass]="selectedRoute(it.routerLink) ? 'text-blue-custom' : ''">{{ it.label }}</span>
                 </div>
             </div>
         </ng-template>

@@ -88,6 +88,8 @@ export class ManageMainPostComponent implements OnInit, OnDestroy {
           this.realEstatePosts = response.data;
           if (this.realEstatePosts.length > 10) {
             this.currRealEstatePosts = this.realEstatePosts.slice(0, 10);
+          } else {
+            this.currRealEstatePosts = this.realEstatePosts;
           }
           this.realEstatePosts.forEach(e => {
             this._realEsatePostService.countNoOfInterestAndComment(e.id)

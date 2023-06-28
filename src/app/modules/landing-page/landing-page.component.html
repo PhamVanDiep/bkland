@@ -6,12 +6,13 @@
                 [options]="provinces" [(ngModel)]="searchRequest.provinceCode" (ngModelChange)="getDistrictsInProvince()"></p-dropdown>
         </div>
         <div class="flex flex-col">
-            <p-multiSelect placeholder="Quận/Huyện" [options]="districts" optionLabel="fullName" optionValue="code"
+            <p-multiSelect placeholder="Quận/Huyện" [options]="districts" optionLabel="fullName" optionValue="code" [showClear]="true" 
+                (onClear)="searchRequest.districtCode=[];searchRequest.wardCode=[]"
                 [filter]="true" filterBy="fullName" [(ngModel)]="searchRequest.districtCode" (ngModelChange)="getWardsInDistrict()"
             ></p-multiSelect>
         </div>
         <div class="flex flex-col">
-            <p-multiSelect placeholder="Xã/Phường" [options]="wards" optionLabel="fullName" optionValue="code"
+            <p-multiSelect placeholder="Xã/Phường" [options]="wards" optionLabel="fullName" optionValue="code" [showClear]="true" (onClear)="searchRequest.wardCode=[]"
                 [filter]="true" filterBy="fullName" [(ngModel)]="searchRequest.wardCode">
             </p-multiSelect>
         </div>
@@ -103,18 +104,25 @@
         </div>
     </div>
 </p-overlayPanel>
-<div class="md:flex w-full flex-col space-y-6 pb-4 hidden">
-    <div class="flex flex-col w-full mt-4 space-y-2">
+<div class="md:flex w-full flex-col space-y-6 pb-4">
+    <div class="flex flex-col w-full space-y-2">
+        <span class="text-2xl font-bold mt-4 mb-2">{{ 'Tìm kiếm bài viết' }}</span>
+        <hr class="w-full my-2" width="1" color="#ced4da">
         <div class="flex flex-row">
-            <div class="w-1/5">
-                <p-dropdown placeholder="Danh mục" [options]="lstDanhMuc" [(ngModel)]="searchRequest.sell"
-                    optionLabel="value" optionValue="key"></p-dropdown>
+            <div class="flex lg:hidden">
+                <button pButton pRipple class="p-button-secondary p-button-text p-button-rounded" icon="pi pi-filter-fill" (click)="showSearchPopup=true"></button>
             </div>
-            <div class="w-1/5">
-                <p-dropdown placeholder="Loại BĐS" [options]="lstLoaiBDS" [(ngModel)]="searchRequest.type"
-                    optionLabel="value" optionValue="key"></p-dropdown>
+            <div class="lg:flex lg:flex-row lg:w-2/5 hidden">
+                <div class="w-full">
+                    <p-dropdown placeholder="Danh mục" [options]="lstDanhMuc" [(ngModel)]="searchRequest.sell"
+                        optionLabel="value" optionValue="key"></p-dropdown>
+                </div>
+                <div class="w-full">
+                    <p-dropdown placeholder="Loại BĐS" [options]="lstLoaiBDS" [(ngModel)]="searchRequest.type"
+                        optionLabel="value" optionValue="key"></p-dropdown>
+                </div>
             </div>
-            <div class="w-3/5 flex flex-row">
+            <div class="w-full lg:w-3/5 flex flex-row">
                 <div class="w-full">
                     <input pInputText class="w-full" placeholder="Nhập từ khóa..." [(ngModel)]="searchRequest.keyword" (keydown.enter)="onSearch()">
                 </div>
@@ -123,25 +131,25 @@
                 </div>
             </div>
         </div>
-        <div class="flex flex-row space-x-2">
-            <div class="w-full flex justify-between items-center border rounded-md border-b-custom px-4 py-4 cursor-pointer hover:border-primary-clr" 
+        <div class="lg:flex flex-row space-x-2 hidden">
+            <div class="w-full flex justify-between items-center border rounded-md border-b-custom px-3 py-3 cursor-pointer hover:border-primary-clr" 
                 (click)="aroundOP.toggle($event)">
-                <span class="text-text-color-custom">{{ renderSelectedDiaDiem() }}</span>
+                <span class="text-text-color-custom text-sm">{{ renderSelectedDiaDiem() }}</span>
                 <i class="pi pi-chevron-down text-icon-custom"></i>
             </div>
-            <div class="w-full flex justify-between items-center border rounded-md border-b-custom px-4 py-4 cursor-pointer hover:border-primary-clr"
+            <div class="w-full flex justify-between items-center border rounded-md border-b-custom px-3 py-3 cursor-pointer hover:border-primary-clr"
                 (click)="areaOP.toggle($event)">
-                <span class="text-text-color-custom">{{ renderSelectedDienTich() }}</span>
+                <span class="text-text-color-custom text-sm">{{ renderSelectedDienTich() }}</span>
                 <i class="pi pi-chevron-down text-icon-custom"></i>
             </div>
-            <div class="w-full flex justify-between items-center border rounded-md border-b-custom px-4 py-4 cursor-pointer hover:border-primary-clr"
+            <div class="w-full flex justify-between items-center border rounded-md border-b-custom px-3 py-3 cursor-pointer hover:border-primary-clr"
                 (click)="priceOP.toggle($event)">
-                <span class="text-text-color-custom">{{ renderSelectedGia() }}</span>
+                <span class="text-text-color-custom text-sm">{{ renderSelectedGia() }}</span>
                 <i class="pi pi-chevron-down text-icon-custom"></i>
             </div>
-            <div class="w-full flex justify-between items-center border rounded-md border-b-custom px-4 py-4 cursor-pointer hover:border-primary-clr"
+            <div class="w-full flex justify-between items-center border rounded-md border-b-custom px-3 py-3 cursor-pointer hover:border-primary-clr"
                 (click)="otherOP.toggle($event)">
-                <span class="text-text-color-custom">{{ renderSelectedXemThem() }}</span>
+                <span class="text-text-color-custom text-sm">{{ renderSelectedXemThem() }}</span>
                 <i class="pi pi-chevron-down text-icon-custom"></i>
             </div>
             <div class="w-auto">
@@ -243,3 +251,43 @@
         </div>
     </div>
 </div>
+<p-dialog header="Mật khẩu mới" [(visible)]="showSearchPopup" [style]="{width: '100vw'}" 
+    [baseZIndex]="100" [modal]="true">
+    <div class="flex flex-col space-y-4 p-4 w-full">
+        <div class="w-full">
+            <p-dropdown placeholder="Danh mục" [options]="lstDanhMuc" [(ngModel)]="searchRequest.sell"
+                optionLabel="value" optionValue="key"></p-dropdown>
+        </div>
+        <div class="w-full">
+            <p-dropdown placeholder="Loại BĐS" [options]="lstLoaiBDS" [(ngModel)]="searchRequest.type"
+                optionLabel="value" optionValue="key"></p-dropdown>
+        </div>
+        <div class="w-full flex justify-between items-center border rounded-md border-b-custom px-3 py-3 cursor-pointer hover:border-primary-clr" 
+            (click)="aroundOP.toggle($event)">
+            <span class="text-text-color-custom text-sm">{{ renderSelectedDiaDiem() }}</span>
+            <i class="pi pi-chevron-down text-icon-custom"></i>
+        </div>
+        <div class="w-full flex justify-between items-center border rounded-md border-b-custom px-3 py-3 cursor-pointer hover:border-primary-clr"
+            (click)="areaOP.toggle($event)">
+            <span class="text-text-color-custom text-sm">{{ renderSelectedDienTich() }}</span>
+            <i class="pi pi-chevron-down text-icon-custom"></i>
+        </div>
+        <div class="w-full flex justify-between items-center border rounded-md border-b-custom px-3 py-3 cursor-pointer hover:border-primary-clr"
+            (click)="priceOP.toggle($event)">
+            <span class="text-text-color-custom text-sm">{{ renderSelectedGia() }}</span>
+            <i class="pi pi-chevron-down text-icon-custom"></i>
+        </div>
+        <div class="w-full flex justify-between items-center border rounded-md border-b-custom px-3 py-3 cursor-pointer hover:border-primary-clr"
+            (click)="otherOP.toggle($event)">
+            <span class="text-text-color-custom text-sm">{{ renderSelectedXemThem() }}</span>
+            <i class="pi pi-chevron-down text-icon-custom"></i>
+        </div>
+    </div>
+    <ng-template pTemplate="footer">
+        <div class="w-full flex flex-row justify-between items-center">
+            <button pButton pRipple icon="pi pi-sync" pTooltip="Đặt lại" (click)="this.initSearchRequest()"
+                class="p-button-text p-button-rounded p-button-secondary"></button>
+            <button pButton pRipple label="Tìm kiếm" class="p-button-text" (click)="onSearch()"></button>
+        </div>
+    </ng-template>
+</p-dialog>

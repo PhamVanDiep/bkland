@@ -19,6 +19,9 @@ import { FocusComponent } from "./focus/focus.component";
 
 export const route: Route[] = [
     {
+        path: '', redirectTo: 'focus', pathMatch: 'full'
+    },
+    {
         path: 'focus',
         children: [
             {
@@ -44,12 +47,20 @@ export const route: Route[] = [
         component: AccountManagementComponent
     },
     {
-        path: 'recharge',
-        component: ChargeComponent
-    },
-    {
-        path: 'balance-fluctuation',
-        component: BalanceFluctuationComponent
+        path: 'balance',
+        children: [
+            {
+                path: '', redirectTo: 'fluctuation', pathMatch: 'full'
+            },
+            {
+                path: 'recharge',
+                component: ChargeComponent
+            },
+            {
+                path: 'fluctuation',
+                component: BalanceFluctuationComponent
+            }
+        ]
     },
     {
         path: 'post',

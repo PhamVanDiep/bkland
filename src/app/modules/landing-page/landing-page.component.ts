@@ -1,5 +1,5 @@
 import { HttpStatusCode } from '@angular/common/http';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as e from 'express';
 import { DeviceDetectorService, DeviceInfo } from 'ngx-device-detector';
@@ -52,6 +52,16 @@ export class LandingPageComponent implements OnInit, OnDestroy{
 
   deviceInfo: DeviceInfo;
 
+  showSearchPopup: boolean;
+  innerWidth: any;
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.innerWidth = window.innerWidth;
+    if (window.innerWidth > 1024) {
+      this.showSearchPopup = false;
+    } 
+  }
+
   constructor(
     private _loadingService: LoadingService,
     private _messageService: MessageService,
@@ -89,6 +99,7 @@ export class LandingPageComponent implements OnInit, OnDestroy{
     this.districts = [];
     this.wards = [];
 
+    this.showSearchPopup = false;
     this.initSearchRequest();
   }
 

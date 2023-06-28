@@ -79,15 +79,15 @@ export const USER_NAV = [
     {
         label: 'Quản lý tài chính',
         icon: 'pi pi-chart-line',
-        routerLink: 'user/balance-fluctuation',
+        routerLink: 'user/balance',
         items: [
             {
                 label: 'Nạp tiền',
-                routerLink: 'user/recharge'
+                routerLink: 'user/balance/recharge'
             },
             {
                 label: 'Lịch sử giao dịch',
-                routerLink: 'user/balance-fluctuation'
+                routerLink: 'user/balance/fluctuation'
             }
         ]
     },
@@ -137,15 +137,15 @@ export const ENTERPRISE_NAV = [
     {
         label: 'Quản lý tài chính',
         icon: 'pi pi-chart-line',
-        routerLink: 'user/balance-fluctuation',
+        routerLink: 'user/balance',
         items: [
             {
                 label: 'Nạp tiền',
-                routerLink: 'user/recharge'
+                routerLink: 'user/balance/recharge'
             },
             {
                 label: 'Lịch sử giao dịch',
-                routerLink: 'user/balance-fluctuation'
+                routerLink: 'user/balance/fluctuation'
             }
         ]
     },
