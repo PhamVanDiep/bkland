@@ -201,6 +201,10 @@ export class CreateMainPostComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    if (this._userService.isEnterprise()) {
+      this._router.navigate(['pages/forbidden']);
+    }
+    
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((response: any) => {
         this.realEstatePost.lat = response.coords.latitude;

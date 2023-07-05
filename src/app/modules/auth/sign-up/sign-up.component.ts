@@ -217,4 +217,8 @@ export class SignUpComponent implements OnInit, OnDestroy {
         }
       })
   }
+
+  login(): void {
+    this._router.navigate(['login']);
+  }
 }

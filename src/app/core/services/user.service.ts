@@ -102,6 +102,24 @@ export class UserService {
         }
     }
 
+    isEnterprise(): boolean {
+        let roleStorage = localStorage.getItem('roles') || '';
+        if (roleStorage === ROLE.ROLE_ENTERPRISE) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    isNormalUser(): boolean {
+        let roleStorage = localStorage.getItem('roles') || '';
+        if (roleStorage === ROLE.ROLE_USER) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     getUserNoAuthById(userId: string): Observable<APIResponse> {
         return this._httpClient.get<APIResponse>(`${environment.BASE_URL_NO_AUTH}/user/${userId}`);
     }

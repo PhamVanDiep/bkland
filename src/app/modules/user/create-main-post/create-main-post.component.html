@@ -21,14 +21,14 @@
                 <label for="provinceCode" class="text-sm">Tỉnh/Thành phố</label>
                 <p-dropdown [options]="provinces" [(ngModel)]="realEstatePost.province.code" [style]="{'width': '100%'}"
                     optionLabel="fullName" (ngModelChange)="getDistrictsInProvince()" optionValue="code" [filter]="true"
-                    filterBy="fullName" autoWidth="false" [disabled]="isUpdate"></p-dropdown>
+                    filterBy="fullName" autoWidth="false" [disabled]="isUpdate" [autofocusFilter]="false"></p-dropdown>
             </div>
             <div class="flex flex-col w-full">
                 <label for="districtCode" class="text-sm">Quận/Huyện/Thị xã</label>
                 <p-dropdown [options]="districts" [(ngModel)]="realEstatePost.district.code" [style]="{'width': '100%'}"
                     optionLabel="fullName" [disabled]="realEstatePost.province.code.length <= 0"
                     (ngModelChange)="getWardsInDistrict()" optionValue="code" [filter]="true"
-                    filterBy="fullName" [disabled]="isUpdate"></p-dropdown>
+                    filterBy="fullName" [disabled]="isUpdate" [autofocusFilter]="false"></p-dropdown>
             </div>
         </div>
         <div class="flex flex-col w-full space-y-4 lg:space-y-0 lg:flex-row lg:space-x-4">
@@ -36,7 +36,7 @@
                 <label for="wardCode" class="text-sm">Xã/Phường/Thị trấn</label>
                 <p-dropdown [options]="wards" [(ngModel)]="realEstatePost.ward.code" [style]="{'width': '100%'}"
                     optionLabel="fullName" [disabled]="realEstatePost.district.code.length <= 0" optionValue="code"
-                    [filter]="true" filterBy="fullName" [disabled]="isUpdate"></p-dropdown>
+                    [filter]="true" filterBy="fullName" [disabled]="isUpdate" [autofocusFilter]="false"></p-dropdown>
             </div>
             <div class="flex flex-col w-full">
                 <label for="street" class="text-sm">Đường</label>

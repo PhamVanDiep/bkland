@@ -5,7 +5,7 @@
     </div>
     <div class="flex flex-col w-full">
         <label for="provinceCode" class="text-sm">Tỉnh/Thành phố</label>
-        <p-dropdown [options]="provinces" [(ngModel)]="selectedProvince" [disabled]="true"
+        <p-dropdown [options]="provinces" [(ngModel)]="selectedProvince" [disabled]="true" [autofocusFilter]="false"
             [style]="{'width': '100%'}" optionLabel="fullName" (ngModelChange)="getDistrictsInProvince()"
             optionValue="code" [filter]="true" filterBy="fullName" autoWidth="false"></p-dropdown>
     </div>

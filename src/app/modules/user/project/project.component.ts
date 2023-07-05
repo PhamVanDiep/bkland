@@ -9,6 +9,7 @@ import { Project } from 'src/app/core/models/project.model';
 import { LoadingService } from 'src/app/core/services/loading.service';
 import { MessageService } from 'src/app/core/services/message.service';
 import { ProjectService } from 'src/app/core/services/project.service';
+import { UserService } from 'src/app/core/services/user.service';
 
 @Component({
   selector: 'app-project',
@@ -35,7 +36,8 @@ export class ProjectComponent implements OnInit, OnDestroy {
     private _projectService: ProjectService,
     private _router: Router,
     private _route: ActivatedRoute,
-    private _confirmationService: ConfirmationService
+    private _confirmationService: ConfirmationService,
+    private _userService: UserService
   ) {
     this.innerWidth = window.innerWidth;
     this.lstProjects = [];
@@ -108,6 +110,9 @@ export class ProjectComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    if (this._userService.isAgency() || this._userService.isNormalUser()) {
+      this._router.navigate(['pages/forbidden']);
+    }
     // throw new Error('Method not implemented.');
     this._loadingService.loading(true);
     this._projectService.findByUser()

@@ -52,7 +52,7 @@
             </div>
             <div class="flex flex-row w-full md:w-auto space-x-2">
                 <span class="p-float-label">
-                    <p-dropdown [options]="provinces" [(ngModel)]="allPostProvince"
+                    <p-dropdown [options]="provinces" [(ngModel)]="allPostProvince" [autofocusFilter]="false"
                         [style]="{'width': '100%'}" optionLabel="name" (ngModelChange)="getChart1Data();getChart2Data()"
                         optionValue="code" [filter]="true" filterBy="name" autoWidth="false" [disabled]="true"></p-dropdown>
                     <label for="float-label">Tỉnh/Thành phố</label>

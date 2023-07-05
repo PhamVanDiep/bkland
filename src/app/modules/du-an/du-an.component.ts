@@ -205,7 +205,7 @@ export class DuAnComponent implements OnInit, OnDestroy {
         })
     } else {
       this._projectService.anonymousInterested({
-        realEstatePostId: item?.id,
+        projectId: item?.id,
         deviceInfo: this.deviceInfoStr
       }).pipe(takeUntil(this._unsubscribe))
         .subscribe((response: APIResponse) => {

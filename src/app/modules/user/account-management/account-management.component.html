@@ -162,14 +162,14 @@
         <div class="flex flex-col space-y-4 justify-between w-full">
             <div class="flex flex-col w-full">
                 <label for="provinceCode" class="text-sm">Tỉnh/Thành phố</label>
-                <p-dropdown [options]="provinces" [(ngModel)]="userUpdate.provinceCode"
+                <p-dropdown [options]="provinces" [(ngModel)]="userUpdate.provinceCode" [autofocusFilter]="false"
                     [style]="{'width': '100%'}" optionLabel="fullName" (ngModelChange)="getDistrictsInProvince()"
                     optionValue="code" [filter]="true" filterBy="fullName" autoWidth="false"></p-dropdown>
             </div>
             <div class="flex flex-col w-full">
                 <label for="districtCode" class="text-sm">Quận/Huyện/Thị xã</label>
                 <p-dropdown [options]="districts" [(ngModel)]="userUpdate.districtCode"
-                    [style]="{'width': '100%'}" optionLabel="fullName"
+                    [style]="{'width': '100%'}" optionLabel="fullName" [autofocusFilter]="false"
                     [disabled]="userUpdate.provinceCode.length <= 0" (ngModelChange)="getWardsInDistrict()"
                     optionValue="code" [filter]="true" filterBy="fullName"></p-dropdown>
             </div>
@@ -177,7 +177,7 @@
                 <label for="wardCode" class="text-sm">Xã/Phường/Thị trấn</label>
                 <p-dropdown [options]="wards" [(ngModel)]="userUpdate.wardCode" [style]="{'width': '100%'}"
                     optionLabel="fullName" [disabled]="userUpdate.provinceCode.length <= 0" optionValue="code"
-                    [filter]="true" filterBy="fullName"></p-dropdown>
+                    [filter]="true" filterBy="fullName" [autofocusFilter]="false"></p-dropdown>
             </div>
         </div>
         <div class="flex flex-col w-full">

@@ -14,6 +14,7 @@ import { MediaService } from 'src/app/core/services/media.service';
 import { MessageService } from 'src/app/core/services/message.service';
 import { NoAuthService } from 'src/app/core/services/no-auth.service';
 import { ProjectService } from 'src/app/core/services/project.service';
+import { UserService } from 'src/app/core/services/user.service';
 
 @Component({
   selector: 'app-project-detail',
@@ -50,7 +51,8 @@ export class ProjectDetailComponent implements OnInit, OnDestroy{
     private _projectService: ProjectService,
     private _router: Router,
     private _route: ActivatedRoute,
-    private _mediaService: MediaService
+    private _mediaService: MediaService,
+    private _userService: UserService
   ) {
     this.projectTypes = PROJECT_TYPE_DROPDOWN;
     this.provinces = [];
@@ -113,6 +115,9 @@ export class ProjectDetailComponent implements OnInit, OnDestroy{
   }
 
   ngOnInit(): void {
+    if (this._userService.isAgency() || this._userService.isNormalUser()) {
+      this._router.navigate(['pages/forbidden']);
+    }
     // throw new Error('Method not implemented.');
     this._noAuthService.getAllProvinces()
       .pipe(takeUntil(this._unsubscribe))

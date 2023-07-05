@@ -423,4 +423,11 @@ export class MainLayoutComponent implements OnInit, OnDestroy{
       }
     }
   }
+
+  showInterestedIcon(): boolean {
+    if (this._userService.isAdmin() || this._userService.isEnterprise()) {
+      return false;
+    }
+    return true;
+  }
 }

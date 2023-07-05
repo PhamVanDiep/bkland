@@ -38,7 +38,7 @@
             <ng-template pTemplate="end">
                 <div class="flex flex-row space-x-4">
                     <p-avatar class="cursor-pointer mt-1" icon="pi pi-heart" 
-                        pBadge [value]="noInterestedPost"
+                        pBadge [value]="noInterestedPost" *ngIf="showInterestedIcon()"
                         [style]="{ 'background-color': '#ffffff', color: '#000000' }" (click)="showInterested();op.toggle($event)"></p-avatar>
                     <div *ngIf="!isAuth">
                         <span class="font-semibold text-sm cursor-pointer" (click)="navigatePage('/register')">Đăng ký</span>

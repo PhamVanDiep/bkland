@@ -59,9 +59,13 @@ html {
     height: 4rem;
 }
 
-/* .p-sidebar {
-    width: 16rem;
-} */
+.p-password-input {
+    width: 100% !important;
+}
+
+.p-password {
+    width: 100% !important;
+}
 
 .p-sidebar-left {
     width: 16rem !important;

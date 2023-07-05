@@ -13,6 +13,7 @@ import { LoadingService } from 'src/app/core/services/loading.service';
 import { MessageService } from 'src/app/core/services/message.service';
 import { NoAuthService } from 'src/app/core/services/no-auth.service';
 import { PriceFluctuationService } from 'src/app/core/services/price-fluctuation.service';
+import { UserService } from 'src/app/core/services/user.service';
 
 @Component({
   selector: 'app-price-fluctuation',
@@ -51,6 +52,7 @@ export class PriceFluctuationComponent implements OnInit, OnDestroy {
     private _noAuthService: NoAuthService,
     private _priceFluctuationService: PriceFluctuationService,
     private _confirmationService: ConfirmationService,
+    private _userService: UserService
   ) {
     this.innerWidth = window.innerWidth;
     this._appTitleService.setTitle(this.title);
@@ -65,6 +67,9 @@ export class PriceFluctuationComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    if (this._userService.isEnterprise()) {
+      this._router.navigate(['pages/forbidden']);
+    }
     // throw new Error('Method not implemented.');
     this._loadingService.loading(true);
     this._noAuthService.getAllProvinces()

@@ -11,6 +11,7 @@ import { AppTitleService } from 'src/app/core/services/app-title.service';
 import { LoadingService } from 'src/app/core/services/loading.service';
 import { MessageService } from 'src/app/core/services/message.service';
 import { RealEstatePostService } from 'src/app/core/services/real-estate-post.service';
+import { UserService } from 'src/app/core/services/user.service';
 
 @Component({
   selector: 'app-manage-main-post',
@@ -41,7 +42,8 @@ export class ManageMainPostComponent implements OnInit, OnDestroy {
     private _realEsatePostService: RealEstatePostService,
     private _router: Router,
     private _route: ActivatedRoute,
-    private _confirmationService: ConfirmationService
+    private _confirmationService: ConfirmationService,
+    private _userService: UserService
   ) {
     this.postInfos = [];
     this.innerWidth = window.innerWidth;
@@ -78,6 +80,10 @@ export class ManageMainPostComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    if (this._userService.isEnterprise()) {
+      this._router.navigate(['pages/forbidden']);
+    }
+
     // throw new Error('Method not implemented.');
     this._loadingService.loading(true);
     this._realEsatePostService.getPostdByOwnerId()

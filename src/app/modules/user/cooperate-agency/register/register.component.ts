@@ -70,6 +70,9 @@ export class RegisterComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    if (this._userService.isEnterprise()) {
+      this._router.navigate(['pages/forbidden']);
+    }
     // throw new Error('Method not implemented.');
     this._loadingService.loading(true);
     this._noAuthService.getAllProvinces()

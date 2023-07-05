@@ -4,7 +4,7 @@ import { MessageService } from 'primeng/api';
 import { LoadingService } from './core/services/loading.service';
 import { MessageService as MessageServiceCustomize } from './core/services/message.service';
 import { PushNotificationService } from './core/services/push-notification.service';
-import { SwUpdate } from '@angular/service-worker';
+import { SwUpdate, VersionEvent } from '@angular/service-worker';
 import { getMessaging, onMessage } from 'firebase/messaging';
 
 @Component({
@@ -35,7 +35,7 @@ export class AppComponent implements OnInit {
     //   });
 
     this._swUpdate.versionUpdates
-      .subscribe((response: any) => {
+      .subscribe((response: VersionEvent) => {
         switch (response.type) {
           case 'VERSION_DETECTED':
             if (confirm('Đã tìm thấy phiên bản mới. Bạn có muốn cập nhật?')) {
@@ -47,6 +47,9 @@ export class AppComponent implements OnInit {
           case 'VERSION_READY':
             console.log(`Current app version: ${response.currentVersion.hash}`);
             console.log(`New app version ready for use: ${response.latestVersion.hash}`);
+            break;
+          case 'NO_NEW_VERSION_DETECTED':
+            console.log(`No new version detected`);
             break;
           case 'VERSION_INSTALLATION_FAILED':
             console.log(`Failed to install app version '${response.version.hash}': ${response.error}`);
