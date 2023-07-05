@@ -22,6 +22,10 @@ export class PostReportService {
         });
     }
 
+    createNoAuth(body: PostReport): Observable<APIResponse> {
+        return this._httpClient.post<APIResponse>(`${environment.BASE_URL_NO_AUTH}/post-report`, body);
+    }
+
     getAllStatistic(): Observable<APIResponse> {
         let accessToken = localStorage.getItem('accessToken') || '';
         return this._httpClient.get<APIResponse>(`${environment.BASE_URL_AUTH}/post-report/statistic`, {

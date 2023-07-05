@@ -87,4 +87,22 @@ export class ForumPostService {
             }
         });
     }
+
+    getChart1Data(month: number, year: number): Observable<APIResponse> {
+        let accessToken = localStorage.getItem('accessToken') || '';
+        return this._httpClient.get<APIResponse>(`${environment.BASE_URL_AUTH}/forum-post/statistic/chart1?month=${month}&year=${year}`, {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        });
+    }
+
+    getChart2Data(month: number, year: number): Observable<APIResponse> {
+        let accessToken = localStorage.getItem('accessToken') || '';
+        return this._httpClient.get<APIResponse>(`${environment.BASE_URL_AUTH}/forum-post/statistic/chart2?month=${month}&year=${year}`, {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        });
+    }
 }

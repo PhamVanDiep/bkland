@@ -54,5 +54,6 @@ export const CAROUSEL_TYPE = {
     BEST_INTERESTED: 'BEST_INTERESTED',
     BEST_VIEW: 'BEST_VIEW',
     TIN_TUC: 'TIN_TUC',
-    DU_AN: 'DU_AN'
+    DU_AN: 'DU_AN',
+    NEWEST: 'NEWEST'
 }

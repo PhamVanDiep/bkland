@@ -39,4 +39,40 @@ export class PaymentService {
             }
         })
     }
+
+    thanhToanNam(nam: number): Observable<APIResponse> {
+        let accessToken = localStorage.getItem('accessToken') || '';
+        return this._httpClient.get<APIResponse>(`${environment.BASE_URL_AUTH}/payment/statistic/thanh-toan-nam?nam=${nam}`, {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        })
+    }
+
+    thanhToanThang(thang: number, nam: number): Observable<APIResponse> {
+        let accessToken = localStorage.getItem('accessToken') || '';
+        return this._httpClient.get<APIResponse>(`${environment.BASE_URL_AUTH}/payment/statistic/thanh-toan-thang?nam=${nam}&thang=${thang}`, {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        })
+    }
+
+    napTienNam(nam: number): Observable<APIResponse> {
+        let accessToken = localStorage.getItem('accessToken') || '';
+        return this._httpClient.get<APIResponse>(`${environment.BASE_URL_AUTH}/payment/statistic/nap-tien-nam?nam=${nam}`, {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        })
+    }
+
+    napTienThang(thang: number, nam: number): Observable<APIResponse> {
+        let accessToken = localStorage.getItem('accessToken') || '';
+        return this._httpClient.get<APIResponse>(`${environment.BASE_URL_AUTH}/payment/statistic/nap-tien-thang?nam=${nam}&thang=${thang}`, {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        })
+    }
 }

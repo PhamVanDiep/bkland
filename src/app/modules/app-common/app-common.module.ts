@@ -48,6 +48,12 @@ import { ClientViewComponent } from './real-estate-post-view/client-view/client-
 import { RepCarouselComponent } from './rep-carousel/rep-carousel.component';
 import { CarouselModule } from 'primeng/carousel';
 import { InfoPostCarouselComponent } from './info-post-carousel/info-post-carousel.component';
+import { PriceFluctuationStatisticComponent } from './price-fluctuation-statistic/price-fluctuation-statistic.component';
+import { NgApexchartsModule } from 'ng-apexcharts';
+import { RepStatisticComponent } from './rep-statistic/rep-statistic.component';
+import { ProjectViewComponent } from './project-view/project-view.component';
+import { ProjectStatisticComponent } from './project-statistic/project-statistic.component';
+import { ProjectDetailStatisticComponent } from './project-statistic/project-detail-statistic/project-detail-statistic.component';
 
 @NgModule({
   declarations: [
@@ -65,7 +71,12 @@ import { InfoPostCarouselComponent } from './info-post-carousel/info-post-carous
     AdministrativeViewComponent,
     ClientViewComponent,
     RepCarouselComponent,
-    InfoPostCarouselComponent
+    InfoPostCarouselComponent,
+    PriceFluctuationStatisticComponent,
+    RepStatisticComponent,
+    ProjectViewComponent,
+    ProjectStatisticComponent,
+    ProjectDetailStatisticComponent
   ],
   imports: [
     CommonModule,
@@ -95,7 +106,8 @@ import { InfoPostCarouselComponent } from './info-post-carousel/info-post-carous
     GoogleMapsModule,
     TimelineModule,
     ClipboardModule,
-    CarouselModule
+    CarouselModule,
+    NgApexchartsModule
   ],
   exports: [
     CreateForumPostComponent,
@@ -112,7 +124,12 @@ import { InfoPostCarouselComponent } from './info-post-carousel/info-post-carous
     AdministrativeViewComponent,
     ClientViewComponent,
     RepCarouselComponent,
-    InfoPostCarouselComponent
+    InfoPostCarouselComponent,
+    PriceFluctuationStatisticComponent,
+    RepStatisticComponent,
+    ProjectViewComponent,
+    ProjectStatisticComponent,
+    ProjectDetailStatisticComponent
   ],
   providers: [
     ForumPostService,

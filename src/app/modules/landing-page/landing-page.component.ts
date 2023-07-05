@@ -49,6 +49,7 @@ export class LandingPageComponent implements OnInit, OnDestroy{
 
   mostViewType: string;
   mostInterestedType: string;
+  newestType: string;
 
   deviceInfo: DeviceInfo;
 
@@ -81,7 +82,8 @@ export class LandingPageComponent implements OnInit, OnDestroy{
     this.lstInfoPosts = [];
     this.mostViewType = CAROUSEL_TYPE.BEST_VIEW;
     this.mostInterestedType = CAROUSEL_TYPE.BEST_INTERESTED;
-
+    this.newestType = CAROUSEL_TYPE.NEWEST;
+    
     // khoi tao request body tim kiem
     this.lstDanhMuc = [
       {

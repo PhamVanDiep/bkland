@@ -14,11 +14,38 @@ import { ReportDetailComponent } from "./report/report-detail/report-detail.comp
 import { ForumPostDetailComponent } from "./forum-post-detail/forum-post-detail.component";
 import { ChatComponent } from "../app-common/chat/chat.component";
 import { AdministrativeViewComponent } from "../app-common/real-estate-post-view/administrative-view/administrative-view.component";
+import { DashboardPostComponent } from "./dashboard/dashboard-post/dashboard-post.component";
+import { DashboardPriceComponent } from "./dashboard/dashboard-price/dashboard-price.component";
+import { ProjectComponent } from "./project/project.component";
+import { DashboradProjectComponent } from "./dashboard/dashborad-project/dashborad-project.component";
 
 export const route: Route[] = [
     {
-        path: '',
-        component: AdminComponent
+        path: '', redirectTo: 'dashboard', pathMatch: 'full'
+    },
+    {
+        path: 'dashboard',
+        children: [
+            {
+                path: '', pathMatch: 'full', redirectTo: 'price'
+            },
+            {
+                path: 'price',
+                component: AdminComponent
+            },
+            {
+                path: 'post',
+                component: DashboardPostComponent
+            },
+            {
+                path: 'user-balance',
+                component: DashboardPriceComponent
+            },
+            {
+                path: 'project',
+                component: DashboradProjectComponent
+            }
+        ]
     },
     {
         path: 'about',
@@ -84,6 +111,10 @@ export const route: Route[] = [
                         component: ForumPostDetailComponent
                     }
                 ]
+            },
+            {
+                path: 'project',
+                component: ProjectComponent
             }
         ]
     },

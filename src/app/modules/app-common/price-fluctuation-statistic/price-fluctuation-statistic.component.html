@@ -1,0 +1,64 @@
+<div class="w-full flex flex-col space-y-6">
+    <span class="font-bold text-lg">{{ 'Thống kê biến động giá' }}</span>
+    <div class="flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-4">
+        <span class="p-float-label w-full">
+            <p-dropdown placeholder="Bán/Cho thuê" [options]="lstDanhMuc" [(ngModel)]="sell" (ngModelChange)="getChartData()"
+                optionLabel="value" optionValue="key"></p-dropdown>
+            <label for="float-label">Bán/Cho thuê</label>
+        </span>
+        <span class="p-float-label w-full">
+            <p-dropdown placeholder="Loại BĐS" [options]="lstLoaiBDS" [(ngModel)]="type" (ngModelChange)="getChartData()"
+                optionLabel="value" optionValue="key"></p-dropdown>
+            <label for="float-label">Loại BĐS</label>
+        </span>
+        <span class="p-float-label w-full">
+            <p-dropdown [options]="provinces" [(ngModel)]="provinceCode" [autoDisplayFirst]="false" [autofocusFilter]="false"
+                [style]="{'width': '100%'}" optionLabel="fullName" [disabled]="true" inputId="float-label"
+                optionValue="code" [filter]="true" filterBy="fullName" autoWidth="false"></p-dropdown>
+            <label for="float-label">Tỉnh/Thành phố</label>
+        </span>
+        <span class="p-float-label w-full">
+            <p-dropdown [options]="districts" [(ngModel)]="districtCode" [showClear]="true" (onClear)="districtCode='';"
+                [style]="{'width': '100%'}" optionLabel="fullName" inputId="float-label"
+                (ngModelChange)="getWardsInDistrict();getChartData()" [autoDisplayFirst]="false" [autofocusFilter]="false"
+                optionValue="code" [filter]="true" filterBy="fullName"></p-dropdown>
+            <label for="float-label">Quận/Huyện/Thị xã</label>
+        </span>
+        <span class="p-float-label w-full">
+            <p-dropdown [options]="wards" [(ngModel)]="wardCode"  [showClear]="true" (onClear)="wardCode='';"
+                [style]="{'width': '100%'}" [autoDisplayFirst]="false" [autofocusFilter]="false"
+                optionLabel="fullName" [disabled]="districtCode.length <= 0" optionValue="code" inputId="float-label" (ngModelChange)="getChartData()"
+                [filter]="true" filterBy="fullName"></p-dropdown>
+            <label for="wardCode" class="text-sm">Xã/Phường/Thị trấn</label>
+        </span>
+        <span class="p-float-label w-full">
+            <p-dropdown [options]="months" [(ngModel)]="month" (ngModelChange)="getChartData()" [autoDisplayFirst]="false"
+                placeholder="Tháng" optionLabel="value" optionValue="key" inputId="float-label" [showClear]="true" (onClear)="month=0"></p-dropdown>
+            <label for="float-label">Tháng</label>
+        </span>
+        <span class="p-float-label w-full">
+            <p-dropdown [options]="years" [(ngModel)]="year" (ngModelChange)="getChartData()"
+                placeholder="Năm" optionLabel="value" optionValue="key" inputId="float-label"></p-dropdown>
+            <label for="float-label">Năm</label>
+        </span>
+    </div>
+    <div class="flex w-full flex-col space-y-2 rounded-md shadow-lg hover:shadow-xl" [ngClass]="loading ? 'h-[70vh]' : ''">
+        <div *ngIf="!loading;else loadingChartData">
+            <span class="font-semibold ml-2 mt-2">{{ getChartTitle() }}</span>
+            <apx-chart class="w-full"
+                [title]="chartOptions.title" 
+                [series]="chartOptions.series" 
+                [chart]="chartOptions.chart" 
+                [labels]="chartOptions.labels"
+                [xaxis]="chartOptions.xaxis"
+                [yaxis]="chartOptions.yaxis"
+                [dataLabels]="chartOptions.dataLabels">
+            </apx-chart>
+        </div>
+        <ng-template #loadingChartData>
+            <div class="w-full h-full flex items-center justify-center">
+                <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
+            </div>
+        </ng-template>
+    </div>
+</div>

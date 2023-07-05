@@ -36,6 +36,11 @@ import { AppCommonModule } from '../app-common/app-common.module';
 import { NewRequestComponent } from './cooperate-agency/new-request/new-request.component';
 import { FocusComponent } from './focus/focus.component';
 import { PaginatorModule } from 'primeng/paginator';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { ProjectComponent } from './project/project.component';
+import { ProjectDetailComponent } from './project/project-detail/project-detail.component';
+import { EditorModule } from 'primeng/editor';
+import { ProjectService } from 'src/app/core/services/project.service';
 
 @NgModule({
   declarations: [
@@ -49,6 +54,9 @@ import { PaginatorModule } from 'primeng/paginator';
     PriceFluctuationComponent,
     NewRequestComponent,
     FocusComponent,
+    DashboardComponent,
+    ProjectComponent,
+    ProjectDetailComponent,
   ],
   imports: [
     CommonModule,
@@ -73,12 +81,14 @@ import { PaginatorModule } from 'primeng/paginator';
     ConfirmDialogModule,
     MultiSelectModule,
     AppCommonModule,
-    PaginatorModule
+    PaginatorModule,
+    EditorModule
   ],
   providers: [
     ConfirmationService,
     SpecialAccountService,
-    PaymentService
+    PaymentService,
+    ProjectService
   ]
 })
 export class UserModule { }

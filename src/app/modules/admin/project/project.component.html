@@ -1,0 +1,91 @@
+<p-confirmDialog [style]="{width: innerWidth > 640 ? '50vw' : '100vh'}"></p-confirmDialog>
+<div class="w-full flex flex-col px-4 lg:px-6 space-y-6 pt-6 md:pt-4" *ngIf="!preview; else previewTemplate">
+    <div class="flex flex-col w-full space-y-4">
+        <div class="flex flex-row w-full justify-between items-center">
+            <span class="text-xl font-bold">{{ 'Danh dự án bất động sản đã đăng [' + lstProjects.length + ']' }}</span>
+        </div>
+        <p-table
+            [value]="lstProjects"
+            [paginator]="true"
+            [rows]="10"
+            dataKey="id"
+            [rowsPerPageOptions]="[10, 25, 50]"
+            currentPageReportTemplate="{first} đến {last} trên {totalRecords} bản ghi"
+            class="p-datatable-striped"
+        >
+            <ng-template pTemplate="header">
+                <tr>
+                    <th pFrozenColumn>#</th>
+                    <th>Tên dự án</th>
+                    <th>Loại</th>
+                    <th>Diện tích</th>
+                    <th>Số điện thoại</th>
+                    <th>Email</th>
+                    <th>Địa chỉ</th>
+                    <th>Ngày đăng</th>
+                    <th></th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-project let-editing="editing" let-index="rowIndex">
+                <tr>
+                    <th>
+                        <span class="text-sm font-normal pl-4">
+                            {{ index + 1}}
+                        </span>
+                    </th>
+                    <th>
+                        <span class="text-sm font-normal">
+                            {{ project.name }}
+                        </span>
+                    </th>
+                    <th>
+                        <span class="text-sm font-normal">
+                            {{ getProjectTypeName(project.type) }}
+                        </span>
+                    </th>
+                    <th>
+                        <span class="text-sm font-normal">
+                            {{ project.area + ' m2' }}
+                        </span>
+                    </th>
+                    <th>
+                        <span class="text-sm font-normal">
+                            {{ project.phoneNumber }}
+                        </span>
+                    </th>
+                    <th>
+                        <span class="text-sm font-normal">
+                            {{ project.email }}
+                        </span>
+                    </th>
+                    <th class="text-center">
+                        <span class="text-sm font-normal pl-4">
+                            {{ getProjectAddress(project) }}
+                        </span>
+                    </th>
+                    <th>
+                        <span class="text-sm font-normal pl-4">
+                            {{ project.createAt | date:'dd/MM/yyyy hh:mm:ss a' }}
+                        </span>
+                    </th>
+                    <th>
+                        <div class="flex flex-row justify-end">
+                            <button pButton pRipple class="p-button-rounded p-button-text p-button-secondary" pTooltip="Xem trước"
+                                icon="pi pi-info-circle" (click)="selectedProject=project;preview=true"></button>
+                            <button pButton pRipple class="p-button-rounded p-button-danger p-button-text" pTooltip="Xóa dự án"
+                                icon="pi pi-trash" (click)="deleteProject(project.id)"></button>
+                        </div>
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td>Không có dữ liệu.</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+<ng-template #previewTemplate>
+    <app-project-view [administrative]="true" [project]="selectedProject" (closeView)="onCloseView($event)"></app-project-view>
+</ng-template>

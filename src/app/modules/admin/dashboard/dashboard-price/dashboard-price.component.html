@@ -1,0 +1,108 @@
+<div class="w-full flex flex-col py-6 md:py-4">
+    <div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:justify-between w-full">
+        <div class="flex flex-col w-full md:w-1/3">
+            <div class="flex flex-col w-full rounded-md shadow-lg hover:shadow-xl px-2 pt-2">
+                <span class="font-bold mb-4">{{ 'Người dùng hệ thống' }}</span>
+                <hr class="w-full my-2" width="1" color="#ced4da">
+                <div class="flex flex-col py-2 md:py-4 space-y-2 border-b border-b-b-custom">
+                    <span class="text-sm font-light">{{ 'Đang hoạt động' }}</span>
+                    <span class="font-bold text-lg">{{ userStatistic.noOfActiveUsers }}</span>
+                </div>
+                <div class="flex flex-col py-2 md:py-4 space-y-2 border-b border-b-b-custom">
+                    <span class="text-sm font-light">{{ 'Dừng hoạt động' }}</span>
+                    <span class="font-bold text-lg">{{ userStatistic.noOfDisableUsers }}</span>
+                </div>
+                <div class="flex flex-col py-2 md:py-4 space-y-2 border-b border-b-b-custom">
+                    <span class="text-sm font-light">{{ 'Đăng ký mới trong tháng' }}</span>
+                    <div class="w-full flex flex-row justify-between items-center">
+                        <span class="font-bold text-lg">{{ userStatistic.noOfMonthNewestUsers }}</span>
+                        <p-tag [severity]="getNewestUsersSeverity()" [value]="userStatistic.diffNewestMonth"
+                            [icon]="userStatistic.noOfMonthNewestUsers < userStatistic.noOfPreviousMonthNewestUsers ? 'pi pi-arrow-down-left' : 'pi pi-arrow-up-right'">
+                        </p-tag>
+                    </div>
+                </div>
+                <div class="flex flex-col py-2 md:py-4 space-y-2">
+                    <span class="text-sm font-light">{{ 'Dừng hoạt động trong tháng' }}</span>
+                    <div class="w-full flex flex-row justify-between items-center">
+                        <span class="text-lg font-bold">{{ userStatistic.noOfMonthDisableUsers }}</span>
+                        <p-tag [severity]="getDisableUserSeverity()" [value]="userStatistic.diffDisableMonth"
+                            [icon]="userStatistic.noOfMonthDisableUsers < userStatistic.noOfPreviousMonthDisableUsers ? 'pi pi-arrow-down-left' : 'pi pi-arrow-up-right'">
+                        </p-tag>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="flex w-full md:w-1/2 flex-col space-y-2 rounded-md shadow-lg hover:shadow-xl">
+            <span class="font-semibold ml-2 mt-2">{{ 'Thống kê người dùng hệ thống' }}</span>
+            <apx-chart class="w-full"
+                [title]="userChartOptions.title" 
+                [series]="userChartOptions.series" 
+                [chart]="userChartOptions.chart" 
+                [labels]="userChartOptions.labels">
+            </apx-chart>
+        </div>
+    </div>
+    <div class="flex flex-col w-full space-y-4 mt-6">
+        <div class="flex flex-col md:flex-row md:justify-between md:items-center w-full border rounded-md border-b-b-custom p-2 md:py-6 space-y-6 md:space-y-0">
+            <span class="font-bold text-lg">{{ 'Thống kê giao dịch tài chính' }}</span>
+            <div class="flex flex-row space-x-2">
+                <span class="p-float-label">
+                    <p-dropdown [options]="months" [(ngModel)]="thanhToanThang" (ngModelChange)="getThanhToanThangData();getNapTienThangData()"
+                        placeholder="Tháng" optionLabel="value" optionValue="key" inputId="float-label"></p-dropdown>
+                    <label for="float-label">Tháng</label>
+                </span>
+                <span class="p-float-label">
+                    <p-dropdown [options]="years" [(ngModel)]="thanhToanNam" (ngModelChange)="getThanhToanNamData();getThanhToanThangData();getNapTienNamData();getNapTienThangData()"
+                        placeholder="Năm" optionLabel="value" optionValue="key" inputId="float-label"></p-dropdown>
+                    <label for="float-label">Năm</label>
+                </span>
+            </div>
+        </div>
+        <div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4 w-full">
+            <div class="flex w-full flex-col space-y-2 rounded-md shadow-lg hover:shadow-xl">
+                <span class="font-semibold ml-2 mt-2">{{ 'Chi phí người dùng trả trong năm' }}</span>
+                <apx-chart class="w-full"
+                    [title]="thanhToanNamChartOptions.title" 
+                    [series]="thanhToanNamChartOptions.series" 
+                    [chart]="thanhToanNamChartOptions.chart" 
+                    [labels]="thanhToanNamChartOptions.labels"
+                    [xaxis]="thanhToanNamChartOptions.xaxis">
+                </apx-chart>
+            </div>
+            <div class="flex w-full flex-col space-y-2 rounded-md shadow-lg hover:shadow-xl">
+                <span class="font-semibold ml-2 mt-2">{{ 'Chi phí người dùng trả trong tháng' }}</span>
+                <apx-chart class="w-full"
+                    [title]="thanhToanThangChartOptions.title" 
+                    [series]="thanhToanThangChartOptions.series" 
+                    [chart]="thanhToanThangChartOptions.chart" 
+                    [labels]="thanhToanThangChartOptions.labels"
+                    [xaxis]="thanhToanThangChartOptions.xaxis"
+                >
+                </apx-chart>
+            </div>
+        </div>
+        <div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4 w-full">
+            <div class="flex w-full flex-col space-y-2 rounded-md shadow-lg hover:shadow-xl">
+                <span class="font-semibold ml-2 mt-2">{{ 'Số tiền đã nạp trong năm' }}</span>
+                <apx-chart class="w-full"
+                    [title]="napNamChartOptions.title" 
+                    [series]="napNamChartOptions.series" 
+                    [chart]="napNamChartOptions.chart" 
+                    [labels]="napNamChartOptions.labels"
+                    [xaxis]="napNamChartOptions.xaxis">
+                </apx-chart>
+            </div>
+            <div class="flex w-full flex-col space-y-2 rounded-md shadow-lg hover:shadow-xl">
+                <span class="font-semibold ml-2 mt-2">{{ 'Số tiền đã nạp trong tháng' }}</span>
+                <apx-chart class="w-full"
+                    [title]="napThangChartOptions.title" 
+                    [series]="napThangChartOptions.series" 
+                    [chart]="napThangChartOptions.chart" 
+                    [labels]="napThangChartOptions.labels"
+                    [xaxis]="napThangChartOptions.xaxis"
+                >
+                </apx-chart>
+            </div>
+        </div>
+    </div>
+</div>

@@ -94,10 +94,6 @@ html {
     text-align: center;
 }
 
-th {
-    text-align: left !important;
-}
-
 tbody th {
     padding-top: 1rem !important;
     padding-bottom: 1rem !important;

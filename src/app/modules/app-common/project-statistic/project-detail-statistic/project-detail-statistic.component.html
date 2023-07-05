@@ -1,0 +1,72 @@
+<div class="w-full space-y-4 flex flex-col" *ngIf="projectId != undefined && projectId != null && projectId.length > 0; else emptyPostId">
+    <div class="flex flex-col md:flex-row md:justify-between md:items-center w-full border rounded-md border-b-b-custom p-2 md:py-6 space-y-6 md:space-y-0">
+        <span class="font-bold text-lg">{{ 'Thống kê thông tin chi tiết của bài viết' }}</span>
+        <div class="flex flex-row space-x-2">
+            <span class="p-float-label">
+                <p-dropdown [options]="months" [(ngModel)]="month" (ngModelChange)="fetchData()" [showClear]="true" (onClear)="month=0"
+                    placeholder="Tháng" optionLabel="value" optionValue="key" inputId="float-label"></p-dropdown>
+                <label for="float-label">Tháng</label>
+            </span>
+            <span class="p-float-label">
+                <p-dropdown [options]="years" [(ngModel)]="year" (ngModelChange)="fetchData()"
+                    placeholder="Năm" optionLabel="value" optionValue="key" inputId="float-label"></p-dropdown>
+                <label for="float-label">Năm</label>
+            </span>
+        </div>
+    </div>
+    <div class="w-full flex flex-col space-y-4 lg:flex-row lg:space-x-4 lg:space-y-0">
+        <div class="flex w-full flex-col space-y-2 rounded-md shadow-lg hover:shadow-xl" *ngIf="!viewChartLoading; else loadView">
+            <span class="font-semibold ml-2 mt-2">{{ 'Số lượt xem trong ' + ((month != null && month > 0) ? 'tháng ' + month + ' ' : '') + 'năm ' + year  }}</span>
+            <apx-chart class="w-full"
+                [title]="viewChartOptions.title" 
+                [series]="viewChartOptions.series" 
+                [chart]="viewChartOptions.chart" 
+                [labels]="viewChartOptions.labels"
+                [xaxis]="viewChartOptions.xaxis">
+            </apx-chart>
+        </div>
+        <ng-template #loadView>
+            <div class="w-full h-[50vh] flex items-center justify-center">
+                <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
+            </div>
+        </ng-template>
+        <div class="flex w-full flex-col space-y-2 rounded-md shadow-lg hover:shadow-xl" *ngIf="!interestedChartLoading; else loadInterested">
+            <span class="font-semibold ml-2 mt-2">{{ 'Số lượt quan tâm trong ' + ((month != null && month > 0) ? 'tháng ' + month + ' ' : '') + 'năm ' + year  }}</span>
+            <apx-chart class="w-full"
+                [title]="interestedChartOptions.title" 
+                [series]="interestedChartOptions.series" 
+                [chart]="interestedChartOptions.chart" 
+                [labels]="interestedChartOptions.labels"
+                [xaxis]="interestedChartOptions.xaxis">
+            </apx-chart>
+        </div>
+        <ng-template #loadInterested>
+            <div class="w-full h-[50vh] flex items-center justify-center">
+                <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
+            </div>
+        </ng-template>
+    </div>
+    <div class="w-full flex flex-col space-y-4 lg:flex-row lg:space-x-4 lg:space-y-0">
+        
+    </div>
+    <div class="w-full flex flex-col space-y-4 lg:flex-row lg:space-x-4 lg:space-y-0">
+        <div class="flex w-full lg:w-1/2 flex-col space-y-2 rounded-md shadow-lg hover:shadow-xl" *ngIf="!commentChartLoading; else commentTmpl">
+            <span class="font-semibold ml-2 mt-2">{{ 'Số lượt xem thông tin liên hệ trong ' + ((month != null && month > 0) ? 'tháng ' + month + ' ' : '') + 'năm ' + year  }}</span>
+            <apx-chart class="w-full"
+                [title]="commentChartOptions.title" 
+                [series]="commentChartOptions.series" 
+                [chart]="commentChartOptions.chart" 
+                [labels]="commentChartOptions.labels"
+                [xaxis]="commentChartOptions.xaxis">
+            </apx-chart>
+        </div>
+        <ng-template #commentTmpl>
+            <div class="w-full lg:w-1/2 h-[50vh] flex items-center justify-center">
+                <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
+            </div>
+        </ng-template>
+    </div>
+</div>
+<ng-template #emptyPostId>
+    <span class="font-bold italic">{{ 'Hãy chọn bài viết để xem thống kê chi tiết' }}</span>
+</ng-template>

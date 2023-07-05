@@ -33,6 +33,12 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { AppCommonModule } from '../app-common/app-common.module';
 import { ReportDetailComponent } from './report/report-detail/report-detail.component';
 import { ForumPostDetailComponent } from './forum-post-detail/forum-post-detail.component';
+import { NgApexchartsModule } from 'ng-apexcharts';
+import { DashboardPriceComponent } from './dashboard/dashboard-price/dashboard-price.component';
+import { DashboardPostComponent } from './dashboard/dashboard-post/dashboard-post.component';
+import { TimelineModule } from 'primeng/timeline';
+import { ProjectComponent } from './project/project.component';
+import { DashboradProjectComponent } from './dashboard/dashborad-project/dashborad-project.component';
 
 @NgModule({
   declarations: [
@@ -44,6 +50,10 @@ import { ForumPostDetailComponent } from './forum-post-detail/forum-post-detail.
     ReportComponent,
     ReportDetailComponent,
     ForumPostDetailComponent,
+    DashboardPriceComponent,
+    DashboardPostComponent,
+    ProjectComponent,
+    DashboradProjectComponent,
   ],
   imports: [
     CommonModule,
@@ -66,7 +76,9 @@ import { ForumPostDetailComponent } from './forum-post-detail/forum-post-detail.
     TabViewModule,
     RadioButtonModule,
     CheckboxModule,
-    AppCommonModule
+    AppCommonModule,
+    NgApexchartsModule,
+    TimelineModule
   ],
   providers: [
     ConfirmationService,

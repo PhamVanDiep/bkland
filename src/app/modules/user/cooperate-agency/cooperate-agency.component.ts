@@ -34,6 +34,8 @@ export class CooperateAgencyComponent implements OnInit, OnDestroy {
     this.innerWidth = window.innerWidth;
   }
 
+  selectedPostId: string;
+  
   constructor(
     private _appTitleService: AppTitleService,
     private _loadingService: LoadingService,

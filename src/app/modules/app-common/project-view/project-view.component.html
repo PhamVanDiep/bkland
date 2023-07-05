@@ -1,0 +1,56 @@
+<app-comment [postType]="'REAL_ESTATE_POST'" (hideEvent)="onCloseComment($event)"></app-comment>
+<div class="w-full flex flex-col px-4 lg:px-6 space-y-6 pb-6">
+    <div class="flex flex-col space-y-4">
+        <div class="w-full flex flex-col md:flex-row space-y-4 md:space-y-0 md:justify-between md:items-center">
+            <div class="flex flex-row space-x-4 items-center">
+                <button pButton pRipple class="p-button-text p-button-secondary p-button-rounded" pTooltip="Quay lại"
+                    icon="pi pi-chevron-left" (click)="goBack()"></button>
+                <span class="font-bold text-3xl">{{ project.name }}</span>
+            </div>
+            <div class="flex flex-row space-x-6 items-center" *ngIf="!administrative">
+                <i class="pi pi-heart-fill cursor-pointer" 
+                    [ngClass]="isInterested ? 'text-blue-custom' : 'text-black'" 
+                    pTooltip="Quan tâm"
+                    (click)="onInterest()"></i>
+                <button pButton pRipple class="p-button-text p-button-rounded p-button-secondary" pTooltip="Bình luận"
+                    icon="pi pi-comment" (click)="comment()"></button>
+            </div>
+        </div>
+        <span>{{ project.address + ', ' + project.ward.fullName + ', ' 
+            + project.district.fullName + ', ' + project.province.fullName }}</span>
+        <img [src]="imageRetrive" alt="Ảnh minh họa">
+    </div>
+    <div class="flex flex-col space-y-4">
+        <span class="font-semibold text-xl">{{ 'Thông tin đặc trưng' }}</span>
+        <div class="w-full" *ngIf="project.projectParams.length > 0;else noCharacteristic">
+            <div *ngFor="let item of project.projectParams">
+                <div class="flex space-x-4 md:space-x-12 items-center py-4 border-b border-b-custom w-full">
+                    <span class="font-bold text-sm">{{ item.name }}</span>
+                    <span class="text-sm">{{ item.value }}</span>
+                </div>
+            </div>
+        </div>
+        <ng-template #noCharacteristic>
+            <span class="italic">{{ 'Dự án không có thông tin đặc trưng nào.' }}</span>
+        </ng-template>
+    </div>
+    <div class="w-full flex flex-col space-y-4">
+        <span class="font-semibold text-xl">{{ 'Thông tin chi tiết' }}</span>
+        <div class="ql-container ql-snow z-40 border-0 p-0" style="border-width: 0; padding: 0;">
+            <div class="ql-editor p-0" style="padding: 0;" [innerHTML]="project.content"></div>
+        </div>
+    </div>
+    <div class="w-full flex flex-col space-y-4">
+        <span class="font-semibold text-xl">{{ 'Thông tin liên hệ' }}</span>
+        <div class="flex flex-col w-full space-y-4 md:flex-row md:space-y-0 md:space-x-4">
+            <div class="py-4 border-b border-b-custom w-full flex flex-row space-x-4 md:space-x-12">
+                <span>{{ 'Số điện thoại: ' }}</span>
+                <span class="font-bold">{{ project.phoneNumber }}</span>
+            </div>
+            <div class="py-4 border-b border-b-custom w-full flex flex-row space-x-4 md:space-x-12">
+                <span>{{ 'Email: ' }}</span>
+                <span class="font-bold">{{ project.email }}</span>
+            </div>
+        </div>
+    </div>
+</div>

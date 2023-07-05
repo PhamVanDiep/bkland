@@ -1,0 +1,110 @@
+<p-confirmDialog [style]="{width: innerWidth > 640 ? '50vw' : '100vh'}"></p-confirmDialog>
+<div class="w-full flex flex-col px-4 lg:px-6 space-y-6 pb-6">
+    <div class="w-full flex flex-col space-y-4 mt-6 md:mt-4">
+        <span class="font-bold text-lg">{{ 'Thông tin chung' }}</span>
+        <div class="w-full flex flex-col space-y-4">
+            <div class="w-full flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-4">
+                <div class="w-full flex flex-col">
+                    <label for="name" class="text-sm">{{ 'Tên dự án' }}</label>
+                    <input pInputText  [(ngModel)]="project.name" class="w-full" placeholder="Nhập tên dự án">
+                </div>
+                <div class="flex flex-col w-full">
+                    <label for="provinceCode" class="text-sm">Loại dự án</label>
+                    <p-dropdown [options]="projectTypes" [(ngModel)]="project.type" [autoDisplayFirst]="false"
+                        [style]="{'width': '100%'}" optionLabel="value" (ngModelChange)="getDistrictsInProvince()"
+                        placeholder="Chọn loại dự án" optionValue="key" autoWidth="false"></p-dropdown>
+                </div>
+            </div>
+            <div class="flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-4">
+                <div class="flex flex-col w-full">
+                    <label for="provinceCode" class="text-sm">Tỉnh/Thành phố</label>
+                    <p-dropdown [options]="provinces" [(ngModel)]="project.province.code" [autoDisplayFirst]="false" [autofocusFilter]="false"
+                        [style]="{'width': '100%'}" optionLabel="fullName" (ngModelChange)="getDistrictsInProvince()"
+                        placeholder="Chọn tỉnh/thành phố" optionValue="code"
+                        [filter]="true" filterBy="fullName" autoWidth="false"></p-dropdown>
+                </div>
+                <div class="flex flex-col w-full">
+                    <label for="districtCode" class="text-sm">Quận/Huyện/Thị xã</label>
+                    <p-dropdown [options]="districts" [(ngModel)]="project.district.code" [autoDisplayFirst]="false" [autofocusFilter]="false"
+                        [style]="{'width': '100%'}" optionLabel="fullName"
+                        placeholder="Chọn quận/huyện/thị xã" optionValue="code"
+                        [disabled]="project.province.code.length <= 0" (ngModelChange)="getWardsInDistrict()"
+                        [filter]="true" filterBy="fullName"></p-dropdown>
+                </div>
+                <div class="flex flex-col w-full">
+                    <label for="wardCode" class="text-sm">Xã/Phường/Thị trấn</label>
+                    <p-dropdown [options]="wards" [(ngModel)]="project.ward.code" [style]="{'width': '100%'}"
+                        placeholder="Chọn xã/phường/thị trấn" optionValue="code"
+                        optionLabel="fullName" [disabled]="project.district.code.length <= 0" [autoDisplayFirst]="false" [autofocusFilter]="false"
+                        [filter]="true" filterBy="fullName"></p-dropdown>
+                </div>
+            </div>
+            <div class="w-full flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-4">
+                <div class="w-full flex flex-col">
+                    <label for="address" class="text-sm">{{ 'Địa chỉ' }}</label>
+                    <input pInputText  [(ngModel)]="project.address" class="w-full" placeholder="Nhập địa chỉ">
+                </div>
+                <div class="w-full flex flex-col">
+                    <label for="address" class="text-sm">{{ 'Diện tích (m2)' }}</label>
+                    <p-inputNumber [(ngModel)]="project.area" class="w-full" inputId="minmaxfraction" 
+                        mode="decimal" [minFractionDigits]="2" [maxFractionDigits]="2"></p-inputNumber>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="w-full flex flex-col space-y-4 mt-6 md:mt-4">
+        <div class="w-full flex flex-row justify-between items-center">
+            <span class="font-bold text-lg">{{ 'Ảnh minh họa' }}</span>
+            <label for="uploadImage" class="cursor-pointer">
+                <i class="pi pi-cloud-upload" style="font-size: 2rem;" pTooltip="Tải ảnh lên"></i>
+            </label>
+            <input type="file" name="uploadImage" accept="image/png, image/gif, image/jpeg" id="uploadImage"
+                [hidden]="true" (change)="onFileSelected($event)" [multiple]="false">
+        </div>
+        <div class="w-full">
+            <img [src]="imageRetrive" alt="Ảnh minh họa" class="w-auto max-w-full" *ngIf="imageRetrive != undefined && imageRetrive != null">
+        </div>
+    </div>
+    <div class="w-full flex flex-col space-y-4 mt-6 md:mt-4">
+        <div class="flex flex-row justify-between items-center">
+            <span class="font-bold text-lg">{{ 'Thông tin đặc trưng' }}</span>
+            <button pButton pRipple class="p-button-rounded p-button-success" icon="pi pi-plus" (click)="addParam()"></button>
+        </div>
+        <div *ngIf="project.projectParams.length > 0; else emptyProjectParam" class="flex flex-col space-y-2 w-full">
+            <div *ngFor="let item of project.projectParams">
+                <div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2">
+                    <input pInputText [(ngModel)]="item.name" class="w-full" placeholder="Tên đặc trưng">
+                    <input pInputText [(ngModel)]="item.value" class="w-full" placeholder="Giá trị">
+                    <div class="w-full flex justify-end md:w-max">
+                        <button pButton pRipple class="p-button-rounded p-button-text p-button-danger" 
+                            icon="pi pi-trash" (click)="deleteItem(item.id)"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <ng-template #emptyProjectParam>
+            <span class="text-sm italic">{{ 'Dự án không có thông tin đặc trưng nào.' }}</span>
+        </ng-template>
+    </div>
+    <div class="w-full flex flex-col space-y-4 mt-6 md:mt-4">
+        <span class="font-bold text-lg">{{ 'Nội dung chi tiết' }}</span>
+        <p-editor [(ngModel)]="project.content" [style]="{ height: '50vh' }"></p-editor>
+    </div>
+    <div class="w-full flex flex-col space-y-4 mt-6 md:mt-4">
+        <span class="font-bold text-lg">{{ 'Thông tin liên hệ' }}</span>
+        <div class="w-full flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-4">
+            <div class="w-full flex flex-col">
+                <label for="address" class="text-sm">{{ 'Số điện thoại' }}</label>
+                <input pInputText [(ngModel)]="project.phoneNumber" class="w-full" placeholder="Nhập số điện thoại">
+            </div>
+            <div class="w-full flex flex-col">
+                <label for="address" class="text-sm">{{ 'Email' }}</label>
+                <input pInputText [(ngModel)]="project.email" class="w-full" placeholder="Nhập email">
+            </div>
+        </div>
+    </div>
+    <div class="w-full flex flex-col justify-end md:flex-row space-y-2 md:space-y-0 md:space-x-4">
+        <button pButton pRipple class="p-button-danger w-full md:w-fit" label="Hủy" *ngIf="isUpdate" (click)="goBack()"></button>
+        <button pButton pRipple class="w-full md:w-fit" label="Lưu" (click)="onSave()"></button>
+    </div>
+</div>

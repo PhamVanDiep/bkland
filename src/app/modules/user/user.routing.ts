@@ -16,10 +16,17 @@ import { ChatComponent } from "../app-common/chat/chat.component";
 import { NewRequestComponent } from "./cooperate-agency/new-request/new-request.component";
 import { AdministrativeViewComponent } from "../app-common/real-estate-post-view/administrative-view/administrative-view.component";
 import { FocusComponent } from "./focus/focus.component";
+import { DashboardComponent } from "./dashboard/dashboard.component";
+import { ProjectComponent } from "./project/project.component";
+import { ProjectDetailComponent } from "./project/project-detail/project-detail.component";
 
 export const route: Route[] = [
     {
-        path: '', redirectTo: 'focus', pathMatch: 'full'
+        path: '', redirectTo: 'dashboard', pathMatch: 'full'
+    },
+    {
+        path: 'dashboard',
+        component: DashboardComponent
     },
     {
         path: 'focus',
@@ -97,6 +104,23 @@ export const route: Route[] = [
                     {
                         path: 'update-info-post/:id',
                         component: CreateInfoPostComponent
+                    }
+                ]
+            },
+            {
+                path: 'project',
+                children: [
+                    {
+                        path: '',
+                        component: ProjectComponent
+                    },
+                    {
+                        path: 'create',
+                        component: ProjectDetailComponent
+                    },
+                    {
+                        path: 'update/:id',
+                        component: ProjectDetailComponent
                     }
                 ]
             }

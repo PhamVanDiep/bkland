@@ -1,0 +1,83 @@
+<div class="w-full flex flex-col py-6 md:py-4 space-y-4 px-4 lg:px-6" *ngIf="!isEnterprise;else enterprise">
+    <app-price-fluctuation-statistic></app-price-fluctuation-statistic>
+    <div class="w-full flex flex-col space-y-6">
+        <span class="text-xl font-bold mt-6 md:mt-4">Danh sách bài đăng bán/cho thuê</span>
+        <p-table [value]="realEstatePosts" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[10, 25, 50]"
+            currentPageReportTemplate="{first} đến {last} trên {totalRecords} bản ghi">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th pFrozenColumn>#</th>
+                    <th>Bán/Cho thuê</th>
+                    <th>Loại</th>
+                    <th>Giá</th>
+                    <th>Diện tích (m2)</th>
+                    <th>Thời điểm tạo</th>
+                    <th>Trạng thái</th>
+                    <th>Số lượt xem</th>
+                    <th>Bình luận</th>
+                    <th>Báo cáo</th>
+                    <th>Quan tâm</th>
+                    <th>Xem SĐT</th>
+                    <th></th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rep let-index="rowIndex">
+                <tr>
+                    <th>
+                        <span class="text-sm font-normal">{{ index + 1 }}</span>
+                    </th>
+                    <th>
+                        <span class="text-sm font-normal">{{ rep.sell ? 'Bán' : 'Cho thuê' }}</span>
+                    </th>
+                    <th>
+                        <span class="text-sm font-normal">{{ genType(rep.type) }}</span>
+                    </th>
+                    <th class="text-start">
+                        <span class="text-sm font-normal">{{ rep.price + (rep.sell ? ' tỷ VNĐ' : ' triệu VNĐ') }}</span>
+                    </th>
+                    <th class="text-center">
+                        <span class="text-sm font-normal">{{ rep.area }}</span>
+                    </th>
+                    <th>
+                        <span class="text-sm font-normal">{{ rep.createAt | date:'dd/MM/yyyy, h:mm:ss a' }}</span>
+                    </th>
+                    <th class="text-start">
+                        <p-tag [value]="getStatusValue(rep.status)" [severity]="getStatusSeverity(rep.status)"></p-tag>
+                    </th>
+                    <th>
+                        <span class="text-sm font-normal">{{ rep.view }}</span>
+                    </th>
+                    <th>
+                        <span class="text-sm font-normal">{{ rep.comment }}</span>
+                    </th>
+                    <th>
+                        <span class="text-sm font-normal">{{ rep.report }}</span>
+                    </th>
+                    <th>
+                        <span class="text-sm font-normal">{{ rep.interested }}</span>
+                    </th>
+                    <th>
+                        <span class="text-sm font-normal">{{ rep.clickedView }}</span>
+                    </th>
+                    <th>
+                        <button pButton pRipple class="p-button-text p-button-warning p-button-rounded"
+                            pTooltip="Xem thống kê chi tiết"
+                            icon="pi pi-chart-line" (click)="selectedRep=rep"></button>
+                        <button pButton pRipple class="p-button-text p-button-info p-button-rounded"
+                            pTooltip="Xem bài viết"
+                            icon="pi pi-info-circle" (click)="selectedRep=rep;viewPost()"></button>
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td>Không có dữ liệu.</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+    <app-rep-statistic [postId]="selectedRep?.id"></app-rep-statistic>
+</div>
+<ng-template #enterprise>
+    <app-project-statistic></app-project-statistic>
+</ng-template>

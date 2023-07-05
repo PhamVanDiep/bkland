@@ -1,0 +1,66 @@
+<div class="w-full flex flex-col mt-6 md:mt-4 space-y-4">
+    <div class="flex flex-col md:flex-row space-x-0 space-y-4 md:space-y-0 md:space-x-4">
+        <div class="flex w-full flex-col space-y-2 rounded-md shadow-lg hover:shadow-xl" *ngIf="!chart1Loading; else loadView1">
+            <span class="font-semibold ml-2 mt-2">{{ 'Số lượng bài viết trên cả nước' }}</span>
+            <apx-chart class="w-full"
+                [title]="chart1Options.title" 
+                [series]="chart1Options.series" 
+                [chart]="chart1Options.chart" 
+                [labels]="chart1Options.labels"
+                [xaxis]="chart1Options.xaxis">
+            </apx-chart>
+        </div>
+        <ng-template #loadView1>
+            <div class="w-full h-[50vh] flex items-center justify-center">
+                <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
+            </div>
+        </ng-template>
+        <div class="flex w-full flex-col space-y-2 rounded-md shadow-lg hover:shadow-xl" *ngIf="!chart2Loading; else loadView2">
+            <span class="font-semibold ml-2 mt-2">{{ 'Dự án ở các tỉnh được quan tâm nhiều' }}</span>
+            <apx-chart class="w-full"
+                [title]="chart2Options.title" 
+                [series]="chart2Options.series" 
+                [chart]="chart2Options.chart" 
+                [labels]="chart2Options.labels"
+                [xaxis]="chart2Options.xaxis">
+            </apx-chart>
+        </div>
+        <ng-template #loadView2>
+            <div class="w-full h-[50vh] flex items-center justify-center">
+                <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
+            </div>
+        </ng-template>
+    </div>
+    <div class="flex flex-col md:flex-row space-x-0 space-y-4 md:space-y-0 md:space-x-4">
+        <div class="flex w-full flex-col space-y-2 rounded-md shadow-lg hover:shadow-xl" *ngIf="!chart3Loading; else loadView3">
+            <span class="font-semibold ml-2 mt-2">{{ 'Dự án ở các tỉnh được xem nhiều' }}</span>
+            <apx-chart class="w-full"
+                [title]="chart3Options.title" 
+                [series]="chart3Options.series" 
+                [chart]="chart3Options.chart" 
+                [labels]="chart3Options.labels"
+                [xaxis]="chart3Options.xaxis">
+            </apx-chart>
+        </div>
+        <ng-template #loadView3>
+            <div class="w-full h-[50vh] flex items-center justify-center">
+                <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
+            </div>
+        </ng-template>
+        <div class="flex w-full flex-col space-y-2 rounded-md shadow-lg hover:shadow-xl" *ngIf="!chart4Loading; else loadView4">
+            <span class="font-semibold ml-2 mt-2">{{ 'Dự án ở các tỉnh được bình luận nhiều' }}</span>
+            <apx-chart class="w-full"
+                [title]="chart4Options.title" 
+                [series]="chart4Options.series" 
+                [chart]="chart4Options.chart" 
+                [labels]="chart4Options.labels"
+                [xaxis]="chart4Options.xaxis">
+            </apx-chart>
+        </div>
+        <ng-template #loadView4>
+            <div class="w-full h-[50vh] flex items-center justify-center">
+                <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
+            </div>
+        </ng-template>
+    </div>
+</div>

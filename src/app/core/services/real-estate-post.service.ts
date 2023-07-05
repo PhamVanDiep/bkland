@@ -195,7 +195,111 @@ export class RealEstatePostService {
         return this._httpClient.get<APIResponse>(`${environment.BASE_URL_NO_AUTH}/real-estate-post/mostView`);
     }
 
+    getPostsByNewest(): Observable<APIResponse> {
+        return this._httpClient.get<APIResponse>(`${environment.BASE_URL_NO_AUTH}/real-estate-post/newest`);
+    }
+
     search(body: any): Observable<APIResponse> {
         return this._httpClient.post<APIResponse>(`${environment.BASE_URL_NO_AUTH}/real-estate-post/search`, body);
+    }
+
+    getChart1Data(sell: number, type: string, provinceCode: string, year: number): Observable<APIResponse> {
+        let accessToken = localStorage.getItem('accessToken') || '';
+        return this._httpClient.get<APIResponse>(`${environment.BASE_URL_AUTH}/real-estate-post/statistic/chart1?sell=${sell}&type=${type}&provinceCode=${provinceCode}&year=${year}`, {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        });
+    }
+
+    getChart2Data(sell: number, type: string, provinceCode: string, year: number): Observable<APIResponse> {
+        let accessToken = localStorage.getItem('accessToken') || '';
+        return this._httpClient.get<APIResponse>(`${environment.BASE_URL_AUTH}/real-estate-post/statistic/chart2?sell=${sell}&type=${type}&provinceCode=${provinceCode}&year=${year}`, {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        });
+    }
+
+    getPriceFluctuationStatistic(sell: number, type: string, provinceCode: string, districCode: string, wardCode: string, month: number, year: number): Observable<APIResponse> {
+        let accessToken = localStorage.getItem('accessToken') || '';
+        return this._httpClient.get<APIResponse>(`${environment.BASE_URL_AUTH}/real-estate-post/statistic/price-fluctuation?sell=${sell}&type=${type}&provinceCode=${provinceCode}&districtCode=${districCode}&month=${month}&wardCode=${wardCode}&year=${year}`, 
+        {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        });
+    }
+
+    getMostRepPriceFluctuation(): Observable<APIResponse> {
+        let accessToken = localStorage.getItem('accessToken') || '';
+        return this._httpClient.get<APIResponse>(`${environment.BASE_URL_AUTH}/real-estate-post/statistic/most-change-price`, {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        });
+    }
+
+    getPriceChartOption(postId: string): Observable<APIResponse> {
+        let accessToken = localStorage.getItem('accessToken') || '';
+        return this._httpClient.get<APIResponse>(`${environment.BASE_URL_AUTH}/real-estate-post/statistic/price?postId=${postId}`, {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        });
+    }
+
+    getViewChartOption(postId: string, month: number, year: number): Observable<APIResponse> {
+        let accessToken = localStorage.getItem('accessToken') || '';
+        return this._httpClient.get<APIResponse>(`${environment.BASE_URL_AUTH}/real-estate-post/statistic/view?postId=${postId}&month=${month}&year=${year}`, {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        });
+    }
+
+    getCommentChartOption(postId: string, month: number, year: number): Observable<APIResponse> {
+        let accessToken = localStorage.getItem('accessToken') || '';
+        return this._httpClient.get<APIResponse>(`${environment.BASE_URL_AUTH}/real-estate-post/statistic/comment?postId=${postId}&month=${month}&year=${year}`, {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        });
+    }
+
+    getInterestedChartOption(postId: string, month: number, year: number): Observable<APIResponse> {
+        let accessToken = localStorage.getItem('accessToken') || '';
+        return this._httpClient.get<APIResponse>(`${environment.BASE_URL_AUTH}/real-estate-post/statistic/interested?postId=${postId}&month=${month}&year=${year}`, {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        });
+    }
+
+    getReportChartOption(postId: string, month: number, year: number): Observable<APIResponse> {
+        let accessToken = localStorage.getItem('accessToken') || '';
+        return this._httpClient.get<APIResponse>(`${environment.BASE_URL_AUTH}/real-estate-post/statistic/report?postId=${postId}&month=${month}&year=${year}`, {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        });
+    }
+
+    getClickedViewChartOption(postId: string, month: number, year: number): Observable<APIResponse> {
+        let accessToken = localStorage.getItem('accessToken') || '';
+        return this._httpClient.get<APIResponse>(`${environment.BASE_URL_AUTH}/real-estate-post/statistic/click?postId=${postId}&month=${month}&year=${year}`, {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        });
+    }
+
+    getAllPostOfUser(): Observable<APIResponse> {
+        let accessToken = localStorage.getItem('accessToken') || '';
+        return this._httpClient.get<APIResponse>(`${environment.BASE_URL_AUTH}/real-estate-post/all-of-user`, {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        });
     }
 }

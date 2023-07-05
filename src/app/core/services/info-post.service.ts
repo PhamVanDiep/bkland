@@ -85,4 +85,22 @@ export class InfoPostService {
     loadMore(infoTypeId: number, limit: number, page: number): Observable<APIResponse> {
         return this._httpClient.get<APIResponse>(`${environment.BASE_URL_NO_AUTH}/info-post/load-more?infoTypeId=${infoTypeId}&limit=${limit}&page=${page}`);
     }
+
+    getChart1Data(): Observable<APIResponse> {
+        let accessToken = localStorage.getItem('accessToken') || '';
+        return this._httpClient.get<APIResponse>(`${environment.BASE_URL_AUTH}/info-post/statistic/chart1`, {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        })
+    }
+
+    getChart2Data(): Observable<APIResponse> {
+        let accessToken = localStorage.getItem('accessToken') || '';
+        return this._httpClient.get<APIResponse>(`${environment.BASE_URL_AUTH}/info-post/statistic/chart2`, {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        })
+    }
 }

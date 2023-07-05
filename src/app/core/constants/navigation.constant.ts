@@ -1,8 +1,29 @@
+import { PROJECT_ROUTE } from "./other.constant";
+
 export const ADMIN_NAV = [
     {
         label: 'Thống kê',
         icon: 'pi pi-th-large',
-        routerLink: 'admin/dashboard'
+        routerLink: 'admin/dashboard',
+        items: [
+            
+            {
+                label: 'Bài viết',
+                routerLink: 'admin/dashboard/post'
+            },
+            {
+                label: 'Giá bất động sản',
+                routerLink: 'admin/dashboard/price'
+            },
+            {
+                label: 'Người dùng và Tài chính',
+                routerLink: 'admin/dashboard/user-balance'
+            },
+            {
+                label: 'Dự án bất động sản',
+                routerLink: 'admin/dashboard/project'
+            }
+        ]
     },
     {
         label: 'Quản lý bài viết',
@@ -20,6 +41,10 @@ export const ADMIN_NAV = [
             {
                 label: 'Bài viết tin tức',
                 routerLink: 'admin/post/info'
+            },
+            {
+                label: 'Dự án bất động sản',
+                routerLink: 'admin/post/project'
             }
         ]
     },
@@ -56,6 +81,11 @@ export const ADMIN_NAV = [
 ];
 
 export const USER_NAV = [
+    {
+        label: 'Thống kê',
+        icon: 'pi pi-th-large',
+        routerLink: 'user/dashboard',
+    },
     {
         label: 'Bài đăng quan tâm',
         icon: 'pi pi-heart-fill',
@@ -120,10 +150,19 @@ export const USER_NAV = [
 
 export const ENTERPRISE_NAV = [
     {
+        label: 'Thống kê',
+        icon: 'pi pi-th-large',
+        routerLink: 'user/dashboard',
+    },
+    {
         label: 'Quản lý bài viết',
         icon: 'pi pi-list',
         routerLink: 'user/post',
         items: [
+            {
+                label: 'Dự án bất động sản',
+                routerLink: 'user/post/project'
+            },
             {
                 label: 'Bài viết dự án',
                 routerLink: 'user/post/info'
@@ -198,6 +237,59 @@ export const HEADER_NAV = [
         ]
     },
     {
+        label: "Dự án",
+        items: [
+            {
+                label: "Căn hộ chung cư",
+                routerLink: `/du-an/${PROJECT_ROUTE.CAN_HO_CHUNG_CU}`
+            },
+            {
+                label: "Cao ốc văn phòng",
+                routerLink: `/du-an/${PROJECT_ROUTE.CAO_OC_VAN_PHONG}`
+            },
+            {
+                label: "Trung tâm thương mại",
+                routerLink: `/du-an/${PROJECT_ROUTE.TRUNG_TAM_THUONG_MAI}`
+            },
+            {
+                label: "Khu đô thị mới",
+                routerLink: `/du-an/${PROJECT_ROUTE.KHU_DO_THI_MOI}`
+            },
+            {
+                label: "Khu phức hợp",
+                routerLink: `/du-an/${PROJECT_ROUTE.KHU_PHUC_HOP}`
+            },
+            {
+                label: "Nhà ở xã hội",
+                routerLink: `/du-an/${PROJECT_ROUTE.NHA_O_XA_HOI}`
+            },
+            {
+                label: "Khu nghỉ dưỡng, Sinh thái",
+                routerLink: `/du-an/${PROJECT_ROUTE.KHU_NGHI_DUONG_SINH_THAI}`
+            },
+            {
+                label: "Khu công nghiệp",
+                routerLink: `/du-an/${PROJECT_ROUTE.KHU_CONG_NGHIEP}`
+            },
+            {
+                label: "Biệt thự, liền kề",
+                routerLink: `/du-an/${PROJECT_ROUTE.BIET_THU_LIEN_KE}`
+            },
+            {
+                label: "Shop house",
+                routerLink: `/du-an/${PROJECT_ROUTE.SHOP_HOUSE}`
+            },
+            {
+                label: "Nhà mặt phố",
+                routerLink: `/du-an/${PROJECT_ROUTE.NHA_MAT_PHO}`
+            },
+            {
+                label: "Dự án khác",
+                routerLink: `/du-an/${PROJECT_ROUTE.DU_AN_KHAC}`
+            }
+        ]
+    },
+    {
         label: "Cộng đồng",
         routerLink: '/cong-dong'
     },
@@ -205,7 +297,7 @@ export const HEADER_NAV = [
         label: "Tiện ích",
         items: [
             {
-                label: "Dự án",
+                label: "Tin dự án",
                 routerLink: '/tien-ich/du-an'
             },
             {

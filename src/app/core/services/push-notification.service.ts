@@ -66,23 +66,23 @@ export class PushNotificationService {
         })
     }
 
-    getAllUserToken(): Observable<UserToken[]> {
-        return this._httpClient.get<UserToken[]>(`${environment.PUSH_NOTIFY_BASE_URL}/userToken`);
-    }
+    // getAllUserToken(): Observable<UserToken[]> {
+    //     return this._httpClient.get<UserToken[]>(`${environment.PUSH_NOTIFY_BASE_URL}/userToken`);
+    // }
 
-    getUserToken(userToken: UserToken): Observable<UserToken> {
-        let requestParams = new HttpParams()
-                .set('userId', userToken.userId)
-                .set('deviceInfo', userToken.deviceInfo);
-        return this._httpClient.get<UserToken>(`${environment.PUSH_NOTIFY_BASE_URL}/userToken/getByUserIdAndDeviceInfo`, 
-                                                { params: requestParams });
-    }
+    // getUserToken(userToken: UserToken): Observable<UserToken> {
+    //     let requestParams = new HttpParams()
+    //             .set('userId', userToken.userId)
+    //             .set('deviceInfo', userToken.deviceInfo);
+    //     return this._httpClient.get<UserToken>(`${environment.PUSH_NOTIFY_BASE_URL}/userToken/getByUserIdAndDeviceInfo`, 
+    //                                             { params: requestParams });
+    // }
 
-    addUserToken(userToken: UserToken): Observable<UserToken> {
-        return this._httpClient.post<UserToken>(`${environment.PUSH_NOTIFY_BASE_URL}/userToken`, userToken);
-    }
+    // addUserToken(userToken: UserToken): Observable<UserToken> {
+    //     return this._httpClient.post<UserToken>(`${environment.PUSH_NOTIFY_BASE_URL}/userToken`, userToken);
+    // }
 
-    updateUserToken(userToken: UserToken): Observable<UserToken> {
-        return this._httpClient.put<UserToken>(`${environment.PUSH_NOTIFY_BASE_URL}/userToken`, userToken);
-    }
+    // updateUserToken(userToken: UserToken): Observable<UserToken> {
+    //     return this._httpClient.put<UserToken>(`${environment.PUSH_NOTIFY_BASE_URL}/userToken`, userToken);
+    // }
 }

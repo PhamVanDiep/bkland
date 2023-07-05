@@ -134,6 +134,30 @@ export class RepCarouselComponent implements OnInit, OnDestroy, OnChanges {
             this._messageService.errorMessage(response.message);
           }
         })
+    } else if (this.type === CAROUSEL_TYPE.NEWEST) {
+      this._realEstatePostService.getPostsByNewest()
+        .pipe(takeUntil(this._unsubscribe))
+        .subscribe((response: APIResponse) => {
+          this._loadingService.loading(false);
+          if (response.status === HttpStatusCode.Ok) {
+            this.reps = response.data;
+            this.reps.forEach(e => {
+              if (e.imageUrl != undefined && e.imageUrl != null && e.imageUrl.length > 0) {
+                this._mediaService.getImage(e.imageUrl)
+                  .pipe(takeUntil(this._unsubscribe))
+                  .subscribe((response1: APIResponse) => {
+                    if (response1.status === HttpStatusCode.Ok) {
+                      e.imageRetrive = this._mediaService.getImgSrc(response1.data);
+                    } else {
+                      this._messageService.errorMessage(response1.message);
+                    }
+                  }) 
+              }
+            })
+          } else {
+            this._messageService.errorMessage(response.message);
+          }
+        })
     }
   }
 

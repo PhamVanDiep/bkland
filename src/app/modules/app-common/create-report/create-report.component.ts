@@ -94,17 +94,45 @@ export class CreateReportComponent implements OnInit, OnDestroy, OnChanges {
 
   sendReport(): void {
     this._loadingService.loading(true);
-    this._postReportService.create(this.postReport)
-      .pipe(takeUntil(this._unsubscribe))
-      .subscribe((response: APIResponse) => {
-        this._loadingService.loading(false);
-        if (response.status === HttpStatusCode.Ok) {
-          this.displayCreateReportDialog = false;
-          this._messageService.successMessage(response.message);
-        } else {
-          this._messageService.errorMessage(response.message);
-        }
-      })
+    if (this.isForumPost) {
+      this._postReportService.create(this.postReport)
+        .pipe(takeUntil(this._unsubscribe))
+        .subscribe((response: APIResponse) => {
+          this._loadingService.loading(false);
+          if (response.status === HttpStatusCode.Ok) {
+            this.displayCreateReportDialog = false;
+            this._messageService.successMessage(response.message);
+          } else {
+            this._messageService.errorMessage(response.message);
+          }
+        }) 
+    } else {
+      if (this._authService.isAuthenticated()) {
+        this._postReportService.create(this.postReport)
+          .pipe(takeUntil(this._unsubscribe))
+          .subscribe((response: APIResponse) => {
+            this._loadingService.loading(false);
+            if (response.status === HttpStatusCode.Ok) {
+              this.displayCreateReportDialog = false;
+              this._messageService.successMessage(response.message);
+            } else {
+              this._messageService.errorMessage(response.message);
+            }
+          })
+      } else {
+        this._postReportService.createNoAuth(this.postReport)
+          .pipe(takeUntil(this._unsubscribe))
+          .subscribe((response: APIResponse) => {
+            this._loadingService.loading(false);
+            if (response.status === HttpStatusCode.Ok) {
+              this.displayCreateReportDialog = false;
+              this._messageService.successMessage(response.message);
+            } else {
+              this._messageService.errorMessage(response.message);
+            }
+          })
+      }
+    }
   }
 
   hideDialog(): void {

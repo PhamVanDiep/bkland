@@ -5,6 +5,7 @@ import { LoadingService } from './core/services/loading.service';
 import { MessageService as MessageServiceCustomize } from './core/services/message.service';
 import { PushNotificationService } from './core/services/push-notification.service';
 import { SwUpdate } from '@angular/service-worker';
+import { getMessaging, onMessage } from 'firebase/messaging';
 
 @Component({
   selector: 'app-root',
@@ -65,11 +66,16 @@ export class AppComponent implements OnInit {
         this._messageService.clear();
         this._messageService.add(response);
       });
-    this._pushNotifyService.listen();
-    this._pushNotifyService.message$
-      .subscribe((response: any) => {
-        console.log(response);
-      })
+
+    const messaging = getMessaging();
+    onMessage(messaging, (payload: any) => {
+      console.log(payload);
+    })
+    // this._pushNotifyService.listen();
+    // this._pushNotifyService.message$
+    //   .subscribe((response: any) => {
+    //     console.log(response);
+    //   })
   }
 
   reload(): void {
