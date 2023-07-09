@@ -41,6 +41,8 @@ import { ProjectComponent } from './project/project.component';
 import { ProjectDetailComponent } from './project/project-detail/project-detail.component';
 import { EditorModule } from 'primeng/editor';
 import { ProjectService } from 'src/app/core/services/project.service';
+import { InterestedUserComponent } from './interested-user/interested-user.component';
+import { ClipboardModule, ClipboardService } from 'ngx-clipboard';
 
 @NgModule({
   declarations: [
@@ -57,6 +59,7 @@ import { ProjectService } from 'src/app/core/services/project.service';
     DashboardComponent,
     ProjectComponent,
     ProjectDetailComponent,
+    InterestedUserComponent,
   ],
   imports: [
     CommonModule,
@@ -82,13 +85,15 @@ import { ProjectService } from 'src/app/core/services/project.service';
     MultiSelectModule,
     AppCommonModule,
     PaginatorModule,
-    EditorModule
+    EditorModule,
+    ClipboardModule
   ],
   providers: [
     ConfirmationService,
     SpecialAccountService,
     PaymentService,
-    ProjectService
+    ProjectService,
+    ClipboardService
   ]
 })
 export class UserModule { }

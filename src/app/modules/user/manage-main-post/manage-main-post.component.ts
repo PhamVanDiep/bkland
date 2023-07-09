@@ -35,6 +35,9 @@ export class ManageMainPostComponent implements OnInit, OnDestroy {
     this.innerWidth = window.innerWidth;
   }
 
+  showLstInterestedUsers: boolean;
+  selectedRepId: string;
+  
   constructor(
     private _appTitleService: AppTitleService,
     private _loadingService: LoadingService,
@@ -51,6 +54,14 @@ export class ManageMainPostComponent implements OnInit, OnDestroy {
     this.realEstatePosts = [];
     this.currRealEstatePosts = [];
     this.items = [
+      {
+        label: 'Người quan tâm',
+        icon: 'pi pi-fw pi-heart',
+        command: () => {
+          this.selectedRepId = this.selectedREP.id;
+          this.showLstInterestedUsers = true;
+        }
+      },
       {
         label: 'Xem trước',
         icon: 'pi pi-fw pi-info-circle',
@@ -77,6 +88,7 @@ export class ManageMainPostComponent implements OnInit, OnDestroy {
     if (roles === ROLE.ROLE_ENTERPRISE) {
       this._router.navigate(['../info'], { relativeTo: this._route });
     }
+    this.showLstInterestedUsers = false;
   }
 
   ngOnInit(): void {

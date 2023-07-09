@@ -10,6 +10,7 @@ import { LoadingService } from 'src/app/core/services/loading.service';
 import { MediaService } from 'src/app/core/services/media.service';
 import { MessageService } from 'src/app/core/services/message.service';
 import { RealEstatePostService } from 'src/app/core/services/real-estate-post.service';
+import { SocketioService } from 'src/app/core/services/socketio.service';
 
 @Component({
   selector: 'app-rep-carousel',
@@ -59,7 +60,8 @@ export class RepCarouselComponent implements OnInit, OnDestroy, OnChanges {
     private _mediaService: MediaService,
     private _authService: AuthService,
     private _deviceDetectorService: DeviceDetectorService,
-    private _router: Router
+    private _router: Router,
+    private _socketService: SocketioService
   ) {
     this.reps = [];
     this.noInterest = 0;
@@ -94,7 +96,7 @@ export class RepCarouselComponent implements OnInit, OnDestroy, OnChanges {
                     } else {
                       this._messageService.errorMessage(response1.message);
                     }
-                  }) 
+                  })
               }
               this._realEstatePostService.isInterested(this.userId, e.id, this.isAuthenticated ? '' : this.deviceInfo.userAgent.replaceAll(' ', ''))
                 .pipe(takeUntil(this._unsubscribe))
@@ -127,14 +129,25 @@ export class RepCarouselComponent implements OnInit, OnDestroy, OnChanges {
                     } else {
                       this._messageService.errorMessage(response1.message);
                     }
-                  }) 
+                  })
               }
+              this._realEstatePostService.isInterested(this.userId, e.id, this.isAuthenticated ? '' : this.deviceInfo.userAgent.replaceAll(' ', ''))
+                .pipe(takeUntil(this._unsubscribe))
+                .subscribe((response2: APIResponse) => {
+                  if (response2.status === HttpStatusCode.Ok) {
+                    e.interested = response2.data;
+                  } else {
+                    this._messageService.errorMessage(response2.message);
+                  }
+                });
             })
           } else {
             this._messageService.errorMessage(response.message);
           }
         })
     } else if (this.type === CAROUSEL_TYPE.NEWEST) {
+      this._socketService.connect();
+      this._socketService.joinNewRepConversation();
       this._realEstatePostService.getPostsByNewest()
         .pipe(takeUntil(this._unsubscribe))
         .subscribe((response: APIResponse) => {
@@ -151,11 +164,40 @@ export class RepCarouselComponent implements OnInit, OnDestroy, OnChanges {
                     } else {
                       this._messageService.errorMessage(response1.message);
                     }
-                  }) 
+                  })
               }
+              this._realEstatePostService.isInterested(this.userId, e.id, this.isAuthenticated ? '' : this.deviceInfo.userAgent.replaceAll(' ', ''))
+                .pipe(takeUntil(this._unsubscribe))
+                .subscribe((response2: APIResponse) => {
+                  if (response2.status === HttpStatusCode.Ok) {
+                    e.interested = response2.data;
+                  } else {
+                    this._messageService.errorMessage(response2.message);
+                  }
+                });
             })
           } else {
             this._messageService.errorMessage(response.message);
+          }
+        });
+      this._socketService.receiveNewRep();
+      this._socketService.getNewRep$
+        .pipe(takeUntil(this._unsubscribe))
+        .subscribe((response: any) => {
+          if (response != null) {
+            if (response.imageUrl != undefined && response.imageUrl != null && response.imageUrl.length > 0) {
+              this._mediaService.getImage(response.imageUrl)
+                .pipe(takeUntil(this._unsubscribe))
+                .subscribe((response1: APIResponse) => {
+                  if (response1.status === HttpStatusCode.Ok) {
+                    response.imageRetrive = this._mediaService.getImgSrc(response1.data);
+                  } else {
+                    this._messageService.errorMessage(response1.message);
+                  }
+                })
+            }
+            response.interested = false;
+            this.reps = [response, ...this.reps];
           }
         })
     }
@@ -168,7 +210,7 @@ export class RepCarouselComponent implements OnInit, OnDestroy, OnChanges {
       .subscribe((response: number) => {
         this.noInterest = response;
       });
-    
+
     this.deviceInfo = this._deviceDetectorService.getDeviceInfo();
   }
 
@@ -223,5 +265,7 @@ export class RepCarouselComponent implements OnInit, OnDestroy, OnChanges {
     // throw new Error('Method not implemented.');
     this._unsubscribe.next(null);
     this._unsubscribe.complete();
+    this._socketService.disconnect();
+    this._socketService.leaveNewRepConversation();
   }
 }

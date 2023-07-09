@@ -35,7 +35,9 @@ export class CooperateAgencyComponent implements OnInit, OnDestroy {
   }
 
   selectedPostId: string;
-  
+  showLstInterestedUsers: boolean;
+  showStatistic: boolean;
+
   constructor(
     private _appTitleService: AppTitleService,
     private _loadingService: LoadingService,
@@ -51,6 +53,8 @@ export class CooperateAgencyComponent implements OnInit, OnDestroy {
     this.isAgency = this._userService.isAgency();
     this.agencyRequested = [];
     this.innerWidth = window.innerWidth;
+    this.showLstInterestedUsers = false;
+    this.showStatistic = false;
   }
 
   ngOnInit(): void {

@@ -11,6 +11,7 @@ import { AppTitleService } from 'src/app/core/services/app-title.service';
 import { LoadingService } from 'src/app/core/services/loading.service';
 import { MessageService } from 'src/app/core/services/message.service';
 import { RealEstatePostService } from 'src/app/core/services/real-estate-post.service';
+import { SocketioService } from 'src/app/core/services/socketio.service';
 
 @Component({
   selector: 'app-main-post',
@@ -39,7 +40,8 @@ export class MainPostComponent implements OnInit, OnDestroy {
     private _realEstatePostService: RealEstatePostService,
     private _confirmationService: ConfirmationService,
     private _router: Router,
-    private _route: ActivatedRoute
+    private _route: ActivatedRoute,
+    private _socketService: SocketioService
   ) {
     this._appTitleService.setTitle(this.title);
     this.items = [
@@ -70,6 +72,8 @@ export class MainPostComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this._socketService.connect();
+    this._socketService.joinNewRepConversation();
     // throw new Error('Method not implemented.');
     this._loadingService.loading(true);
     this._realEstatePostService.getAllPost()
@@ -197,6 +201,7 @@ export class MainPostComponent implements OnInit, OnDestroy {
               if (response.status === HttpStatusCode.Ok) {
                 this._messageService.successMessage(response.message);
                 this.selectedRep.status = response.data;
+                this._socketService.sendNewRep(this.selectedRep);
               } else {
                 this._messageService.errorMessage(response.message);
               }
@@ -245,5 +250,7 @@ export class MainPostComponent implements OnInit, OnDestroy {
     // throw new Error('Method not implemented.');
     this._unsubscribe.next(null);
     this._unsubscribe.complete();
+    this._socketService.disconnect();
+    this._socketService.leaveNewRepConversation();
   }
 }

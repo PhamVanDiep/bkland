@@ -1,0 +1,31 @@
+<div class="w-full flex flex-col space-y-6 px-2 md:px-4">
+    <div class="flex flex-row items-center w-full space-x-4 mt-6 md:mt-4">
+        <button pButton pRipple class="p-button-text p-button-secondary w-max p-button-rounded"
+            (click)="goBack()" pTooltip="Quay lại" icon="pi pi-chevron-left"></button>
+        <span class="text-lg font-bold">{{ 'Danh sách người dùng đã quan tâm tới bài viết' }}</span>
+    </div>
+    <div class="w-full flex flex-col space-y-4" *ngIf="lstUsers.length > 0;else emptyIntestedUser">
+        <div class="flex flex-col lg:flex-row lg:items-center w-full border border-b-custom rounded-md p-2" *ngFor="let item of lstUsers">
+            <div class="w-full flex flex-row items-center space-x-4">
+                <p-avatar [image]="item?.avatarRetrive" shape="circle"></p-avatar>
+                <span class="font-bold">{{ item?.fullName }}</span>
+            </div>
+            <div class="w-full flex flex-row items-center space-x-2">
+                <i class="pi pi-phone"></i>
+                <span>{{ item?.phoneNumber }}</span>
+                <i class="pi pi-copy" (click)="copy(item?.phoneNumber)" pTooltip="Sao chép sđt"></i>
+            </div>
+            <div class="w-full flex flex-row items-center space-x-2">
+                <i class="pi pi-envelope"></i>
+                <span>{{ item?.email }}</span>
+                <i class="pi pi-copy" (click)="copy(item?.phoneNumber)" pTooltip="Sao chép email"></i>
+            </div>
+            <div class="w-full justify-end flex">
+                <span class="italic text-sm">{{ item?.createAt | date:'dd/MM/yyyy hh:mm:ss a' }}</span>
+            </div>
+        </div>
+    </div>
+    <ng-template #emptyIntestedUser>
+        <span class="italic text-sm">{{ 'Bài viết không có người dùng nào quan tâm' }}</span>
+    </ng-template>
+</div>

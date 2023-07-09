@@ -8,9 +8,14 @@ import { environment } from "src/environments/environment";
 })
 export class SocketioService {
     private _message: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+    private _newRep: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 
     get message$(): Observable<any> {
         return this._message.asObservable();
+    }
+
+    get getNewRep$(): Observable<any> {
+        return this._newRep.asObservable();
     }
 
     socket: any;
@@ -36,6 +41,25 @@ export class SocketioService {
     receiveMessage(): void {
         this.socket.on("newMessageSent", (data: any) => {
             this._message.next(data);
+        })
+    }
+
+    joinNewRepConversation(): void {
+        this.socket.emit("joinConversation", "newRepId");
+    }
+
+    leaveNewRepConversation(): void {
+        this.socket.emit("leaveConversation", "newRepId");
+    }
+
+    sendNewRep(rep: any): void {
+        this.socket.emit("newRep", rep);
+    }
+
+    receiveNewRep(): void {
+        this.socket.on("newRepReceiver", (data: any) => {
+            console.log(data);
+            this._newRep.next(data);
         })
     }
 

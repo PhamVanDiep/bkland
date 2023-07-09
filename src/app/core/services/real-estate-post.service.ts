@@ -302,4 +302,13 @@ export class RealEstatePostService {
             }
         });
     }
+
+    getAllInterestedUsersOfPost(postId: string): Observable<APIResponse> {
+        let accessToken = localStorage.getItem('accessToken') || '';
+        return this._httpClient.get<APIResponse>(`${environment.BASE_URL_AUTH}/real-estate-post/interested/all-user?postId=${postId}`, {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        });
+    }
 }

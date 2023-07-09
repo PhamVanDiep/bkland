@@ -1,5 +1,5 @@
 <p-confirmDialog [style]="{width: innerWidth > 640 ? '50vw' : '100vh'}"></p-confirmDialog>
-<div class="w-full flex flex-col px-4 lg:px-6 space-y-6">
+<div class="w-full flex flex-col px-4 lg:px-6 space-y-6" *ngIf="!showLstInterestedUsers;else lstInterestedUsers">
     <div
         class="flex flex-row w-full justify-between items-center mt-6 md:mt-4 px-2 py-2 border border-gray-custom rounded-lg shadow-lg">
         <span class="text-base font-bold">{{ isAgency ? 'Cập nhật thông tin đăng ký' : 'Bạn chưa là môi giới?' }}</span>
@@ -60,9 +60,12 @@
                     <th>
                         <button pButton pRipple class="p-button-text p-button-warning p-button-rounded"
                             pTooltip="Xem thống kê chi tiết"
-                            icon="pi pi-chart-line" (click)="selectedPostId=rep.id"></button>
+                            icon="pi pi-chart-line" (click)="selectedPostId=rep.id;showStatistic=true"></button>
                         <button pButton pRipple class="p-button-text p-button-info p-button-rounded"
                             pTooltip="Xem bài viết" icon="pi pi-info-circle" (click)="viewPost(rep.id)"></button>
+                        <button pButton pRipple class="p-button-text p-button-help p-button-rounded"
+                            pTooltip="Xem danh sách người dùng quan tâm" icon="pi pi-heart" 
+                            (click)="selectedPostId=rep.id;showLstInterestedUsers=true"></button>
                         <button pButton pRipple class="p-button-text p-button-success p-button-rounded"
                             pTooltip="Nhận lời môi giới cho bài viết" icon="pi pi-check"
                             (click)="acceptPost(rep)" *ngIf="rep.status === 'DA_GUI_YEU_CAU'"></button>
@@ -78,7 +81,7 @@
                 </tr>
             </ng-template>
         </p-table>
-        <div class="w-full mt-4">
+        <div class="w-full mt-4" *ngIf="showStatistic">
             <app-rep-statistic [postId]="selectedPostId"></app-rep-statistic>
         </div>
     </div>
@@ -144,3 +147,6 @@
         </p-table>
     </ng-template>
 </div>
+<ng-template #lstInterestedUsers>
+    <app-interested-user [postId]="selectedPostId" (back)="showLstInterestedUsers=false"></app-interested-user>
+</ng-template>
