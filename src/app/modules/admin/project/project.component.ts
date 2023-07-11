@@ -3,7 +3,7 @@ import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmEventType, ConfirmationService } from 'primeng/api';
 import { ReplaySubject, takeUntil } from 'rxjs';
-import { PROJECT_TYPE_DROPDOWN } from 'src/app/core/constants/project.constant';
+import { PROJECT_TYPE_DROPDOWN, PROJECT_TYPE_DROPDOWN_TABLE_FILTER } from 'src/app/core/constants/project.constant';
 import { APIResponse } from 'src/app/core/models/api-response.model';
 import { Project } from 'src/app/core/models/project.model';
 import { LoadingService } from 'src/app/core/services/loading.service';
@@ -25,9 +25,13 @@ export class ProjectComponent implements OnInit, OnDestroy {
   }
   projectTypes: any[];
   lstProjects: Project[];
+  lstProjectsSrc: Project[];
 
   preview: boolean;
   selectedProject: Project;
+
+  lstTypeDropdown: any[];
+  selectedType: string;
 
   constructor(
     private _loadingService: LoadingService,
@@ -41,8 +45,17 @@ export class ProjectComponent implements OnInit, OnDestroy {
     this.lstProjects = [];
     this.projectTypes = PROJECT_TYPE_DROPDOWN;
     this.preview = false;
+    this.selectedType = 'ALL';
+    this.lstTypeDropdown = PROJECT_TYPE_DROPDOWN_TABLE_FILTER;
   }
 
+  filterByType(): void {
+    if (this.selectedType == 'ALL') {
+      this.lstProjects = this.lstProjectsSrc;
+    } else {
+      this.lstProjects = this.lstProjectsSrc.filter(e => e.type == this.selectedType);
+    }
+  }
   deleteProject(id: string): void {
     this._confirmationService.confirm(
       {
@@ -76,6 +89,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
         if (response.status === HttpStatusCode.Ok) {
           this._messageService.successMessage(response.message);
           this.lstProjects = this.lstProjects.filter(e => e.id != id);
+          this.lstProjectsSrc = this.lstProjectsSrc.filter(e => e.id != id);
         } else {
           this._messageService.errorMessage(response.message);
         }
@@ -108,6 +122,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
         this._loadingService.loading(false);
         if (response.status === HttpStatusCode.Ok) {
           this.lstProjects = response.data;
+          this.lstProjectsSrc = response.data;
         } else {
           this._messageService.errorMessage(response.message);
         }

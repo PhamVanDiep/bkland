@@ -10,9 +10,22 @@
             [rows]="10"
             dataKey="id"
             [rowsPerPageOptions]="[10, 25, 50]"
+            [showCurrentPageReport]="true"
             currentPageReportTemplate="{first} đến {last} trên {totalRecords} bản ghi"
             class="p-datatable-striped"
+            #tbl1
+            [globalFilterFields]="['name', 'createAt']"
         >
+            <ng-template pTemplate="caption">
+                <div class="flex flex-row justify-end space-x-4">
+                    <p-dropdown [options]="lstTypeDropdown" (onChange)="filterByType()" class="w-max" optionLabel="value" optionValue="key"
+                        [(ngModel)]="selectedType" placeholder="Chọn loại bài viết" [autoDisplayFirst]="false"></p-dropdown>
+                    <span class="p-input-icon-left ml-auto">
+                        <i class="pi pi-search"></i>
+                        <input #inputFilter pInputText type="text" (input)="tbl1.filterGlobal(inputFilter.value, 'contains')" placeholder="Nhập tiêu đề" />
+                    </span>
+                </div>
+            </ng-template>
             <ng-template pTemplate="header">
                 <tr>
                     <th pFrozenColumn>#</th>
@@ -22,7 +35,7 @@
                     <th>Số điện thoại</th>
                     <th>Email</th>
                     <th>Địa chỉ</th>
-                    <th>Ngày đăng</th>
+                    <th pSortableColumn="createAt">Ngày đăng <p-sortIcon field="createAt"></p-sortIcon></th>
                     <th></th>
                 </tr>
             </ng-template>

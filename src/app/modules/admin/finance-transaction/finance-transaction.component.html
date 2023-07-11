@@ -20,23 +20,25 @@
             [rows]="10"
             [rowsPerPageOptions]="[10, 25, 50]"
             currentPageReportTemplate="{first} đến {last} trên {totalRecords} bản ghi"
+            [showCurrentPageReport]="true"
+            [globalFilterFields]="['user.firstName', 'user.middleName', 'user.lastName', 'chargeType']"
         >
             <ng-template pTemplate="caption">
-                <div class="flex flex-row justify-end">
+                <div class="flex flex-row justify-end space-x-4">
                     <p-dropdown [options]="lstChargeDropdown" (onChange)="filterByStatus()" class="w-max"
                         [(ngModel)]="selectedStatus" optionLabel="value"></p-dropdown>
-                    <!-- <span class="p-input-icon-left ml-auto">
+                    <span class="p-input-icon-left ml-auto">
                         <i class="pi pi-search"></i>
                         <input #inputFilter pInputText type="text" (input)="tbl1.filterGlobal(inputFilter.value, 'contains')" placeholder="Search keyword" />
-                    </span> -->
+                    </span>
                 </div>
             </ng-template>
             <ng-template pTemplate="header">
                 <tr>
                     <th pFrozenColumn>#</th>
-                    <th>Số tiền nạp</th>
+                    <th pSortableColumn="soTien">Số tiền nạp <p-sortIcon field="soTien"></p-sortIcon></th>
                     <th>Tên người nạp</th>
-                    <th>Thời điểm</th>
+                    <th pSortableColumn="createAt">Thời điểm <p-sortIcon field="createAt"></p-sortIcon></th>
                     <th>Hình thức</th>
                     <th>Ảnh minh chứng</th>
                     <th>Trạng thái</th>
@@ -102,15 +104,26 @@
             [rows]="10"
             [rowsPerPageOptions]="[10, 25, 50]"
             currentPageReportTemplate="{first} đến {last} trên {totalRecords} bản ghi"
+            [showCurrentPageReport]="true"
+            [globalFilterFields]="['realEstatePost.id', 'user.firstName', 'user.middleName', 'user.lastName', 'phoneNumber', 'createAt']"
+            #tbl2
         >
+            <ng-template pTemplate="caption">
+                <div class="flex flex-row justify-end space-x-4">
+                    <span class="p-input-icon-left ml-auto">
+                        <i class="pi pi-search"></i>
+                        <input #inputFilter pInputText type="text" (input)="tbl2.filterGlobal(inputFilter.value, 'contains')" placeholder="Nhập tên người đăng..." />
+                    </span>
+                </div>
+            </ng-template>
             <ng-template pTemplate="header">
                 <tr>
                     <th pFrozenColumn>#</th>
                     <th>Mã bài đăng</th>
                     <th>Tên người đăng</th>
                     <th>Số điện thoại</th>
-                    <th>Thời điểm</th>
-                    <th>Số tiền trả</th>
+                    <th pSortableColumn="createAt">Thời điểm <p-sortIcon field="createAt"></p-sortIcon></th>
+                    <th pSortableColumn="price">Số tiền trả <p-sortIcon field="createAt"></p-sortIcon></th>
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-postPaid let-index="rowIndex">
@@ -162,15 +175,26 @@
             [rows]="10"
             [rowsPerPageOptions]="[10, 25, 50]"
             currentPageReportTemplate="{first} đến {last} trên {totalRecords} bản ghi"
+            [showCurrentPageReport]="true"
+            #tbl3
+            [globalFilterFields]="['user.firstName', 'user.middleName', 'user.lastName', 'user.phoneNumber', 'content', 'createAt']"
         >
+            <ng-template pTemplate="caption">
+                <div class="flex flex-row justify-end space-x-4">
+                    <span class="p-input-icon-left ml-auto">
+                        <i class="pi pi-search"></i>
+                        <input #inputFilter pInputText type="text" (input)="tbl3.filterGlobal(inputFilter.value, 'contains')" placeholder="Nhập tên..." />
+                    </span>
+                </div>
+            </ng-template>
             <ng-template pTemplate="header">
                 <tr>
                     <th pFrozenColumn>#</th>
                     <th>Tên</th>
                     <th>Số điện thoại</th>
-                    <th>Số tiền</th>
+                    <th pSortableColumn="amount">Số tiền <p-sortIcon field="amount"></p-sortIcon></th>
                     <th>Nội dung</th>
-                    <th>Thời điểm</th>
+                    <th pSortableColumn="createAt">Thời điểm <p-sortIcon field="createAt"></p-sortIcon></th>
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-monthlyPaid let-index="rowIndex">

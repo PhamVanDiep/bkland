@@ -161,6 +161,7 @@ export class MainLayoutComponent implements OnInit, OnDestroy{
             if (response.status === HttpStatusCode.Ok) {
               localStorage.setItem('accessToken', response.data.accessToken);
               localStorage.setItem('refreshToken', response.data.refreshToken);
+              this.isAuth = true;
               setTimeout(() => {
                 this.getUserInfo();
               }, 500);

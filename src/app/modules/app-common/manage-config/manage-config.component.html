@@ -14,4 +14,30 @@
             [options]="lstNotifyBefore" optionLabel="value" optionValue="key"
             (ngModelChange)="updateSpecialAccount()"></p-dropdown>
     </div>
+    <div class="flex flex-col space-y-4 w-full" *ngIf="isAdmin">
+        <div class="w-full flex flex-row justify-between items-center px-2 py-3 border border-gray-custom rounded-lg shadow-lg">
+            <span>{{ 'Ẩn bài viết hết hạn' }}</span>
+            <div class="flex justify-end w-1/2">
+                <p-tag severity="success" value="Đang hoạt động"></p-tag>
+            </div>
+        </div>
+        <div class="w-full flex flex-row justify-between items-center px-2 py-3 border border-gray-custom rounded-lg shadow-lg">
+            <span>{{ 'Thông báo tài khoản doanh nghiệp mới tạo cần đóng phí' }}</span>
+            <div class="flex justify-end w-1/2">
+                <p-tag severity="success" value="Đang hoạt động"></p-tag>
+            </div>
+        </div>
+        <div class="w-full flex flex-row justify-between items-center px-2 py-3 border border-gray-custom rounded-lg shadow-lg">
+            <span>{{ 'Thông báo cho môi giới/doanh nghiệp đến hạn đóng phí' }}</span>
+            <div class="flex justify-end w-1/2">
+                <p-tag severity="success" value="Đang hoạt động"></p-tag>
+            </div>
+        </div>
+        <div class="w-full flex flex-row justify-between items-center px-2 py-3 border border-gray-custom rounded-lg shadow-lg">
+            <span>{{ 'Tính toán dữ liệu trung bình hàng ngày' }}</span>
+            <div class="flex justify-end w-1/2">
+                <p-tag severity="success" value="Đang hoạt động"></p-tag>
+            </div>
+        </div>
+    </div>
 </div>

@@ -63,3 +63,58 @@ export const PROJECT_TYPE_DROPDOWN = [
         value: 'Dự án khác'
     }
 ]
+
+export const PROJECT_TYPE_DROPDOWN_TABLE_FILTER = [
+    {
+        key: 'ALL',
+        value: 'Tất cả'
+    },
+    {
+        key: 'CAN_HO_CHUNG_CU',
+        value: 'Căn hộ chung cư'
+    },
+    {
+        key: 'CAO_OC_VAN_PHONG',
+        value: 'Cao ốc văn phòng'
+    },
+    {
+        key: 'TRUNG_TAM_THUONG_MAI',
+        value: 'Trung tâm thương mại'
+    },
+    {
+        key: 'KHU_DO_THI_MOI',
+        value: 'Khu đô thị mới'
+    },
+    {
+        key: 'KHU_PHUC_HOP',
+        value: 'Khu phức hợp'
+    },
+    {
+        key: 'NHA_O_XA_HOI',
+        value: 'Nhà ở xã hội'
+    },
+    {
+        key: 'KHU_NGHI_DUONG_SINH_THAI',
+        value: 'Khu nghỉ dưỡng, sinh thái'
+    },
+    {
+        key: 'KHU_CONG_NGHIEP',
+        value: 'Khu công nghiệp'
+    },
+    {
+        key: 'BIET_THU_LIEN_KE',
+        value: 'Biệt thự, liền kề'
+    },
+    {
+        key: 'SHOP_HOUSE',
+        value: 'Shop house'
+    },
+    {
+        key: 'NHA_MAT_PHO',
+        value: 'Nhà mặt phố'
+    },
+    {
+        key: 'DU_AN_KHAC',
+        value: 'Dự án khác'
+    }
+]

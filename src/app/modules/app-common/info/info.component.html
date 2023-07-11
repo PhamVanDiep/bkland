@@ -4,7 +4,7 @@
         <span class="text-xl font-bold">Danh mục tin tức</span>
         <p-card header="Thêm mới danh mục">
             <div class="w-full flex flex-row justify-between space-x-4">
-                <input pInputText [(ngModel)]="newInfoTypeName" class="w-full">
+                <input pInputText [(ngModel)]="newInfoTypeName" class="w-full" placeholder="Nhập tên danh mục...">
                 <div class="w-1/4 flex justify-end md:w-1/12">
                     <button pButton pRipple icon="pi pi-plus"
                         class="p-button-rounded p-button-success w-max"
@@ -88,9 +88,22 @@
             [rows]="10"
             dataKey="id"
             [rowsPerPageOptions]="[10, 25, 50]"
+            [showCurrentPageReport]="true"
             currentPageReportTemplate="{first} đến {last} trên {totalRecords} bản ghi"
             class="p-datatable-striped"
+            #tbl1
+            [globalFilterFields]="['title', 'description', 'createAt']"
         >
+            <ng-template pTemplate="caption">
+                <div class="flex flex-row justify-end space-x-4">
+                    <p-dropdown [options]="lstTypeDropdown" (onChange)="filterByType()" class="w-max" optionLabel="name" optionValue="id" *ngIf="isAdmin"
+                        [(ngModel)]="selectedType" placeholder="Chọn loại bài viết" [autoDisplayFirst]="false"></p-dropdown>
+                    <span class="p-input-icon-left ml-auto">
+                        <i class="pi pi-search"></i>
+                        <input #inputFilter pInputText type="text" (input)="tbl1.filterGlobal(inputFilter.value, 'contains')" placeholder="Nhập tiêu đề" />
+                    </span>
+                </div>
+            </ng-template>
             <ng-template pTemplate="header">
                 <tr>
                     <th pFrozenColumn>#</th>
@@ -98,8 +111,8 @@
                     <th>Mô tả</th>
                     <th>Loại</th>
                     <th>Người tạo</th>
-                    <th>Thời gian tạo</th>
-                    <th>Số lượt xem</th>
+                    <th pSortableColumn="createAt">Thời gian tạo <p-sortIcon field="createAt"></p-sortIcon></th>
+                    <th pSortableColumn="view">Số lượt xem <p-sortIcon field="view"></p-sortIcon></th>
                     <th></th>
                 </tr>
             </ng-template>

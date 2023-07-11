@@ -28,7 +28,8 @@ export class InfoComponent implements OnInit, OnDestroy {
   newInfoTypeName: string;
 
   lstInfoPosts: any[];
-
+  lstInfoPostSrc: any[];
+  
   innerWidth: any;
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
@@ -36,6 +37,9 @@ export class InfoComponent implements OnInit, OnDestroy {
   }
 
   isAdmin: boolean;
+
+  lstTypeDropdown: any[];
+  selectedType: number;
 
   constructor(
     private _appTitleService: AppTitleService,
@@ -61,6 +65,8 @@ export class InfoComponent implements OnInit, OnDestroy {
     } else {
       this._router.navigate(['pages/forbidden']);
     }
+    this.lstTypeDropdown = [];
+    this.selectedType = 0;
   }
 
   ngOnDestroy(): void {
@@ -83,8 +89,36 @@ export class InfoComponent implements OnInit, OnDestroy {
             this._messageService.errorMessage(response.message);
           }
         });
+      this._infoTypeService.getAll()
+        .pipe(takeUntil(this._unsubscribe))
+        .subscribe((response: APIResponse) => {
+          if (response.status === HttpStatusCode.Ok) {
+            this.lstTypeDropdown = response.data;
+            let allInfoType: InfoType = {
+              id: 0,
+              name: 'Tất cả',
+              createAt: null,
+              createBy: '',
+              parent: 0,
+              path: '',
+              updateAt: null,
+              updateBy: ''
+            };
+            this.lstTypeDropdown = [allInfoType, ...this.lstTypeDropdown];
+          } else {
+            this._messageService.errorMessage(response.message);
+          }
+        });
     }
     this.getLstPosts();
+  }
+
+  filterByType(): void {
+    if (this.selectedType != 0) {
+      this.lstInfoPosts = this.lstInfoPostSrc.filter(e => e.infoType.id == this.selectedType); 
+    } else {
+      this.lstInfoPosts = this.lstInfoPostSrc;
+    }
   }
 
   getLstPosts(): void {
@@ -96,6 +130,7 @@ export class InfoComponent implements OnInit, OnDestroy {
           this._loadingService.loading(false);
           if (response.status === HttpStatusCode.Ok) {
             this.lstInfoPosts = response.data;
+            this.lstInfoPostSrc = response.data;
           } else {
             this._messageService.errorMessage(response.message);
           }
@@ -108,6 +143,7 @@ export class InfoComponent implements OnInit, OnDestroy {
           this._loadingService.loading(false);
           if (response.status === HttpStatusCode.Ok) {
             this.lstInfoPosts = response.data;
+            this.lstInfoPostSrc = response.data;
           } else {
             this._messageService.errorMessage(response.message);
           }
@@ -287,6 +323,7 @@ export class InfoComponent implements OnInit, OnDestroy {
               if (response.status === HttpStatusCode.Ok) {
                 this._messageService.successMessage(response.message);
                 this.lstInfoPosts = this.lstInfoPosts.filter((e: InfoPost) => e.id !== id);
+                this.lstInfoPostSrc = this.lstInfoPostSrc.filter((e: InfoPost) => e.id !== id);
               } else {
                 this._messageService.errorMessage(response.message);
               }

@@ -15,6 +15,7 @@ import { PriceFluctuationService } from 'src/app/core/services/price-fluctuation
 import { PushNotificationService } from 'src/app/core/services/push-notification.service';
 import { SpecialAccountService } from 'src/app/core/services/special-account.service';
 import { UserDeviceTokenService } from 'src/app/core/services/user-device-token.service';
+import { UserService } from 'src/app/core/services/user.service';
 
 @Component({
   selector: 'app-manage-config',
@@ -40,6 +41,8 @@ export class ManageConfigComponent implements OnInit, OnDestroy {
 
   userId: string;
 
+  isAdmin: boolean;
+
   constructor(
     private _appTitleService: AppTitleService,
     private _loadingService: LoadingService,
@@ -48,7 +51,8 @@ export class ManageConfigComponent implements OnInit, OnDestroy {
     private _pushNotificationService: PushNotificationService,
     private _userDeviceTokenService: UserDeviceTokenService,
     private _priceFluctuationService: PriceFluctuationService,
-    private _specialAccountService: SpecialAccountService
+    private _specialAccountService: SpecialAccountService,
+    private _userService: UserService
   ) {
     this._appTitleService.setTitle(this.title);
 
@@ -87,6 +91,7 @@ export class ManageConfigComponent implements OnInit, OnDestroy {
       userId: ''
     };
     this.userId = JSON.parse(window.atob((localStorage.getItem('accessToken') || '').split('.')[1])).id;
+    this.isAdmin = this._userService.isAdmin();
   }
 
   ngOnDestroy(): void {

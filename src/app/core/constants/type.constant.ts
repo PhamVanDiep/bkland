@@ -19,6 +19,25 @@ export const TYPE_DROPDOWN = [
     }
 ];
 
+export const TYPE_DROPDOWN_FILTER = [
+    {
+        key: 'ALL',
+        value: 'Tất cả'
+    },
+    {
+        key: TYPE.HOUSE,
+        value: 'Nhà đất'
+    },
+    {
+        key: TYPE.APARTMENT,
+        value: 'Chung cư'
+    },
+    {
+        key: TYPE.PLOT,
+        value: 'Đất nền'
+    }
+];
+
 export const TYPE_SELL_DROPDOWN = [
     {
         key: TYPE.HOUSE,

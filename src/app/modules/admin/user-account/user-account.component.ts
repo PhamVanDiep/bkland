@@ -4,7 +4,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { ConfirmEventType, ConfirmationService, MenuItem } from 'primeng/api';
 import { ReplaySubject, takeUntil } from 'rxjs';
 import { GENDER } from 'src/app/core/constants/gender.constant';
-import { ROLE } from 'src/app/core/constants/role.constant';
+import { ROLE, ROLE_DROPDOWN } from 'src/app/core/constants/role.constant';
 import { APIResponse } from 'src/app/core/models/api-response.model';
 import { SignUpRequest } from 'src/app/core/models/sign-up.model';
 import { UserInfo } from 'src/app/core/models/user-info.model';
@@ -25,12 +25,17 @@ export class UserAccountComponent implements OnInit, OnDestroy {
   private title: string = 'Quản lý tài khoản';
 
   users: SignUpRequest[];
+  userSrc: SignUpRequest[];
+
   selectedUser: SignUpRequest;
 
   innerWidth: any;
   displayUserDetail: boolean;
   avatarUrlRetrive: any;
   user: UserInfo;
+
+  lstRoleDropdown: any[];
+  selectedRole: number;
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
@@ -103,6 +108,24 @@ export class UserAccountComponent implements OnInit, OnDestroy {
       updateBy: '',
       updateAt: null
     };
+    this.lstRoleDropdown = ROLE_DROPDOWN;
+    this.selectedRole = -1;
+  }
+
+  filterByRole(): void {
+    if (this.selectedRole == 0) {
+      this.users = this.userSrc;
+    } else {
+      this.users = this.userSrc.filter(e => {
+        let valid = false;
+        e.roles.forEach((ee: any) => {
+          if (ee.id == this.selectedRole) {
+            valid = true;
+          }
+        })
+        return valid;
+      })
+    }
   }
 
   ngOnDestroy(): void {
@@ -119,6 +142,7 @@ export class UserAccountComponent implements OnInit, OnDestroy {
         this._loadingService.loading(false);
         if (response.status === HttpStatusCode.Ok) {
           this.users = response.data.filter((e: SignUpRequest) => e.id !== 'admin');
+          this.userSrc = response.data.filter((e: SignUpRequest) => e.id !== 'admin');;
         } else {
           this._messageService.errorMessage(response.message);
         }

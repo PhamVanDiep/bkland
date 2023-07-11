@@ -7,7 +7,20 @@
         [rows]="10"
         [rowsPerPageOptions]="[10, 25, 50]"
         currentPageReportTemplate="{first} đến {last} trên {totalRecords} bản ghi"
+        [showCurrentPageReport]="true"
+        #tbl1
+        [globalFilterFields]="['firstName', 'middleName', 'lastName', 'email', 'phoneNumber']"
     >
+        <ng-template pTemplate="caption">
+            <div class="flex flex-row justify-end space-x-4">
+                <p-dropdown [options]="lstRoleDropdown" (onChange)="filterByRole()" class="w-max" optionLabel="title" optionValue="id"
+                    [(ngModel)]="selectedRole" placeholder="Chọn vai trò" [autoDisplayFirst]="false"></p-dropdown>
+                <span class="p-input-icon-left ml-auto">
+                    <i class="pi pi-search"></i>
+                    <input #inputFilter pInputText type="text" (input)="tbl1.filterGlobal(inputFilter.value, 'contains')" placeholder="Nhập tên người dùng..." />
+                </span>
+            </div>
+        </ng-template>
         <ng-template pTemplate="header">
             <tr>
                 <th pFrozenColumn>#</th>

@@ -121,12 +121,17 @@
                 }}</span>
         </div>
         <p-table [value]="lstPostReportsFilter" [paginator]="true" [rows]="10" dataKey="id"
-            [rowsPerPageOptions]="[10, 25, 50]"
-            currentPageReportTemplate="{first} đến {last} trên {totalRecords} bản ghi" class="p-datatable-striped">
+            [rowsPerPageOptions]="[10, 25, 50]" [showCurrentPageReport]="true" #tbl1
+            currentPageReportTemplate="{first} đến {last} trên {totalRecords} bản ghi" class="p-datatable-striped"
+            [globalFilterFields]="['title']">
             <ng-template pTemplate="caption">
-                <div class="flex flex-row justify-end">
+                <div class="flex flex-row justify-end space-x-4">
                     <p-dropdown [options]="lstPostTypeDropdown" (onChange)="filterByPostType()" class="w-max"
                         [(ngModel)]="selectedPostType" optionLabel="value" optionValue="key"></p-dropdown>
+                    <span class="p-input-icon-left ml-auto">
+                        <i class="pi pi-search"></i>
+                        <input #inputFilter pInputText type="text" (input)="tbl1.filterGlobal(inputFilter.value, 'contains')" placeholder="Nhập tiêu đề..." />
+                    </span>
                 </div>
             </ng-template>
             <ng-template pTemplate="header">
@@ -136,8 +141,8 @@
                     <th>Loại bài viết</th>
                     <th>Người tạo</th>
                     <th>Số điện thoại</th>
-                    <th>Thời điểm tạo</th>
-                    <th>Số báo cáo</th>
+                    <th pSortableColumn="createAt">Thời điểm tạo <p-sortIcon field="createAt"></p-sortIcon></th>
+                    <th pSortableColumn="count">Số báo cáo <p-sortIcon field="count"></p-sortIcon></th>
                     <th></th>
                 </tr>
             </ng-template>

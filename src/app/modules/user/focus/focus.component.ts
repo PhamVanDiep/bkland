@@ -3,7 +3,7 @@ import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmEventType, ConfirmationService } from 'primeng/api';
 import { ReplaySubject, takeUntil } from 'rxjs';
-import { PROJECT_TYPE_DROPDOWN } from 'src/app/core/constants/project.constant';
+import { PROJECT_TYPE_DROPDOWN, PROJECT_TYPE_DROPDOWN_TABLE_FILTER } from 'src/app/core/constants/project.constant';
 import { TYPE_DROPDOWN } from 'src/app/core/constants/type.constant';
 import { APIResponse } from 'src/app/core/models/api-response.model';
 import { Project } from 'src/app/core/models/project.model';
@@ -37,6 +37,10 @@ export class FocusComponent implements OnInit, OnDestroy {
 
   noInterest: number;
 
+  lstProjectsSrc: Project[];
+  lstTypeDropdown: any[];
+  selectedType: string;
+
   constructor(
     private _appTitleService: AppTitleService,
     private _loadingService: LoadingService,
@@ -52,6 +56,15 @@ export class FocusComponent implements OnInit, OnDestroy {
     this.innerWidth = window.innerWidth;
     this.projectTypes = PROJECT_TYPE_DROPDOWN;
     this.preview = false;
+    this.lstTypeDropdown = PROJECT_TYPE_DROPDOWN_TABLE_FILTER;
+  }
+
+  filterByType(): void {
+    if (this.selectedType == 'ALL') {
+      this.lstProjects = this.lstProjectsSrc;
+    } else {
+      this.lstProjects = this.lstProjectsSrc.filter(e => e.type == this.selectedType);
+    }
   }
 
   ngOnInit(): void {
@@ -83,6 +96,7 @@ export class FocusComponent implements OnInit, OnDestroy {
       .subscribe((response: APIResponse) => {
         if (response.status === HttpStatusCode.Ok) {
           this.lstProjects = response.data;
+          this.lstProjectsSrc = response.data;
         } else {
           this._messageService.errorMessage(response.message);
         }
@@ -185,6 +199,7 @@ export class FocusComponent implements OnInit, OnDestroy {
               if (response.status === HttpStatusCode.Ok) {
                 if (response.message === "DELETED") {
                   this.lstProjects = this.lstProjects.filter(e => e.id != projectId);
+                  this.lstProjectsSrc = this.lstProjectsSrc.filter(e => e.id != projectId);
                 }
               } else {
                 this._messageService.errorMessage(response.message);

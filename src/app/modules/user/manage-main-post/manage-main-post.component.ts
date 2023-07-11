@@ -3,8 +3,10 @@ import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmEventType, ConfirmationService, MenuItem } from 'primeng/api';
 import { ReplaySubject, takeUntil } from 'rxjs';
+import { BAN_CHOTHUE_DROPDOWN } from 'src/app/core/constants/other.constant';
 import { ROLE } from 'src/app/core/constants/role.constant';
-import { STATUS } from 'src/app/core/constants/status.constant';
+import { STATUS, STATUS_DROPDOWN } from 'src/app/core/constants/status.constant';
+import { TYPE_DROPDOWN_FILTER } from 'src/app/core/constants/type.constant';
 import { APIResponse } from 'src/app/core/models/api-response.model';
 import { RealEstatePost } from 'src/app/core/models/real-estate-post.model';
 import { AppTitleService } from 'src/app/core/services/app-title.service';
@@ -38,6 +40,14 @@ export class ManageMainPostComponent implements OnInit, OnDestroy {
   showLstInterestedUsers: boolean;
   selectedRepId: string;
   
+  typeOptions: any[];
+  repTypeOptions: any[];
+  statusOptions: any[];
+  keyword: string;
+  selectedType: number;
+  selectedRepType: string;
+  selectedStatus: string;
+
   constructor(
     private _appTitleService: AppTitleService,
     private _loadingService: LoadingService,
@@ -48,6 +58,14 @@ export class ManageMainPostComponent implements OnInit, OnDestroy {
     private _confirmationService: ConfirmationService,
     private _userService: UserService
   ) {
+    this.typeOptions = BAN_CHOTHUE_DROPDOWN;
+    this.repTypeOptions = TYPE_DROPDOWN_FILTER;
+    this.statusOptions = STATUS_DROPDOWN;
+    this.keyword = '';
+    this.selectedType = -1;
+    this.selectedRepType = '';
+    this.selectedStatus = '';
+
     this.postInfos = [];
     this.innerWidth = window.innerWidth;
     this._appTitleService.setTitle(this.title);
@@ -89,6 +107,10 @@ export class ManageMainPostComponent implements OnInit, OnDestroy {
       this._router.navigate(['../info'], { relativeTo: this._route });
     }
     this.showLstInterestedUsers = false;
+  }
+
+  filterFunc(): void {
+
   }
 
   ngOnInit(): void {

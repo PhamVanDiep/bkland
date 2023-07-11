@@ -3,7 +3,7 @@ import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmEventType, ConfirmationService, MenuItem } from 'primeng/api';
 import { ReplaySubject, takeUntil } from 'rxjs';
-import { STATUS } from 'src/app/core/constants/status.constant';
+import { STATUS, STATUS_DROPDOWN } from 'src/app/core/constants/status.constant';
 import { TYPE } from 'src/app/core/constants/type.constant';
 import { APIResponse } from 'src/app/core/models/api-response.model';
 import { RealEstatePost } from 'src/app/core/models/real-estate-post.model';
@@ -31,7 +31,11 @@ export class MainPostComponent implements OnInit, OnDestroy {
   items: MenuItem[];
 
   realEstatePosts: any[];
+  realEstatePostsSrc: any[];
   selectedRep: any;
+
+  lstStatusDropdown: any[];
+  selectedStatus: string;
 
   constructor(
     private _appTitleService: AppTitleService,
@@ -69,6 +73,8 @@ export class MainPostComponent implements OnInit, OnDestroy {
     ];
     this.realEstatePosts = [];
     this.innerWidth = window.innerWidth;
+    this.lstStatusDropdown = STATUS_DROPDOWN;
+    this.selectedStatus = '';
   }
 
   ngOnInit(): void {
@@ -82,6 +88,7 @@ export class MainPostComponent implements OnInit, OnDestroy {
         this._loadingService.loading(false);
         if (response.status === HttpStatusCode.Ok) {
           this.realEstatePosts = response.data;
+          this.realEstatePostsSrc = response.data;
         } else {
           this._messageService.errorMessage(response.message);
         }
@@ -252,5 +259,13 @@ export class MainPostComponent implements OnInit, OnDestroy {
     this._unsubscribe.complete();
     this._socketService.disconnect();
     this._socketService.leaveNewRepConversation();
+  }
+
+  filterByStatus(): void {
+    if (this.selectedStatus != 'ALL') {
+      this.realEstatePosts = this.realEstatePostsSrc.filter(e => e.status == this.selectedStatus); 
+    } else {
+      this.realEstatePosts = this.realEstatePostsSrc;
+    }
   }
 }

@@ -27,3 +27,18 @@ export const PROJECT_ROUTE = {
     NHA_MAT_PHO: 'nha-mat-pho',
     DU_AN_KHAC: 'du-an-khac'
 }
+
+export const BAN_CHOTHUE_DROPDOWN = [
+    {
+        key: 2,
+        value: 'Tất cả'
+    },
+    {
+        key: 0,
+        value: 'Cho thuê'
+    },
+    {
+        key: 1,
+        value: 'Bán'
+    }
+]
