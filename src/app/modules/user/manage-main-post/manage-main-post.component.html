@@ -8,19 +8,19 @@
             [label]="innerWidth > 640 ? 'Đăng bài' : ''" (click)="createPost()"></button>
     </div>
     <div class="w-full flex flex-col space-y-4">
+        <div class="w-full flex flex-col space-y-4 lg:flex-row lg:space-y-0 lg:space-x-4">
+            <p-dropdown [options]="typeOptions" placeholder="Bán/Cho thuê" optionLabel="value" optionValue="key" class="w-full"
+                [(ngModel)]="selectedType" (ngModelChange)="filterFunc()" [autoDisplayFirst]="false"></p-dropdown>
+            <p-dropdown [options]="repTypeOptions" placeholder="Loại bất động sản" optionLabel="value" optionValue="key" class="w-full"
+                [(ngModel)]="selectedRepType" (ngModelChange)="filterFunc()" [autoDisplayFirst]="false"></p-dropdown>
+            <p-dropdown [options]="statusOptions" placeholder="Trạng thái" optionLabel="value" optionValue="key" class="w-full"
+                [(ngModel)]="selectedStatus" (ngModelChange)="filterFunc()" [autoDisplayFirst]="false"></p-dropdown>
+            <span class="p-input-icon-left ml-auto w-full">
+                <i class="pi pi-search"></i>
+                <input pInputText type="text" placeholder="Nhập tiêu đề..." [(ngModel)]="keyword" class="w-full" (ngModelChange)="filterFunc()"/>
+            </span>
+        </div>
         <div class="w-full flex flex-col space-y-4" *ngIf="realEstatePosts.length > 0; else emptyREPs">
-            <div class="w-full flex flex-col space-y-4 lg:flex-row lg:space-y-0 lg:space-x-4">
-                <p-dropdown [options]="typeOptions" placeholder="Bán/Cho thuê" optionLabel="value" optionValue="key" class="w-full"
-                    [(ngModel)]="selectedType" (ngModelChange)="filterFunc()" [autoDisplayFirst]="false"></p-dropdown>
-                <p-dropdown [options]="repTypeOptions" placeholder="Loại bất động sản" optionLabel="value" optionValue="key" class="w-full"
-                    [(ngModel)]="selectedRepType" (ngModelChange)="filterFunc()" [autoDisplayFirst]="false"></p-dropdown>
-                <p-dropdown [options]="statusOptions" placeholder="Trạng thái" optionLabel="value" optionValue="key" class="w-full"
-                    [(ngModel)]="selectedStatus" (ngModelChange)="filterFunc()" [autoDisplayFirst]="false"></p-dropdown>
-                <span class="p-input-icon-left ml-auto w-full">
-                    <i class="pi pi-search"></i>
-                    <input pInputText type="text" placeholder="Nhập tiêu đề..." [(ngModel)]="keyword" class="w-full"/>
-                </span>
-            </div>
             <div class="flex flex-col w-full border border-gray-custom cursor-pointer px-2 py-2 rounded-lg" 
                 *ngFor="let item of currRealEstatePosts" (click)="menu.toggle($event); selectedREP=item">
                 <div class="w-full flex flex-col md:flex-row md:items-center justify-between">

@@ -311,4 +311,13 @@ export class RealEstatePostService {
             }
         });
     }
+
+    completeStatus(postId: string): Observable<APIResponse> {
+        let accessToken = localStorage.getItem('accessToken') || '';
+        return this._httpClient.post<APIResponse>(`${environment.BASE_URL_AUTH}/real-estate-post/complete-status?realEstatePostId=${postId}`, null, {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        });
+    }
 }

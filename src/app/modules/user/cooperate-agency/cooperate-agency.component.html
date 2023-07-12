@@ -14,7 +14,16 @@
     </div>
     <div *ngIf="isAgency;else normalUser">
         <p-table [value]="agencyRequested" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[10, 25, 50]"
-            currentPageReportTemplate="{first} đến {last} trên {totalRecords} bản ghi">
+            currentPageReportTemplate="{first} đến {last} trên {totalRecords} bản ghi" [showCurrentPageReport]="true"
+            #tbl1 [globalFilterFields]="['fullName', 'phoneNumber', 'title']">
+            <ng-template pTemplate="caption">
+                <div class="flex flex-row justify-end space-x-4">
+                    <span class="p-input-icon-left ml-auto">
+                        <i class="pi pi-search"></i>
+                        <input #inputFilter pInputText type="text" (input)="tbl1.filterGlobal(inputFilter.value, 'contains')" placeholder="Nhập tiêu đề..." />
+                    </span>
+                </div>
+            </ng-template>
             <ng-template pTemplate="header">
                 <tr>
                     <th pFrozenColumn>#</th>
@@ -23,7 +32,7 @@
                     <th>Loại</th>
                     <th>Người đăng</th>
                     <th>Số điện thoại</th>
-                    <th>Giá</th>
+                    <th pSortableColumn="price">Giá <p-sortIcon field="price"></p-sortIcon></th>
                     <th>Trạng thái</th>
                     <th></th>
                 </tr>
@@ -87,7 +96,16 @@
     </div>
     <ng-template #normalUser>
         <p-table [value]="userRequestSents" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[10, 25, 50]"
-            currentPageReportTemplate="{first} đến {last} trên {totalRecords} bản ghi">
+            currentPageReportTemplate="{first} đến {last} trên {totalRecords} bản ghi" [showCurrentPageReport]="true"
+            #tbl2 [globalFilterFields]="['title', 'fullName', 'phoneNumber']">
+            <ng-template pTemplate="caption">
+                <div class="flex flex-row justify-end space-x-4">
+                    <span class="p-input-icon-left ml-auto">
+                        <i class="pi pi-search"></i>
+                        <input #inputFilter pInputText type="text" (input)="tbl2.filterGlobal(inputFilter.value, 'contains')" placeholder="Nhập tiêu đề..." />
+                    </span>
+                </div>
+            </ng-template>
             <ng-template pTemplate="header">
                 <tr>
                     <th pFrozenColumn>#</th>
@@ -96,7 +114,7 @@
                     <th>Loại</th>
                     <th>Nhà môi giới</th>
                     <th>Số điện thoại</th>
-                    <th>Giá</th>
+                    <th pSortableColumn="price">Giá <p-sortIcon field="price"></p-sortIcon></th>
                     <th>Trạng thái</th>
                     <th></th>
                 </tr>

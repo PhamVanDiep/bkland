@@ -14,7 +14,20 @@
             [rowsPerPageOptions]="[10, 25, 50]"
             currentPageReportTemplate="{first} đến {last} trên {totalRecords} bản ghi"
             class="p-datatable-striped"
+            [showCurrentPageReport]="true"
+            #tbl1
+            [globalFilterFields]="['name', 'phoneNumber', 'email', 'createAt']"
         >
+            <ng-template pTemplate="caption">
+                <div class="flex flex-row justify-end space-x-4">
+                    <p-dropdown [options]="typeOptions" placeholder="Trạng thái" optionLabel="value" optionValue="key" class="w-full"
+                        [(ngModel)]="selectedType" (ngModelChange)="filterByType()" [autoDisplayFirst]="false"></p-dropdown>
+                    <span class="p-input-icon-left ml-auto">
+                        <i class="pi pi-search"></i>
+                        <input #inputFilter pInputText type="text" (input)="tbl1.filterGlobal(inputFilter.value, 'contains')" placeholder="Nhập số điện thoại..." />
+                    </span>
+                </div>
+            </ng-template>
             <ng-template pTemplate="header">
                 <tr>
                     <th pFrozenColumn>#</th>

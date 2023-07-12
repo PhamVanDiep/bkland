@@ -26,9 +26,13 @@ export class ProjectComponent implements OnInit, OnDestroy {
   }
   projectTypes: any[];
   lstProjects: Project[];
+  lstProjectsSrc: Project[];
 
   preview: boolean;
   selectedProject: Project;
+
+  typeOptions: any[];
+  selectedType: string;
 
   constructor(
     private _loadingService: LoadingService,
@@ -43,6 +47,16 @@ export class ProjectComponent implements OnInit, OnDestroy {
     this.lstProjects = [];
     this.projectTypes = PROJECT_TYPE_DROPDOWN;
     this.preview = false;
+  }
+
+  filterByType(): void {
+    this.lstProjects = this.lstProjectsSrc.filter(e => {
+      let response = true;
+      if (this.selectedType != 'ALL' && this.selectedType != e.type) {
+        response = false;
+      }
+      return response;
+    });
   }
 
   createProject(): void {
@@ -86,6 +100,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
         if (response.status === HttpStatusCode.Ok) {
           this._messageService.successMessage(response.message);
           this.lstProjects = this.lstProjects.filter(e => e.id != id);
+          this.lstProjectsSrc = this.lstProjectsSrc.filter(e => e.id != id);
         } else {
           this._messageService.errorMessage(response.message);
         }
@@ -121,6 +136,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
         this._loadingService.loading(false);
         if (response.status === HttpStatusCode.Ok) {
           this.lstProjects = response.data;
+          this.lstProjectsSrc = response.data;
         } else {
           this._messageService.errorMessage(response.message);
         }

@@ -3,9 +3,10 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApexAxisChartSeries, ApexChart, ApexDataLabels, ApexNonAxisChartSeries, ApexTitleSubtitle, ApexXAxis, ApexYAxis } from 'ng-apexcharts';
 import { ReplaySubject, takeUntil } from 'rxjs';
-import { STATUS } from 'src/app/core/constants/status.constant';
+import { BAN_CHOTHUE_DROPDOWN } from 'src/app/core/constants/other.constant';
+import { STATUS, STATUS_DROPDOWN } from 'src/app/core/constants/status.constant';
 import { MONTHS } from 'src/app/core/constants/time-select.constant';
-import { TYPE } from 'src/app/core/constants/type.constant';
+import { TYPE, TYPE_DROPDOWN_FILTER } from 'src/app/core/constants/type.constant';
 import { APIResponse } from 'src/app/core/models/api-response.model';
 import { AppTitleService } from 'src/app/core/services/app-title.service';
 import { LoadingService } from 'src/app/core/services/loading.service';
@@ -34,8 +35,16 @@ export class AdminComponent implements OnInit, OnDestroy {
   private title: string = 'Thống kê';
 
   realEstatePosts: any[];
+  realEstatePostsSrc: any[];
   selectedRep: any;
   priceFluctuations: any[];
+
+  typeOptions: any[];
+  repTypeOptions: any[];
+  statusOptions: any[];
+  selectedType: number;
+  selectedRepType: string;
+  selectedStatus: string;
 
   constructor(
     private _loadingService: LoadingService,
@@ -48,6 +57,13 @@ export class AdminComponent implements OnInit, OnDestroy {
     this._appTitleService.setTitle(this.title);
     this.priceFluctuations = [];
     this.realEstatePosts = [];
+
+    this.typeOptions = BAN_CHOTHUE_DROPDOWN;
+    this.repTypeOptions = TYPE_DROPDOWN_FILTER;
+    this.statusOptions = STATUS_DROPDOWN;
+    this.selectedType = -1;
+    this.selectedRepType = '';
+    this.selectedStatus = '';
   }
 
   ngOnInit(): void {
@@ -57,6 +73,7 @@ export class AdminComponent implements OnInit, OnDestroy {
       .subscribe((response: APIResponse) => {
         if (response.status === HttpStatusCode.Ok) {
           this.realEstatePosts = response.data;
+          this.realEstatePostsSrc = response.data;
         } else {
           this._messageService.errorMessage(response.message);
         }
@@ -64,6 +81,22 @@ export class AdminComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       this._loadingService.loading(false);      
     }, 3000);
+  }
+
+  filterFunc(): void {
+    this.realEstatePosts = this.realEstatePostsSrc.filter(e => {
+      let valid = true;
+      if (this.selectedType >= 0 && this.selectedType != 2 && ((e.sell && this.selectedType == 0) || (!e.sell && this.selectedType == 1))) {
+        valid = false;
+      }
+      if (this.selectedRepType.length > 0 && this.selectedRepType != 'ALL' && e.type != this.selectedRepType) {
+        valid = false;
+      }
+      if (this.selectedStatus.length > 0 && this.selectedStatus != 'ALL' && e.status != this.selectedStatus) {
+        valid = false;
+      }
+      return valid;
+    });
   }
 
   genType(type: string): string {

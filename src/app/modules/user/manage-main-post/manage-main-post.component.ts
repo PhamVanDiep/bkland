@@ -25,6 +25,7 @@ export class ManageMainPostComponent implements OnInit, OnDestroy {
   private _unsubscribe: ReplaySubject<any> = new ReplaySubject<any>();
   private title: string  = 'Quản lý bài đăng bán/cho thuê';
 
+  realEstatePostSrc: RealEstatePost[];
   realEstatePosts: RealEstatePost[];
   currRealEstatePosts: RealEstatePost[];
   items: MenuItem[];
@@ -95,6 +96,13 @@ export class ManageMainPostComponent implements OnInit, OnDestroy {
         }
       },
       {
+        label: 'Đã bán/cho thuê',
+        icon: 'pi pi-fw pi-check',
+        command: () => {
+          this.successStatus(this.selectedREP.id);
+        }
+      },
+      {
         label: 'Ẩn bài viết',
         icon: 'pi pi-fw pi-eye-slash',
         command: () => {
@@ -110,7 +118,37 @@ export class ManageMainPostComponent implements OnInit, OnDestroy {
   }
 
   filterFunc(): void {
+    this.realEstatePosts = this.realEstatePostSrc.filter(e => {
+      let valid = true;
+      if (this.selectedType >= 0 && this.selectedType != 2 && ((e.sell && this.selectedType == 0) || (!e.sell && this.selectedType == 1))) {
+        valid = false;
+      }
+      if (this.selectedRepType.length > 0 && this.selectedRepType != 'ALL' && e.type != this.selectedRepType) {
+        valid = false;
+      }
+      if (this.selectedStatus.length > 0 && this.selectedStatus != 'ALL' && e.status != this.selectedStatus) {
+        valid = false;
+      }
+      if (!e.title.toUpperCase().includes(this.keyword.toUpperCase()) && !e.description.toUpperCase().includes(this.keyword.toUpperCase())) {
+        valid = false;
+      }
+      return valid;
+    });
+    this.currRealEstatePosts = this.realEstatePosts.length > 10 ? this.realEstatePosts.slice(0, 10) : this.realEstatePosts;
+  }
 
+  successStatus(postId: string): void {
+    this._loadingService.loading(true);
+    this._realEsatePostService.completeStatus(postId)
+      .pipe(takeUntil(this._unsubscribe))
+      .subscribe((response: APIResponse) => {
+        this._loadingService.loading(false);
+        if (response.status === HttpStatusCode.Ok) {
+          this.selectedREP.status = response.data;
+        } else {
+          this._messageService.errorMessage(response.message);
+        }
+      });
   }
 
   ngOnInit(): void {
@@ -144,7 +182,8 @@ export class ManageMainPostComponent implements OnInit, OnDestroy {
                   this._messageService.errorMessage(response.message);
                 }
               })
-          })
+          });
+          this.realEstatePostSrc = this.realEstatePosts;
         } else {
           this._messageService.errorMessage(response.message);
         }
@@ -166,15 +205,13 @@ export class ManageMainPostComponent implements OnInit, OnDestroy {
   }
 
   getStatusValue(status: string): string {
-    if (status === STATUS.CHO_KIEM_DUYET) {
-      return 'Chờ kiểm duyệt';
-    } else if (status === STATUS.DA_KIEM_DUYET) {
-      return 'Đã kiểm duyệt';
-    } else if (status === STATUS.BI_TU_CHOI) {
-      return 'Bị từ chối';
-    } else {
-      return 'Đã hết hạn';
-    }
+    let response = '';
+    STATUS_DROPDOWN.forEach(e => {
+      if (e.key == status) {
+        response = e.value;
+      }
+    });
+    return response;
   }
 
   getStatusSeverity(status: string): string {
@@ -184,9 +221,11 @@ export class ManageMainPostComponent implements OnInit, OnDestroy {
       return 'success';
     } else if (status === STATUS.BI_TU_CHOI) {
       return 'danger';
-    } else {
+    } else if (status === STATUS.DA_HET_HAN) {
       return 'warning';
-    } 
+    } else {
+      return 'info';
+    }
   }
 
   viewPost(id: string): void {
