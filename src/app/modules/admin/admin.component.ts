@@ -110,15 +110,13 @@ export class AdminComponent implements OnInit, OnDestroy {
   }
 
   getStatusValue(status: string): string {
-    if (status === STATUS.CHO_KIEM_DUYET) {
-      return 'Chờ kiểm duyệt';
-    } else if (status === STATUS.DA_KIEM_DUYET) {
-      return 'Đã kiểm duyệt';
-    } else if (status === STATUS.BI_TU_CHOI) {
-      return 'Bị từ chối';
-    } else {
-      return 'Đã hết hạn';
-    }
+    let response = '';
+    STATUS_DROPDOWN.forEach(e => {
+      if (e.key == status) {
+        response = e.value;
+      }
+    });
+    return response;
   }
 
   getStatusSeverity(status: string): string {

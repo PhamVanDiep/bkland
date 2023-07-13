@@ -24,12 +24,13 @@
             [globalFilterFields]="['user.firstName', 'user.middleName', 'user.lastName', 'chargeType']"
         >
             <ng-template pTemplate="caption">
-                <div class="flex flex-row justify-end space-x-4">
-                    <p-dropdown [options]="lstChargeDropdown" (onChange)="filterByStatus()" class="w-max"
+                <div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:justify-end md:space-x-4">
+                    <p-dropdown [options]="lstChargeDropdown" (onChange)="filterByStatus()" class="w-full md:w-auto"
                         [(ngModel)]="selectedStatus" optionLabel="value"></p-dropdown>
-                    <span class="p-input-icon-left ml-auto">
+                    <span class="p-input-icon-left ml-auto w-full md:w-auto">
                         <i class="pi pi-search"></i>
-                        <input #inputFilter pInputText type="text" (input)="tbl1.filterGlobal(inputFilter.value, 'contains')" placeholder="Nhập tên người dùng..." />
+                        <input #inputFilter pInputText type="text" (input)="tbl1.filterGlobal(inputFilter.value, 'contains')" 
+                            placeholder="Nhập tên người dùng..." class="w-full md:w-auto"/>
                     </span>
                 </div>
             </ng-template>
@@ -110,9 +111,10 @@
         >
             <ng-template pTemplate="caption">
                 <div class="flex flex-row justify-end space-x-4">
-                    <span class="p-input-icon-left ml-auto">
+                    <span class="p-input-icon-left ml-auto w-full md:w-auto">
                         <i class="pi pi-search"></i>
-                        <input #inputFilter pInputText type="text" (input)="tbl2.filterGlobal(inputFilter.value, 'contains')" placeholder="Nhập tên người đăng..." />
+                        <input #inputFilter pInputText type="text" (input)="tbl2.filterGlobal(inputFilter.value, 'contains')" 
+                            placeholder="Nhập tên người đăng..." class="w-full md:w-auto"/>
                     </span>
                 </div>
             </ng-template>
@@ -181,9 +183,10 @@
         >
             <ng-template pTemplate="caption">
                 <div class="flex flex-row justify-end space-x-4">
-                    <span class="p-input-icon-left ml-auto">
+                    <span class="p-input-icon-left ml-auto w-full md:w-auto">
                         <i class="pi pi-search"></i>
-                        <input #inputFilter pInputText type="text" (input)="tbl3.filterGlobal(inputFilter.value, 'contains')" placeholder="Nhập tên..." />
+                        <input #inputFilter pInputText type="text" (input)="tbl3.filterGlobal(inputFilter.value, 'contains')" 
+                        placeholder="Nhập tên..." class="w-full md:w-auto"/>
                     </span>
                 </div>
             </ng-template>

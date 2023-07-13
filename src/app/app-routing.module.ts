@@ -161,16 +161,6 @@ const routes: Routes = [
     ]
   },
   {
-    path: 'cho-thue/dat-nen',
-    component: MainLayoutComponent,
-    children: [
-      {
-        path: '',
-        loadChildren: () => import('src/app/modules/danh-muc/danh-muc.module').then(m => m.DanhMucModule)
-      }
-    ]
-  },
-  {
     path: 'tim-kiem',
     component: MainLayoutComponent,
     children: [

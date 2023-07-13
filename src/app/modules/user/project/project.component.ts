@@ -3,7 +3,7 @@ import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmEventType, ConfirmationService } from 'primeng/api';
 import { ReplaySubject, takeUntil } from 'rxjs';
-import { PROJECT_TYPE_DROPDOWN } from 'src/app/core/constants/project.constant';
+import { PROJECT_TYPE_DROPDOWN, PROJECT_TYPE_DROPDOWN_TABLE_FILTER } from 'src/app/core/constants/project.constant';
 import { APIResponse } from 'src/app/core/models/api-response.model';
 import { Project } from 'src/app/core/models/project.model';
 import { LoadingService } from 'src/app/core/services/loading.service';
@@ -47,6 +47,8 @@ export class ProjectComponent implements OnInit, OnDestroy {
     this.lstProjects = [];
     this.projectTypes = PROJECT_TYPE_DROPDOWN;
     this.preview = false;
+    this.typeOptions = PROJECT_TYPE_DROPDOWN_TABLE_FILTER;
+    this.selectedType = '';
   }
 
   filterByType(): void {

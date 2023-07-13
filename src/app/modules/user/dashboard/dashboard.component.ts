@@ -2,9 +2,10 @@ import { HttpStatusCode } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ReplaySubject, takeUntil } from 'rxjs';
+import { BAN_CHOTHUE_DROPDOWN } from 'src/app/core/constants/other.constant';
 import { ROLE } from 'src/app/core/constants/role.constant';
-import { STATUS } from 'src/app/core/constants/status.constant';
-import { TYPE } from 'src/app/core/constants/type.constant';
+import { STATUS, STATUS_DROPDOWN } from 'src/app/core/constants/status.constant';
+import { TYPE, TYPE_DROPDOWN_FILTER } from 'src/app/core/constants/type.constant';
 import { APIResponse } from 'src/app/core/models/api-response.model';
 import { AppTitleService } from 'src/app/core/services/app-title.service';
 import { LoadingService } from 'src/app/core/services/loading.service';
@@ -22,7 +23,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   isEnterprise: boolean;
   realEstatePosts: any[];
+  realEstatePostSrc: any[];
   selectedRep: any;
+
+  typeOptions: any[];
+  repTypeOptions: any[];
+  statusOptions: any[];
+  selectedType: number;
+  selectedRepType: string;
+  selectedStatus: string;
 
   constructor(
     private _loadingService: LoadingService,
@@ -39,6 +48,28 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
     this.realEstatePosts = [];
     this._appTitleService.setTitle(this.title);
+    this.typeOptions = BAN_CHOTHUE_DROPDOWN;
+    this.repTypeOptions = TYPE_DROPDOWN_FILTER;
+    this.statusOptions = STATUS_DROPDOWN;
+    this.selectedType = -1;
+    this.selectedRepType = '';
+    this.selectedStatus = '';
+  }
+
+  filterFunc(): void {
+    this.realEstatePosts = this.realEstatePostSrc.filter(e => {
+      let valid = true;
+      if (this.selectedType >= 0 && this.selectedType != 2 && ((e.sell && this.selectedType == 0) || (!e.sell && this.selectedType == 1))) {
+        valid = false;
+      }
+      if (this.selectedRepType.length > 0 && this.selectedRepType != 'ALL' && e.type != this.selectedRepType) {
+        valid = false;
+      }
+      if (this.selectedStatus.length > 0 && this.selectedStatus != 'ALL' && e.status != this.selectedStatus) {
+        valid = false;
+      }
+      return valid;
+    });
   }
 
   genType(type: string): string {
@@ -52,15 +83,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   getStatusValue(status: string): string {
-    if (status === STATUS.CHO_KIEM_DUYET) {
-      return 'Chờ kiểm duyệt';
-    } else if (status === STATUS.DA_KIEM_DUYET) {
-      return 'Đã kiểm duyệt';
-    } else if (status === STATUS.BI_TU_CHOI) {
-      return 'Bị từ chối';
-    } else {
-      return 'Đã hết hạn';
-    }
+    let response = '';
+    STATUS_DROPDOWN.forEach(e => {
+      if (e.key == status) {
+        response = e.value;
+      }
+    });
+    return response;
   }
 
   getStatusSeverity(status: string): string {
@@ -88,6 +117,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this._loadingService.loading(false);
         if (response.status === HttpStatusCode.Ok) {
           this.realEstatePosts = response.data;
+          this.realEstatePostSrc = response.data;
         } else {
           this._messageService.errorMessage(response.message);
         }

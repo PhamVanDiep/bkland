@@ -23,16 +23,27 @@
             </div>
         </p-card>
         <p-table [value]="lstReportTypes" [paginator]="true" [rows]="10" dataKey="id" editMode="row"
-            [rowsPerPageOptions]="[10, 25, 50]"
-            currentPageReportTemplate="{first} đến {last} trên {totalRecords} bản ghi">
+            [rowsPerPageOptions]="[10, 25, 50]" [showCurrentPageReport]="true"
+            currentPageReportTemplate="{first} đến {last} trên {totalRecords} bản ghi"
+            #tbl2 [globalFilterFields]="['name']"
+        >
+            <ng-template pTemplate="caption">
+                <div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:justify-end md:space-x-4">
+                    <span class="p-input-icon-left ml-auto w-full md:w-auto">
+                        <i class="pi pi-search"></i>
+                        <input #inputFilter pInputText type="text" (input)="tbl2.filterGlobal(inputFilter.value, 'contains')" 
+                            placeholder="Nhập tên danh mục..."  class="w-full md:w-auto"/>
+                    </span>
+                </div>
+            </ng-template>
             <ng-template pTemplate="header">
                 <tr>
                     <th pFrozenColumn>#</th>
                     <th>Tên danh mục</th>
                     <th>Áp dụng cho</th>
-                    <th>Số lượng bài viết bị gán</th>
-                    <th>Thời điểm tạo</th>
-                    <th>Thời điểm cập nhật</th>
+                    <th pSortableColumn="count">Số lượng bài viết bị gán <p-sortIcon field="count"></p-sortIcon></th>
+                    <th pSortableColumn="createAt">Thời điểm tạo <p-sortIcon field="createAt"></p-sortIcon></th>
+                    <th pSortableColumn="updateAt">Thời điểm cập nhật <p-sortIcon field="updateAt"></p-sortIcon></th>
                     <th></th>
                 </tr>
             </ng-template>
@@ -125,12 +136,13 @@
             currentPageReportTemplate="{first} đến {last} trên {totalRecords} bản ghi" class="p-datatable-striped"
             [globalFilterFields]="['title']">
             <ng-template pTemplate="caption">
-                <div class="flex flex-row justify-end space-x-4">
-                    <p-dropdown [options]="lstPostTypeDropdown" (onChange)="filterByPostType()" class="w-max"
+                <div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:justify-end md:space-x-4">
+                    <p-dropdown [options]="lstPostTypeDropdown" (onChange)="filterByPostType()" class="w-full md:w-auto"
                         [(ngModel)]="selectedPostType" optionLabel="value" optionValue="key"></p-dropdown>
-                    <span class="p-input-icon-left ml-auto">
+                    <span class="p-input-icon-left ml-auto w-full md:w-auto">
                         <i class="pi pi-search"></i>
-                        <input #inputFilter pInputText type="text" (input)="tbl1.filterGlobal(inputFilter.value, 'contains')" placeholder="Nhập tiêu đề..." />
+                        <input #inputFilter pInputText type="text" (input)="tbl1.filterGlobal(inputFilter.value, 'contains')" 
+                            placeholder="Nhập tiêu đề..."  class="w-full md:w-auto"/>
                     </span>
                 </div>
             </ng-template>

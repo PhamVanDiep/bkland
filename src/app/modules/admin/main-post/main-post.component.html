@@ -6,7 +6,7 @@
         currentPageReportTemplate="{first} đến {last} trên {totalRecords} bản ghi">
         <ng-template pTemplate="caption">
             <div class="flex flex-row justify-end">
-                <p-dropdown [options]="lstStatusDropdown" (onChange)="filterByStatus()" class="w-max" optionLabel="value" optionValue="key"
+                <p-dropdown [options]="lstStatusDropdown" (onChange)="filterByStatus()" class="w-full md:w-auto" optionLabel="value" optionValue="key"
                     [(ngModel)]="selectedStatus" optionLabel="value" placeholder="Chọn trạng thái" [autoDisplayFirst]="false"></p-dropdown>
                 <!-- <span class="p-input-icon-left ml-auto">
                     <i class="pi pi-search"></i>
