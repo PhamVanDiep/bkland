@@ -31,7 +31,7 @@ export class SocketioService {
     }
 
     leaveConversation(id: number): void {
-        this.socket.emit("leaveConversation", id);
+        if (this.socket) this.socket.emit("leaveConversation", id);
     }
 
     sendMessage(message: any): void {
@@ -49,7 +49,7 @@ export class SocketioService {
     }
 
     leaveNewRepConversation(): void {
-        this.socket.emit("leaveConversation", "newRepId");
+        if (this.socket) this.socket.emit("leaveConversation", "newRepId");
     }
 
     sendNewRep(rep: any): void {

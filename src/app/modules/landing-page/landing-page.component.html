@@ -47,11 +47,11 @@
         <div class="w-full flex flex-col space-y-6">
             <span class="p-float-label">
                 <p-inputNumber inputId="locale-vn" mode="decimal" locale="en-VN" [minFractionDigits]="2" [(ngModel)]="searchRequest.startPrice"></p-inputNumber>
-                <label htmlFor="number-input">{{ 'Từ (tỷ VNĐ)' }}</label>
+                <label htmlFor="number-input">{{ 'Từ (' + (searchRequest.sell == 1 ? 'tỷ VNĐ)' : 'triệu VNĐ)') }}</label>
             </span>
             <span class="p-float-label">
                 <p-inputNumber inputId="locale-vn" mode="decimal" locale="en-VN" [minFractionDigits]="2" [(ngModel)]="searchRequest.endPrice"></p-inputNumber>
-                <label htmlFor="number-input">{{ 'Đến (triệu VNĐ)' }}</label>
+                <label htmlFor="number-input">{{ 'Đến (' + (searchRequest.sell == 1 ? 'tỷ VNĐ)' : 'triệu VNĐ)') }}</label>
             </span>
             <div class="flex flex-row justify-between items-center">
                 <button pButton pRipple icon="pi pi-sync" pTooltip="Đặt lại" (click)="searchRequest.startPrice=null;searchRequest.endPrice=null"
@@ -263,7 +263,7 @@
         </div>
     </div>
 </div>
-<p-dialog header="Mật khẩu mới" [(visible)]="showSearchPopup" [style]="{width: '100vw'}" 
+<p-dialog header="Tìm kiếm bài viết" [(visible)]="showSearchPopup" [style]="{width: '100vw'}" 
     [baseZIndex]="100" [modal]="true">
     <div class="flex flex-col space-y-4 p-4 w-full">
         <div class="w-full">

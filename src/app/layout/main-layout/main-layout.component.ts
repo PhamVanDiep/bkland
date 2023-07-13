@@ -5,15 +5,21 @@ import { Router } from '@angular/router';
 import { DeviceDetectorService, DeviceInfo } from 'ngx-device-detector';
 import { MenuItem } from 'primeng/api';
 import { ReplaySubject, takeUntil } from 'rxjs';
+import { DIRECTION_DROPDOWN } from 'src/app/core/constants/direction.constant';
 import { EMAIL_VERIFY_TYPE } from 'src/app/core/constants/email-verify.constant';
 import { HEADER_NAV } from 'src/app/core/constants/navigation.constant';
+import { DANH_MUC_ROUTES } from 'src/app/core/constants/other.constant';
 import { TYPE, TYPE_DROPDOWN } from 'src/app/core/constants/type.constant';
 import { About } from 'src/app/core/models/about.model';
 import { APIResponse } from 'src/app/core/models/api-response.model';
+import { District } from 'src/app/core/models/district.model';
 import { EmailVerify } from 'src/app/core/models/email-verify.model';
 import { ForgotPasswordChange } from 'src/app/core/models/forgot-password-change.model';
+import { Province } from 'src/app/core/models/province.model';
+import { SearchRequest } from 'src/app/core/models/real-estate-post.model';
 import { SignUpRequest } from 'src/app/core/models/sign-up.model';
 import { UserDeviceToken } from 'src/app/core/models/user-device-token.model';
+import { Ward } from 'src/app/core/models/ward.model';
 import { AboutService } from 'src/app/core/services/about.service';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { ChatService } from 'src/app/core/services/chat.service';
@@ -66,6 +72,16 @@ export class MainLayoutComponent implements OnInit, OnDestroy{
   userDeviceId: string;
 
   lstInterestedPosts: any[];
+
+  showSearchBar: boolean;
+  searchRequest: SearchRequest;
+  showSearchPopup: boolean;
+  lstDanhMuc: any[];
+  lstLoaiBDS: any[];
+  provinces: Province[];
+  districts: District[];
+  wards: Ward[];
+  lstDirections: any[];
 
   constructor(
     private _router: Router,
@@ -138,6 +154,47 @@ export class MainLayoutComponent implements OnInit, OnDestroy{
     this.userDeviceId = '';
     this.deviceInfo = this._deviceDetectorService.getDeviceInfo();
     this.lstInterestedPosts = [];
+
+    this.lstDanhMuc = [
+      {
+        key: 1,
+        value: "Bán"
+      },
+      {
+        key: 0,
+        value: "Cho thuê"
+      }
+    ];
+    this.lstDirections = DIRECTION_DROPDOWN;
+    this.lstLoaiBDS = TYPE_DROPDOWN;
+    this.provinces = [];
+    this.districts = [];
+    this.wards = [];
+    this.showSearchBar = false;
+    this.initSearchRequest();
+    this.showSearchPopup = false;
+  }
+
+  initSearchRequest(): void {
+    this.searchRequest = {
+      direction: [],
+      districtCode: [],
+      endArea: null,
+      endPrice: null,
+      keyword: null,
+      limit: 10,
+      noOfBedrooms: [],
+      offset: 0,
+      provinceCode: null,
+      sell: 1,
+      startArea: null,
+      startPrice: null,
+      type: null,
+      wardCode: [],
+      userId: '',
+      deviceInfo: ''
+    };
+    this.initUserIdAndDeviceInfoValue();
   }
 
   ngOnDestroy(): void {
@@ -189,7 +246,53 @@ export class MainLayoutComponent implements OnInit, OnDestroy{
       .pipe(takeUntil(this._unsubscribe))
       .subscribe((response: number) => {
         this.noInterestedPost = response.toString();
-      })
+      });
+
+    DANH_MUC_ROUTES.forEach(e => {
+      if (e.includes(this._router.url)) {
+        this.showSearchBar = true;
+      }
+    });
+
+    this._noAuthService.getAllProvinces()
+      .pipe(takeUntil(this._unsubscribe))
+      .subscribe((response: APIResponse) => {
+        if (response.status === HttpStatusCode.Ok) {
+          this.provinces = response.data.filter((e: any) => e.code != "NOT_FOUND");
+        } else {
+          this._messageService.errorMessage(response.message);
+        }
+      });
+  }
+
+  renderSelectedDanhMuc(): string {
+    let result = 'Danh mục';
+    this.lstDanhMuc.forEach(e => {
+      if (this.searchRequest.sell == e.key) {
+        result = e.value;
+      }
+    });
+    return result;
+  }
+
+  renderSelectedLoaiBDS(): string {
+    let result = 'Loại BĐS';
+    this.lstLoaiBDS.forEach(e => {
+      if (this.searchRequest.type == e.key) {
+        result = e.value;
+      }
+    });
+    return result;
+  }
+
+  initUserIdAndDeviceInfoValue(): void {
+    if (this._authService.isAuthenticated()) {
+      this.searchRequest.userId = JSON.parse(window.atob((localStorage.getItem('accessToken') || '').split('.')[1])).id;
+      this.searchRequest.deviceInfo = '';
+    } else {
+      this.searchRequest.deviceInfo = this.deviceInfo.userAgent.replaceAll(' ', '');
+      this.searchRequest.userId = 'anonymous';
+    }
   }
 
   onActivate(event: any): void {
@@ -430,5 +533,138 @@ export class MainLayoutComponent implements OnInit, OnDestroy{
       return false;
     }
     return true;
+  }
+
+  getDistrictsInProvince(): void {
+    this._noAuthService.getAllDistrictsInProvince(this.searchRequest.provinceCode)
+      .pipe(takeUntil(this._unsubscribe))
+      .subscribe((response: APIResponse) => {
+        if (response.status === HttpStatusCode.Ok) {
+          this.districts = response.data.filter((e: any) => e.code != "NOT_FOUND");
+        } else {
+          this._messageService.errorMessage(response.message);
+        }
+      })
+  }
+
+  getWardsInDistrict(): void {
+    this.searchRequest.districtCode.forEach(e => {
+      this._noAuthService.getAllWardsInDistrict(e)
+        .pipe(takeUntil(this._unsubscribe))
+        .subscribe((response: APIResponse) => {
+          if (response.status === HttpStatusCode.Ok) {
+            this.wards = [...this.wards, ...response.data.filter((e: any) => e.code != "NOT_FOUND")];
+          } else {
+            this._messageService.errorMessage(response.message);
+          }
+        })
+    })
+  }
+
+  renderSelectedDiaDiem(): string {
+    if (this.searchRequest.provinceCode == null) {
+      return "Địa điểm";
+    } else {
+      let str = "";
+      this.provinces.forEach(e => {
+        if (e.code == this.searchRequest.provinceCode) {
+          str += e.name
+        }
+      })
+      if (this.searchRequest.districtCode == null) {
+        this.provinces.forEach(e => {
+          if (e.code == this.searchRequest.provinceCode) {
+            str += e.name;
+          }
+        });
+      } else {
+        str += " - ";
+        this.districts.forEach(e => {
+          this.searchRequest.districtCode.forEach(ee => {
+            if (e.code == ee) {
+              str += e.name + "; ";
+            }
+          })
+        });
+        str = str.substring(0, str.length - 2);
+        if (this.searchRequest.wardCode != null) {
+          str += " - "
+          this.wards.forEach(e => {
+            str +=  e.name + "; ";
+          });
+          str = str.substring(0, str.length - 3);
+        }
+      }
+      return str.length > 30 ? str.substring(0, 30) + "..." : str;
+    }
+  }
+
+  renderSelectedDienTich(): string {
+    let post = " m2";
+    if (this.searchRequest.startArea == null && this.searchRequest.endArea == null) {
+      return "Diện tích" + post;
+    } else if (this.searchRequest.startArea != null && this.searchRequest.endArea == null) {
+      return ">= " + this.searchRequest.startArea + post; 
+    } else if (this.searchRequest.startArea == null && this.searchRequest.endArea != null) {
+      return "<= " + this.searchRequest.endArea + post; 
+    } else {
+      return ">= " + this.searchRequest.startArea + post + " và <= " + this.searchRequest.endArea + post;
+    }
+  }
+
+  renderSelectedGia(): string {
+    let post = "";
+    if (this.searchRequest.sell == 1) {
+      post = " tỷ VNĐ";
+    } else {
+      post = " triệu VNĐ";
+    }
+    let str = "";
+    if (this.searchRequest.startPrice == null && this.searchRequest.endPrice == null) {
+      str = "Khoảng giá: (" + post + " )";
+    } else if (this.searchRequest.startPrice != null && this.searchRequest.endPrice == null) {
+      str = ">= " + this.searchRequest.startPrice + post; 
+    } else if (this.searchRequest.startPrice == null && this.searchRequest.endPrice != null) {
+      str = "<= " + this.searchRequest.endPrice + post; 
+    } else {
+      str = ">= " + this.searchRequest.startPrice + post + " và <= " + this.searchRequest.endPrice + post;
+    }
+    return str.length > 30 ? str.substring(0, 30) + "..." : str;
+  }
+
+  renderSelectedXemThem(): string {
+    let strPn = "PN: " + this.searchRequest.noOfBedrooms.join(", ");
+    let strDir = "Hướng: " + this.searchRequest.direction.join(", ");
+    let res = "";
+    if(strPn == "PN: " && strDir == "Hướng: ") {
+      res = "Chọn thêm";
+    } else if (strPn != "PN: " && strDir == "Hướng: ") {
+      res = strPn;
+    } else if (strPn == "PN: " && strDir != "Hướng: ") {
+      res = strDir;
+    } else {
+      res = strPn + " - " + strDir;
+    }
+    return res.length > 30 ? res.substring(0, 30) + "..." : res;
+  }
+
+  onSelectBedroom(value: number): void {
+    if (this.searchRequest.noOfBedrooms.includes(value)) {
+      const index = this.searchRequest.noOfBedrooms.indexOf(value);
+      if (index > -1) { 
+        this.searchRequest.noOfBedrooms.splice(index, 1);
+      }
+    } else {
+      this.searchRequest.noOfBedrooms.push(value);
+    }
+  }
+
+  onSearch(): void {
+    this._loadingService.loading(true);
+    this._realEstatePostService.setSearchBody(this.searchRequest);
+    setTimeout(() => {
+      this._loadingService.loading(false)
+      this._router.navigate(['tim-kiem']);
+    }, 500);
   }
 }

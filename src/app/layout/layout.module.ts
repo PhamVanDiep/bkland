@@ -25,6 +25,9 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ChatDialogComponent } from './main-layout/chat-dialog/chat-dialog.component';
 import { RealEstatePostService } from '../core/services/real-estate-post.service';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { MultiSelectModule } from 'primeng/multiselect';
 
 @NgModule({
   declarations: [
@@ -50,7 +53,10 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
     ToastModule,
     FontAwesomeModule,
     InputTextModule,
-    OverlayPanelModule
+    OverlayPanelModule,
+    DropdownModule,
+    InputNumberModule,
+    MultiSelectModule
   ],
   exports: [
     MainLayoutComponent,

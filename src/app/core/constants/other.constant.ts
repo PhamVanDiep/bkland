@@ -41,4 +41,14 @@ export const BAN_CHOTHUE_DROPDOWN = [
         key: 1,
         value: 'Bán'
     }
+];
+
+export const DANH_MUC_ROUTES = [
+    '/mua-ban/nha-dat',
+    '/mua-ban/chung-cu',
+    '/mua-ban/dat-nen',
+    '/cho-thue/nha-dat',
+    '/cho-thue/chung-cu',
+    '/cho-thue/dat-nen',
+    '/tim-kiem'
 ]
