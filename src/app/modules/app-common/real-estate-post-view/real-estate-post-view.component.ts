@@ -48,6 +48,18 @@ export class RealEstatePostViewComponent implements OnInit, OnDestroy {
     // throw new Error('Method not implemented.');
     this._loadingService.loading(true);
     this.postId = this._route.snapshot.paramMap.get('id') || '';
+    this.getData();
+    this._router.events
+      .pipe(takeUntil(this._unsubscribe))
+      .subscribe(() => {
+        let postTmp = this._route.snapshot.paramMap.get('id') || '';
+        if (this.postId != postTmp) {
+          window.location.reload(); 
+        }
+      })
+  }
+
+  getData(): void {
     this._realEstatePostService.findContactOfPost(this.postId)
       .pipe(takeUntil(this._unsubscribe))
       .subscribe((response: APIResponse) => {
