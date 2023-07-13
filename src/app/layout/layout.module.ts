@@ -28,6 +28,8 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { MultiSelectModule } from 'primeng/multiselect';
+import { ConfirmationService } from 'primeng/api';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 @NgModule({
   declarations: [
@@ -56,7 +58,8 @@ import { MultiSelectModule } from 'primeng/multiselect';
     OverlayPanelModule,
     DropdownModule,
     InputNumberModule,
-    MultiSelectModule
+    MultiSelectModule,
+    ConfirmDialogModule
   ],
   exports: [
     MainLayoutComponent,
@@ -67,7 +70,8 @@ import { MultiSelectModule } from 'primeng/multiselect';
     AboutService,
     NoAuthService,
     ChargeService,
-    RealEstatePostService
+    RealEstatePostService,
+    ConfirmationService
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA

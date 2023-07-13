@@ -176,6 +176,7 @@
             <div class="w-full flex flex-col justify-between">
                 <div *ngFor="let item of lstInfoPosts;let i = index">
                     <div class="w-full flex flex-col space-y-1 cursor-pointer py-4" 
+                        *ngIf="i != 0 || innerWidth > 768"
                         [ngClass]="i < lstInfoPosts.length - 1 ? 'border-b border-b-custom' : ''" 
                         (click)="viewInfoPost(item?.id)"  (mouseover)="setTinTucImg(item?.id)">
                         <span class="text-lg font-semibold hover:font-light">{{ item?.title }}</span>
@@ -211,6 +212,7 @@
             <div class="w-full flex flex-col">
                 <div *ngFor="let item of lstDuAnInfoPosts;let i = index">
                     <div class="w-full flex flex-col space-y-1 cursor-pointer py-4" 
+                        *ngIf="i != 0 || innerWidth > 768"
                         [ngClass]="i < lstDuAnInfoPosts.length - 1 ? 'border-b border-b-custom' : ''" 
                         (click)="viewInfoPost(item?.id)" (mouseover)="setDuAnImg(item?.id)">
                         <span class="text-lg font-semibold hover:font-light">{{ item?.title }}</span>

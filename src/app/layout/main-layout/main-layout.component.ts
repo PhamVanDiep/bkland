@@ -3,7 +3,7 @@ import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { DeviceDetectorService, DeviceInfo } from 'ngx-device-detector';
-import { MenuItem } from 'primeng/api';
+import { ConfirmEventType, ConfirmationService, MenuItem } from 'primeng/api';
 import { ReplaySubject, takeUntil } from 'rxjs';
 import { DIRECTION_DROPDOWN } from 'src/app/core/constants/direction.constant';
 import { EMAIL_VERIFY_TYPE } from 'src/app/core/constants/email-verify.constant';
@@ -83,6 +83,8 @@ export class MainLayoutComponent implements OnInit, OnDestroy{
   wards: Ward[];
   lstDirections: any[];
 
+  noInterest: number;
+
   constructor(
     private _router: Router,
     private _authService: AuthService,
@@ -95,7 +97,8 @@ export class MainLayoutComponent implements OnInit, OnDestroy{
     private _mediaService: MediaService,
     private _domSanitizer: DomSanitizer,
     private _chatService: ChatService,
-    private _realEstatePostService: RealEstatePostService
+    private _realEstatePostService: RealEstatePostService,
+    private _confirmationService: ConfirmationService
   ) {
     let _roles = localStorage.getItem('roles') || '';
     this.roles = _roles.split(',');
@@ -262,6 +265,12 @@ export class MainLayoutComponent implements OnInit, OnDestroy{
         } else {
           this._messageService.errorMessage(response.message);
         }
+      });
+
+    this._realEstatePostService.interestPosts$
+      .pipe(takeUntil(this._unsubscribe))
+      .subscribe((response: number) => {
+        this.noInterest = response;
       });
   }
 
@@ -666,5 +675,46 @@ export class MainLayoutComponent implements OnInit, OnDestroy{
       this._loadingService.loading(false)
       this._router.navigate(['tim-kiem']);
     }, 500);
+  }
+
+  removeInterested(postId: string): void {
+    this._confirmationService.confirm(
+      {
+        message: 'Bạn có chắc chắn bỏ quan tâm bài viết này?',
+        header: 'Bỏ quan tâm',
+        acceptButtonStyleClass: 'p-button-success',
+        rejectButtonStyleClass: 'p-button-outlined',
+        acceptLabel: 'Xác nhận',
+        rejectLabel: 'Hủy',
+        accept: () => {
+          this._loadingService.loading(true);
+          this._realEstatePostService.anonymousInterested({
+            realEstatePostId: postId,
+            deviceInfo: this.deviceInfo.userAgent.replaceAll(' ', '')
+          })
+            .pipe(takeUntil(this._unsubscribe))
+            .subscribe((response: APIResponse) => {
+              this._loadingService.loading(false);
+              if (response.status === HttpStatusCode.Ok) {
+                if (response.message === "DELETED") {
+                  this.noInterest--;
+                  this._realEstatePostService.setInterestPosts(this.noInterest);
+                  this.lstInterestedPosts = this.lstInterestedPosts.filter(e => e.id != postId);
+                }
+              } else {
+                this._messageService.errorMessage(response.message);
+              }
+            })
+        },
+        reject: (type: any) => {
+          switch(type) {
+            case ConfirmEventType.REJECT:
+              break;
+            case ConfirmEventType.CANCEL:
+              break;
+          }
+        }
+      }
+    )
   }
 }

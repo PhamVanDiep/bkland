@@ -103,6 +103,7 @@ export class LandingPageComponent implements OnInit, OnDestroy{
 
     this.showSearchPopup = false;
     this.initSearchRequest();
+    this.innerWidth = window.innerWidth;
   }
 
   initSearchRequest(): void {

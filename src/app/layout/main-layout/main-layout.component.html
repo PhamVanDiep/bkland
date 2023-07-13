@@ -1,3 +1,4 @@
+<p-confirmDialog [style]="{width: innerWidth > 640 ? '50vw' : '100vh'}"></p-confirmDialog>
 <p-overlayPanel #danhMucOP>
     <div class="w-[200px] flex flex-col">
         <div class="border-b border-b-custom py-2 hover:bg-gray-200 cursor-pointer" 
@@ -131,8 +132,8 @@
 </app-chat-dialog>
 <p-overlayPanel #op>
     <ng-template pTemplate="content">
-        <div *ngIf="lstInterestedPosts.length > 0;else emptyIP">
-            <div *ngFor="let item of lstInterestedPosts">
+        <div *ngIf="lstInterestedPosts.length > 0;else emptyIP" class="w-full max-h-[300px]">
+            <div *ngFor="let item of lstInterestedPosts" class="flex flex-row w-full items-center space-x-2 md:space-x-4">
                 <div class="flex flex-col space-y-2 border-b border-b-custom p-2 bg-white hover:bg-b-custom cursor-pointer"
                     (click)="viewDetail(item.id, item.isSell, item.type)">
                     <span class="font-bold">{{ item.title.length > 30 ? (item.title.substr(0, 30) + '...') : item.title }}</span>
@@ -144,6 +145,7 @@
                         <span class="text-sm">{{ item.area + 'm2' }}</span>
                     </div>
                 </div>
+                <i class="pi pi-times cursor-pointer" pTooltip="Bỏ quan tâm" (click)="removeInterested(item.id)"></i>
             </div>
         </div>
         <ng-template #emptyIP>
