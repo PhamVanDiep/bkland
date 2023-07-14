@@ -20,16 +20,17 @@
                 </tr>
             </ng-template>
             <ng-template pTemplate="caption">
-                <div class="flex flex-row justify-end space-x-4">
-                    <p-dropdown [options]="typeOptions" placeholder="Bán/Cho thuê" optionLabel="value" optionValue="key" class="w-full"
+                <div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:justify-end md:space-x-4">
+                    <p-dropdown [options]="typeOptions" placeholder="Bán/Cho thuê" optionLabel="value" optionValue="key" class="w-full md:w-auto"
                         [(ngModel)]="selectedType" (ngModelChange)="filterFunc()" [autoDisplayFirst]="false"></p-dropdown>
-                    <p-dropdown [options]="repTypeOptions" placeholder="Loại bất động sản" optionLabel="value" optionValue="key" class="w-full"
+                    <p-dropdown [options]="repTypeOptions" placeholder="Loại bất động sản" optionLabel="value" optionValue="key" class="w-full md:w-auto"
                         [(ngModel)]="selectedRepType" (ngModelChange)="filterFunc()" [autoDisplayFirst]="false"></p-dropdown>
-                    <p-dropdown [options]="statusOptions" placeholder="Trạng thái" optionLabel="value" optionValue="key" class="w-full"
+                    <p-dropdown [options]="statusOptions" placeholder="Trạng thái" optionLabel="value" optionValue="key" class="w-full md:w-auto"
                         [(ngModel)]="selectedStatus" (ngModelChange)="filterFunc()" [autoDisplayFirst]="false"></p-dropdown>
-                    <span class="p-input-icon-left ml-auto">
+                    <span class="p-input-icon-left ml-auto w-full md:w-auto">
                         <i class="pi pi-search"></i>
-                        <input #inputFilter pInputText type="text" (input)="tbl1.filterGlobal(inputFilter.value, 'contains')" placeholder="Nhập số điện thoại..." />
+                        <input #inputFilter pInputText type="text" class="w-full md:w-auto"
+                            (input)="tbl1.filterGlobal(inputFilter.value, 'contains')" placeholder="Nhập số điện thoại..." />
                     </span>
                 </div>
             </ng-template>

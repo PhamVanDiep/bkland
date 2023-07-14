@@ -6,7 +6,7 @@ import { environment } from './environments/environment';
 
 platformBrowserDynamic().bootstrapModule(AppModule)
   .then(() => {
-    if ('serviceWorker' in navigator && environment.production) {
+    if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/ngsw-worker.js');
     }
   })

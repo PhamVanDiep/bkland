@@ -194,7 +194,9 @@ export class PriceFluctuationStatisticComponent implements OnInit, OnDestroy {
     } else {
       this.chartTitle += 'Cho thuê đất nền ';
     }
-    this.chartTitle += this.provinces.filter(e => e.code == this.provinceCode)[0].fullName;
+    if (this.provinces.length > 0) {
+      this.chartTitle += this.provinces.filter(e => e.code == this.provinceCode)[0].fullName; 
+    }
     if (this.districtCode != null && this.districtCode.length > 0) {
       this.chartTitle != ', ' + this.districts.filter(e => e.code == this.districtCode)[0].fullName;
     }

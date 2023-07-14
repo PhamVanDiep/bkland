@@ -35,7 +35,7 @@ export class AppComponent implements OnInit {
     //   });
 
     this._swUpdate.versionUpdates
-      .subscribe((response: VersionEvent) => {
+      .subscribe((response) => {
         switch (response.type) {
           case 'VERSION_DETECTED':
             if (confirm('Đã tìm thấy phiên bản mới. Bạn có muốn cập nhật?')) {

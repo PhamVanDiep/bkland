@@ -251,7 +251,15 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   filter(): void {
-    this.lstUserClones = this.lstUsers.filter(e => e.fullName.includes(this.filterValue) || e.phoneNumber.includes(this.filterValue));
+    this.lstUserClones = this.lstUsers.filter(e => {
+      if (e.fullName != undefined && e.fullName != null && e.fullName.length > 0 && e.fullName.toUpperCase().includes(this.filterValue.toUpperCase())) {
+        return true;
+      }
+      if (e.phoneNumber != undefined && e.phoneNumber != null && e.phoneNumber.length > 0 && e.phoneNumber.includes(this.filterValue)) {
+        return true;
+      }
+      return false;
+    })
   }
 
   async getListChatUserEnable() {

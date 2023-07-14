@@ -31,13 +31,16 @@ export class ManageForumComponent implements OnInit, OnDestroy {
 
   displayComment: boolean;
 
+  isLoadingMore: boolean;
+
   @HostListener("window:scroll", ["$event"])
   onWindowScroll() {
     //In chrome and some browser scroll is given to body tag
     let pos = (document.documentElement.scrollTop || document.body.scrollTop) + document.documentElement.offsetHeight;
     let max = document.documentElement.scrollHeight;
     // pos/max will give you the distance between scroll bottom and and bottom of screen in percentage.
-    if (max - pos < 150 && this.isMore) {
+    if (max - pos < 150 && this.isMore && !this.isLoadingMore) {
+      this.isLoadingMore = true;
       this.fetchForumPost();
     }
   }
@@ -71,6 +74,7 @@ export class ManageForumComponent implements OnInit, OnDestroy {
     }
     this.userForumPosts = [];
     this.displayComment = false;
+    this.isLoadingMore = false;
   }
 
   ngOnInit(): void {
@@ -97,6 +101,7 @@ export class ManageForumComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this._unsubscribe))
       .subscribe((response: APIResponse) => {
         this._loadingService.loading(false);
+        this.isLoadingMore = false;
         if (response.status === HttpStatusCode.Ok) {
           this.forumPosts = [...this.forumPosts, ...response.data];
           if (response.data.length < this.pageSize) {
