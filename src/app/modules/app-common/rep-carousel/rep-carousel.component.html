@@ -22,7 +22,7 @@
                     <span class="font-semibold text-blue-custom">{{ rep?.area + ' m2' }}</span>
                 </div>
                 <div class="flex flex-row justify-between items-center">
-                    <div class="font-light text-sm">{{ rep?.createAt | date:'dd/MM/yyyy, hh:mm:ss a' }}</div>
+                    <div class="font-light text-sm">{{ rep?.createAt | date:'dd/MM/yyyy, hh:mm:ss' }}</div>
                     <div class="p-2 border border-b-custom rounded-lg" pTooltip="Quan tâm" (click)="onInterest(rep)">
                         <i class="pi" [ngClass]="rep?.interested ? 'text-blue-custom pi-heart-fill' : 'pi-heart'"></i>
                     </div>

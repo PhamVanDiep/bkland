@@ -10,8 +10,8 @@
                     + infoPostResponse.user.lastName
                     }}</span>
                 <span>{{ infoPostResponse.updateAt == null ?
-                    'Được viết vào: ' + (infoPostResponse.createAt | date:'dd/MM/yyyy, h:mm:ss a') :
-                    'Cập nhật lần cuối vào: ' + (infoPostResponse.updateAt | date:'dd/MM/yyyy, h:mm:ss a') }}</span>
+                    'Được viết vào: ' + (infoPostResponse.createAt | date:'dd/MM/yyyy, h:mm:ss') :
+                    'Cập nhật lần cuối vào: ' + (infoPostResponse.updateAt | date:'dd/MM/yyyy, h:mm:ss') }}</span>
             </div>
         </div>
         <span class="font-bold italic">{{ infoPostResponse.description }}</span>

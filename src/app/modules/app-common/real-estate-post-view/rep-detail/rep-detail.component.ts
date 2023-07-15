@@ -265,7 +265,7 @@ export class RepDetailComponent implements OnInit, OnDestroy, OnChanges {
     }
     let date = new Date(this.realEstatePost?.basePost.realEstatePost.createAt);
     date.setDate(date.getDate() + this.realEstatePost?.basePost.realEstatePost.period);
-    return this._datePipe.transform(date, "dd/MM/yyyy hh:mm:ss a")?.toString() || '';
+    return this._datePipe.transform(date, "dd/MM/yyyy hh:mm:ss")?.toString() || '';
   }
 
   report(): void {
