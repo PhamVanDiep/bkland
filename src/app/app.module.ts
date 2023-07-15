@@ -22,6 +22,7 @@ import { LayoutModule } from './layout/layout.module';
 import { AuthService } from './core/services/auth.service';
 import { MessageService as MessageServiceCustomize } from './core/services/message.service';
 import { BaseService } from './core/services/base.service';
+import { AppPipeModule } from './shared/app-pipe/app-pipe.module';
 
 initializeApp(environment.FirebaseConfig);
 
@@ -39,6 +40,7 @@ initializeApp(environment.FirebaseConfig);
     ToastModule,
     LayoutModule,
     ProgressSpinnerModule,
+    AppPipeModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: true,
       // Register the ServiceWorker as soon as the application is stable

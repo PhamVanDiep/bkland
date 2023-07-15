@@ -170,7 +170,7 @@
                 <span class="font-semibold text-lg">{{ firstInfoPost?.title }}</span>
                 <div class="w-full flex flex-row justify-between">
                     <span class="text-sm italic">{{ firstInfoPost?.fullName }}</span>
-                    <span class="text-sm italic">{{ firstInfoPost?.createAt | date:'dd/MM/yyyy, h:mm:ss' }}</span>
+                    <span class="text-sm italic">{{ firstInfoPost?.createAt | formatDate }}</span>
                 </div>
             </div>
             <div class="w-full flex flex-col justify-between">
@@ -182,7 +182,7 @@
                         <span class="text-lg font-semibold hover:font-light">{{ item?.title }}</span>
                         <div class="w-full flex flex-row justify-between">
                             <span class="text-sm italic">{{ item?.fullName }}</span>
-                            <span class="text-sm italic">{{ item?.createAt | date:'dd/MM/yyyy, h:mm:ss' }}</span>
+                            <span class="text-sm italic">{{ item?.createAt | formatDate }}</span>
                         </div>
                     </div> 
                 </div>
@@ -206,7 +206,7 @@
                 <span class="font-semibold text-lg">{{ firstDuAnInfoPost?.title }}</span>
                 <div class="w-full flex flex-row justify-between">
                     <span class="text-sm italic">{{ firstDuAnInfoPost?.fullName }}</span>
-                    <span class="text-sm italic">{{ firstDuAnInfoPost?.createAt | date:'dd/MM/yyyy, h:mm:ss' }}</span>
+                    <span class="text-sm italic">{{ firstDuAnInfoPost?.createAt | formatDate }}</span>
                 </div>
             </div>
             <div class="w-full flex flex-col">
@@ -218,7 +218,7 @@
                         <span class="text-lg font-semibold hover:font-light">{{ item?.title }}</span>
                         <div class="w-full flex flex-row justify-between">
                             <span class="text-sm italic">{{ item?.fullName }}</span>
-                            <span class="text-sm italic">{{ item?.createAt | date:'dd/MM/yyyy, h:mm:ss' }}</span>
+                            <span class="text-sm italic">{{ item?.createAt | formatDate }}</span>
                         </div>
                     </div> 
                 </div>

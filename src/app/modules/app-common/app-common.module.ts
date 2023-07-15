@@ -54,6 +54,7 @@ import { RepStatisticComponent } from './rep-statistic/rep-statistic.component';
 import { ProjectViewComponent } from './project-view/project-view.component';
 import { ProjectStatisticComponent } from './project-statistic/project-statistic.component';
 import { ProjectDetailStatisticComponent } from './project-statistic/project-detail-statistic/project-detail-statistic.component';
+import { AppPipeModule } from 'src/app/shared/app-pipe/app-pipe.module';
 
 @NgModule({
   declarations: [
@@ -107,7 +108,8 @@ import { ProjectDetailStatisticComponent } from './project-statistic/project-det
     TimelineModule,
     ClipboardModule,
     CarouselModule,
-    NgApexchartsModule
+    NgApexchartsModule,
+    AppPipeModule
   ],
   exports: [
     CreateForumPostComponent,

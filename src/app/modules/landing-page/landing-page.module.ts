@@ -15,6 +15,7 @@ import { ChatDialogComponent } from '../../layout/main-layout/chat-dialog/chat-d
 import { AppCommonModule } from '../app-common/app-common.module';
 import { FormsModule } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
+import { AppPipeModule } from 'src/app/shared/app-pipe/app-pipe.module';
 
 
 @NgModule({
@@ -34,7 +35,8 @@ import { DialogModule } from 'primeng/dialog';
     InputNumberModule,
     AppCommonModule,
     FormsModule,
-    DialogModule
+    DialogModule,
+    AppPipeModule
   ]
 })
 export class LandingPageModule { }

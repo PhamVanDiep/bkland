@@ -241,7 +241,7 @@
         <hr class="w-full" width="1" color="#ced4da">
         <p-timeline [value]="priceFluctuations" layout="horizontal" class="max-w-full w-auto">
             <ng-template pTemplate="content" let-event>
-                <small class="p-text-secondary">{{ event.createAt | date:'dd/MM/yyyy, h:mm:ss' }}</small>
+                <small class="p-text-secondary">{{ event.createAt | formatDate }}</small>
             </ng-template>
             <ng-template pTemplate="opposite" let-event>
                 <small class="font-bold">{{ event.price + ' ' +
@@ -256,7 +256,7 @@
         <div class="flex flex-row w-full justify-between">
             <div class="flex flex-col space-y-2">
                 <span>{{ 'Ngày đăng' }}</span>
-                <span class="font-bold">{{ realEstatePost?.basePost.realEstatePost.createAt | date:'dd/MM/yyyy, h:mm:ss'}}</span>
+                <span class="font-bold">{{ realEstatePost?.basePost.realEstatePost.createAt | formatDate }}</span>
             </div>
             <div class="flex flex-col space-y-2">
                 <span>{{ 'Ngày hết hạn' }}</span>

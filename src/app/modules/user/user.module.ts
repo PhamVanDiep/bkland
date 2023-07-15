@@ -43,6 +43,7 @@ import { EditorModule } from 'primeng/editor';
 import { ProjectService } from 'src/app/core/services/project.service';
 import { InterestedUserComponent } from './interested-user/interested-user.component';
 import { ClipboardModule, ClipboardService } from 'ngx-clipboard';
+import { AppPipeModule } from 'src/app/shared/app-pipe/app-pipe.module';
 
 @NgModule({
   declarations: [
@@ -86,7 +87,8 @@ import { ClipboardModule, ClipboardService } from 'ngx-clipboard';
     AppCommonModule,
     PaginatorModule,
     EditorModule,
-    ClipboardModule
+    ClipboardModule,
+    AppPipeModule
   ],
   providers: [
     ConfirmationService,

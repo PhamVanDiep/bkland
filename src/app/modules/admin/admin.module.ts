@@ -39,6 +39,7 @@ import { DashboardPostComponent } from './dashboard/dashboard-post/dashboard-pos
 import { TimelineModule } from 'primeng/timeline';
 import { ProjectComponent } from './project/project.component';
 import { DashboradProjectComponent } from './dashboard/dashborad-project/dashborad-project.component';
+import { AppPipeModule } from 'src/app/shared/app-pipe/app-pipe.module';
 
 @NgModule({
   declarations: [
@@ -78,7 +79,8 @@ import { DashboradProjectComponent } from './dashboard/dashborad-project/dashbor
     CheckboxModule,
     AppCommonModule,
     NgApexchartsModule,
-    TimelineModule
+    TimelineModule,
+    AppPipeModule
   ],
   providers: [
     ConfirmationService,

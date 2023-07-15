@@ -111,17 +111,21 @@ export class DashboardComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     // throw new Error('Method not implemented.');
     this._loadingService.loading(true);
-    this._realEstatePostService.getAllPostOfUser()
-      .pipe(takeUntil(this._unsubscribe))
-      .subscribe((response: APIResponse) => {
-        this._loadingService.loading(false);
-        if (response.status === HttpStatusCode.Ok) {
-          this.realEstatePosts = response.data;
-          this.realEstatePostSrc = response.data;
-        } else {
-          this._messageService.errorMessage(response.message);
-        }
-      })
+    setTimeout(() => {
+      this._loadingService.loading(false);
+    }, 2000);
+    if (!this.isEnterprise) {
+      this._realEstatePostService.getAllPostOfUser()
+        .pipe(takeUntil(this._unsubscribe))
+        .subscribe((response: APIResponse) => {
+          if (response.status === HttpStatusCode.Ok) {
+            this.realEstatePosts = response.data;
+            this.realEstatePostSrc = response.data;
+          } else {
+            this._messageService.errorMessage(response.message);
+          }
+        })
+    }
   }
 
   ngOnDestroy(): void {

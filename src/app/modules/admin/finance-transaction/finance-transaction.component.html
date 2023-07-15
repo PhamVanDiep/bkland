@@ -65,7 +65,7 @@
                     </th>
                     <th>
                         <span class="text-sm font-normal">
-                            {{ charge.createAt | date:'dd/MM/yyyy, h:mm:ss' }}
+                            {{ charge.createAt | formatDate  }}
                         </span>
                     </th>
                     <th>
@@ -152,7 +152,7 @@
                     </th>
                     <th>
                         <span class="text-sm font-normal">
-                            {{ postPaid.createAt | date:'dd/MM/yyyy, h:mm:ss' }}
+                            {{ postPaid.createAt | formatDate }}
                         </span>
                     </th>
                     <th>
@@ -229,7 +229,7 @@
                     </th>
                     <th>
                         <span class="text-sm font-normal">
-                            {{ monthlyPaid.createAt | date:'dd/MM/yyyy, h:mm:ss' }}
+                            {{ monthlyPaid.createAt | formatDate }}
                         </span>
                     </th>
                 </tr>

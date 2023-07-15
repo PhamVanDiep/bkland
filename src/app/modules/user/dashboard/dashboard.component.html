@@ -50,7 +50,7 @@
                         <span class="text-sm font-normal">{{ rep.area }}</span>
                     </th>
                     <th>
-                        <span class="text-sm font-normal">{{ rep.createAt | date:'dd/MM/yyyy, h:mm:ss' }}</span>
+                        <span class="text-sm font-normal">{{ rep.createAt | formatDate }}</span>
                     </th>
                     <th class="text-start">
                         <p-tag [value]="getStatusValue(rep.status)" [severity]="getStatusSeverity(rep.status)"></p-tag>

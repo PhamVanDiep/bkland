@@ -94,12 +94,12 @@
                     </th>
                     <th>
                         <span class="text-sm font-normal">
-                            {{ reportType.createAt | date:'dd/MM/yyyy, h:mm:ss' }}
+                            {{ reportType.createAt | formatDate }}
                         </span>
                     </th>
                     <th>
                         <span class="text-sm font-normal">
-                            {{ reportType.updateAt | date:'dd/MM/yyyy, h:mm:ss' }}
+                            {{ reportType.updateAt | formatDate }}
                         </span>
                     </th>
                     <th>
@@ -187,7 +187,7 @@
                     </th>
                     <th>
                         <span class="text-sm font-normal">
-                            {{ postReport.createAt | date:'dd/MM/yyyy, h:mm:ss' }}
+                            {{ postReport.createAt | formatDate }}
                         </span>
                     </th>
                     <th class="text-center">

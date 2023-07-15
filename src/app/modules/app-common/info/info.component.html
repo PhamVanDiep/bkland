@@ -52,12 +52,12 @@
                     </th>
                     <th>
                         <span class="text-sm font-normal">
-                            {{ infoTypeSkip.createAt | date:'dd/MM/yyyy, h:mm:ss' }}
+                            {{ infoTypeSkip.createAt | formatDate }}
                         </span>
                     </th>
                     <th>
                         <span class="text-sm font-normal">
-                            {{ infoTypeSkip.updateAt | date:'dd/MM/yyyy, h:mm:ss' }}
+                            {{ infoTypeSkip.updateAt | formatDate }}
                         </span>
                     </th>
                     <th>
@@ -147,7 +147,7 @@
                     </th>
                     <th>
                         <span class="text-sm font-normal">
-                            {{ infoPost.createAt | date:'dd/MM/yyyy, h:mm:ss' }}
+                            {{ infoPost.createAt | formatDate }}
                         </span>
                     </th>
                     <th class="text-center">

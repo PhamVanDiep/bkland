@@ -36,12 +36,12 @@
                 <div class="w-full flex flex-col md:flex-row md:items-center justify-between">
                     <span class="text-sm">{{ 'Số lượt xem: ' + item.view }}</span>
                     <span class="text-sm">{{ 'Số lượt xem thông tin liên hệ: ' + item.clickedView }}</span>
-                    <span class="text-sm">{{ 'Ngày tạo: ' + (item.createAt | date:'dd/MM/yyyy, h:mm:ss') }}</span>
+                    <span class="text-sm">{{ 'Ngày tạo: ' + (item.createAt | formatDate) }}</span>
                 </div>
                 <div class="w-full flex flex-col md:flex-row md:items-center justify-between">
                     <span class="text-sm">{{ 'Số lượt quan tâm: ' + getNoOfInterest(item.id) }}</span>
                     <span class="text-sm">{{ 'Số lượt bình luận: ' + getNoOfComments(item.id) }}</span>
-                    <span class="text-sm" *ngIf="item.updateAt != null">{{ 'Cập nhật lần cuối: ' + (item.updateAt | date:'dd/MM/yyyy, h:mm:ss') }}</span>
+                    <span class="text-sm" *ngIf="item.updateAt != null">{{ 'Cập nhật lần cuối: ' + (item.updateAt | formatDate) }}</span>
                 </div>
             </div>
         </div>

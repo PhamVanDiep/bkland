@@ -21,7 +21,7 @@
                 <i class="pi pi-copy" (click)="copy(item?.phoneNumber)" pTooltip="Sao chép email"></i>
             </div>
             <div class="w-full justify-end flex">
-                <span class="italic text-sm">{{ item?.createAt | date:'dd/MM/yyyy hh:mm:ss' }}</span>
+                <span class="italic text-sm">{{ item?.createAt | formatDate }}</span>
             </div>
         </div>
     </div>
