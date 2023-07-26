@@ -3,8 +3,10 @@
     <div
         class="flex flex-row w-full justify-between items-center mt-6 md:mt-4 px-2 py-2 border border-gray-custom rounded-lg shadow-lg">
         <span class="text-base font-bold">{{ isAgency ? 'Cập nhật thông tin đăng ký' : 'Bạn chưa là môi giới?' }}</span>
-        <button pButton pRipple [ngClass]="isAgency ? 'p-button-primary' : 'p-button-success'"
-            [label]="isAgency ? 'Cập nhật' : 'Đăng ký'" (click)="register()"></button>
+        <button pButton pRipple [ngClass]="(innerWidth <= 640 ? 'p-button-rounded p-button-text ' : '' ) + (isAgency ? 'p-button-primary' : 'p-button-success')" 
+            [label]="innerWidth > 640 ? (isAgency ? 'Cập nhật' : 'Đăng ký') : ''" 
+            [icon]="innerWidth <= 640 ? (isAgency ? 'pi pi-pencil' : 'pi pi-plus'): ''"
+            (click)="register()"></button>
     </div>
     <div class="flex flex-row w-full justify-between items-center">
         <span class="text-xl font-bold">{{ isAgency ? 'Danh sách bài đăng nhờ giúp đỡ' : 'Danh sách bài đăng đã nhờ giúp đỡ'

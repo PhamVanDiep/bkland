@@ -1,46 +1,54 @@
 <div class="w-full flex flex-col space-y-6">
     <span class="font-bold text-lg">{{ 'Thống kê biến động giá' }}</span>
-    <div class="flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-4">
-        <span class="p-float-label w-full">
-            <p-dropdown placeholder="Bán/Cho thuê" [options]="lstDanhMuc" [(ngModel)]="sell" (ngModelChange)="getChartData()"
-                optionLabel="value" optionValue="key"></p-dropdown>
-            <label for="float-label">Bán/Cho thuê</label>
-        </span>
-        <span class="p-float-label w-full">
-            <p-dropdown placeholder="Loại BĐS" [options]="lstLoaiBDS" [(ngModel)]="type" (ngModelChange)="getChartData()"
-                optionLabel="value" optionValue="key"></p-dropdown>
-            <label for="float-label">Loại BĐS</label>
-        </span>
+    <div class="flex flex-col lg:flex-row space-y-6 lg:space-y-0 lg:space-x-4">
         <span class="p-float-label w-full">
             <p-dropdown [options]="provinces" [(ngModel)]="provinceCode" [autoDisplayFirst]="false" [autofocusFilter]="false"
                 [style]="{'width': '100%'}" optionLabel="fullName" [disabled]="true" inputId="float-label"
                 optionValue="code" [filter]="true" filterBy="fullName" autoWidth="false"></p-dropdown>
-            <label for="float-label">Tỉnh/Thành phố</label>
+            <label for="float-label" class="text-sm">Tỉnh/Thành phố</label>
         </span>
         <span class="p-float-label w-full">
             <p-dropdown [options]="districts" [(ngModel)]="districtCode" [showClear]="true" (onClear)="districtCode='';"
-                [style]="{'width': '100%'}" optionLabel="fullName" inputId="float-label"
-                (ngModelChange)="getWardsInDistrict();getChartData()" [autoDisplayFirst]="false" [autofocusFilter]="false"
+                [style]="{'width': '100%'}" optionLabel="fullName" inputId="float-label" placeholder="Quận/Huyện/Thị xã"
+                (ngModelChange)="getWardsInDistrict();" [autoDisplayFirst]="false" [autofocusFilter]="false"
                 optionValue="code" [filter]="true" filterBy="fullName"></p-dropdown>
-            <label for="float-label">Quận/Huyện/Thị xã</label>
+            <label for="float-label" class="text-sm">Quận/Huyện/Thị xã</label>
         </span>
         <span class="p-float-label w-full">
             <p-dropdown [options]="wards" [(ngModel)]="wardCode"  [showClear]="true" (onClear)="wardCode='';"
-                [style]="{'width': '100%'}" [autoDisplayFirst]="false" [autofocusFilter]="false"
-                optionLabel="fullName" [disabled]="districtCode.length <= 0" optionValue="code" inputId="float-label" (ngModelChange)="getChartData()"
+                [style]="{'width': '100%'}" [autoDisplayFirst]="false" [autofocusFilter]="false" placeholder="Xã/Phường/Thị trấn"
+                optionLabel="fullName" [disabled]="districtCode.length <= 0" optionValue="code" inputId="float-label" 
                 [filter]="true" filterBy="fullName"></p-dropdown>
             <label for="wardCode" class="text-sm">Xã/Phường/Thị trấn</label>
         </span>
+    </div>
+    <div class="flex flex-col lg:flex-row space-y-6 lg:space-y-0 lg:space-x-4">
         <span class="p-float-label w-full">
-            <p-dropdown [options]="months" [(ngModel)]="month" (ngModelChange)="getChartData()" [autoDisplayFirst]="false"
-                placeholder="Tháng" optionLabel="value" optionValue="key" inputId="float-label" [showClear]="true" (onClear)="month=0"></p-dropdown>
-            <label for="float-label">Tháng</label>
+            <p-dropdown placeholder="Bán/Cho thuê" [options]="lstDanhMuc" [(ngModel)]="sell" 
+                optionLabel="value" optionValue="key"></p-dropdown>
+            <label for="float-label">Bán/Cho thuê</label>
         </span>
         <span class="p-float-label w-full">
-            <p-dropdown [options]="years" [(ngModel)]="year" (ngModelChange)="getChartData()"
-                placeholder="Năm" optionLabel="value" optionValue="key" inputId="float-label"></p-dropdown>
-            <label for="float-label">Năm</label>
+            <p-dropdown placeholder="Loại BĐS" [options]="lstLoaiBDS" [(ngModel)]="type"
+                optionLabel="value" optionValue="key"></p-dropdown>
+            <label for="float-label">Loại BĐS</label>
         </span>
+        <div class="w-full flex flex-row space-x-4 items-center">
+            <span class="p-float-label w-2/5">
+                <p-dropdown [options]="months" [(ngModel)]="month"
+                    placeholder="Tháng" optionLabel="value" optionValue="key" inputId="float-label" 
+                    [showClear]="true" (onClear)="month=0"></p-dropdown>
+                <label for="float-label">Tháng</label>
+            </span>
+            <span class="p-float-label w-2/5">
+                <p-dropdown [options]="years" [(ngModel)]="year"
+                    placeholder="Năm" optionLabel="value" optionValue="key" inputId="float-label"></p-dropdown>
+                <label for="float-label">Năm</label>
+            </span>
+            <div class="w-1/5 flex items-center justify-center">
+                <i class="pi pi-filter-fill cursor-pointer" (click)="getChartData()" pTooltip="Lọc dữ liệu"></i>
+            </div>
+        </div>
     </div>
     <div class="flex w-full flex-col space-y-2 rounded-md shadow-lg hover:shadow-xl" [ngClass]="loading ? 'h-[70vh]' : ''">
         <div *ngIf="!loading;else loadingChartData">

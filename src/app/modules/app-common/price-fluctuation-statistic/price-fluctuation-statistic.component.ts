@@ -80,7 +80,8 @@ export class PriceFluctuationStatisticComponent implements OnInit, OnDestroy {
     this.chartOptions = {
       chart: {
         type: 'line',
-        width: '100%'
+        width: '100%',
+        height: window.innerWidth >= 1024 ? '400px' : 'auto'
       },
       dataLabels: {
       },
@@ -198,10 +199,10 @@ export class PriceFluctuationStatisticComponent implements OnInit, OnDestroy {
       this.chartTitle += this.provinces.filter(e => e.code == this.provinceCode)[0].fullName; 
     }
     if (this.districtCode != null && this.districtCode.length > 0) {
-      this.chartTitle != ', ' + this.districts.filter(e => e.code == this.districtCode)[0].fullName;
+      this.chartTitle += ', ' + this.districts.filter(e => e.code == this.districtCode)[0].fullName;
     }
     if (this.wardCode != null && this.wardCode.length > 0) {
-      this.chartTitle != ', ' + this.wards.filter(e => e.code == this.wardCode)[0].fullName;
+      this.chartTitle += ', ' + this.wards.filter(e => e.code == this.wardCode)[0].fullName;
     }
     this.chartTitle += ' ';
     this.chartTitle += (this.month != null && this.month != 0 ) ? ('tháng ' + this.month + ' ') : '';
