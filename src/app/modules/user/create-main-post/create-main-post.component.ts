@@ -451,6 +451,14 @@ export class CreateMainPostComponent implements OnInit, OnDestroy {
   }
 
   async savePost() {
+    if (this.realEstatePost.title.length == 0 || this.realEstatePost.title.replaceAll(' ', '').length == 0) {
+      this._messageService.errorMessage('Không được để trống tiêu đề.');
+      return;
+    }
+    if (this.realEstatePost.description.length == 0 || this.realEstatePost.description.replaceAll(' ', '').length == 0) {
+      this._messageService.errorMessage('Không được để trống mô tả.');
+      return;
+    }
     if (this.selectedFiles.length > 0) {
       if (this.selectedFiles.length < 2) {
         this._messageService.warningMessage('Cần chọn tối thiểu 2 ảnh.');
