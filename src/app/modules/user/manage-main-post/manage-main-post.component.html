@@ -22,7 +22,7 @@
         </div>
         <div class="w-full flex flex-col space-y-4" *ngIf="realEstatePosts.length > 0; else emptyREPs">
             <div class="flex flex-col w-full border border-gray-custom cursor-pointer px-2 py-2 rounded-lg" 
-                *ngFor="let item of currRealEstatePosts" (click)="menu.toggle($event); selectedREP=item">
+                *ngFor="let item of realEstatePosts" (click)="menu.toggle($event); selectedREP=item">
                 <div class="w-full flex flex-col md:flex-row md:items-center justify-between">
                     <span class="font-bold text-lg md:w-2/3">{{ item.title }}</span>
                     <span class="md:w-1/6">{{ item.sell ? 'Bán' : 'Cho thuê' }}</span>
@@ -49,7 +49,9 @@
             <span class="italic">Bạn chưa có bài đăng nào.</span>
         </ng-template>
     </div>
-    <p-paginator (onPageChange)="onPageChange($event)" [first]="0" [rows]="10" [totalRecords]="realEstatePosts.length"></p-paginator>
+    <p-paginator (onPageChange)="onPageChange($event)" 
+        [first]="0" [rows]="rows" 
+        [totalRecords]="totalRecords" [rowsPerPageOptions]="rowsPerPage"></p-paginator>
 </div>
 <ng-template #lstInterestedUsers>
     <app-interested-user [postId]="selectedRepId" (back)="showLstInterestedUsers=false"></app-interested-user>

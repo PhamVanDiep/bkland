@@ -49,6 +49,11 @@ export class ManageMainPostComponent implements OnInit, OnDestroy {
   selectedRepType: string;
   selectedStatus: string;
 
+  rowsPerPage: number[] = [10, 25, 50];
+  page: number;
+  rows: number;
+  totalRecords: number;
+
   constructor(
     private _appTitleService: AppTitleService,
     private _loadingService: LoadingService,
@@ -59,6 +64,10 @@ export class ManageMainPostComponent implements OnInit, OnDestroy {
     private _confirmationService: ConfirmationService,
     private _userService: UserService
   ) {
+    this.page = 0;
+    this.rows = 10;
+    this.totalRecords = 100;
+
     this.typeOptions = BAN_CHOTHUE_DROPDOWN;
     this.repTypeOptions = TYPE_DROPDOWN_FILTER;
     this.statusOptions = STATUS_DROPDOWN;
@@ -118,7 +127,7 @@ export class ManageMainPostComponent implements OnInit, OnDestroy {
   }
 
   filterFunc(): void {
-    this.realEstatePosts = this.realEstatePostSrc.filter(e => {
+    this.currRealEstatePosts = this.realEstatePostSrc.filter(e => {
       let valid = true;
       if (this.selectedType >= 0 && this.selectedType != 2 && ((e.sell && this.selectedType == 0) || (!e.sell && this.selectedType == 1))) {
         valid = false;
@@ -134,7 +143,7 @@ export class ManageMainPostComponent implements OnInit, OnDestroy {
       }
       return valid;
     });
-    this.currRealEstatePosts = this.realEstatePosts.length > 10 ? this.realEstatePosts.slice(0, 10) : this.realEstatePosts;
+    this.realEstatePosts = this.currRealEstatePosts.length > this.rows ? this.currRealEstatePosts.slice(0, this.rows) : this.currRealEstatePosts;
   }
 
   successStatus(postId: string): void {
@@ -155,20 +164,32 @@ export class ManageMainPostComponent implements OnInit, OnDestroy {
     if (this._userService.isEnterprise()) {
       this._router.navigate(['pages/forbidden']);
     }
-
+    
     // throw new Error('Method not implemented.');
     this._loadingService.loading(true);
-    this._realEsatePostService.getPostdByOwnerId()
+
+    this._realEsatePostService.findRecordsByUserId()
+      .pipe(takeUntil(this._unsubscribe))
+      .subscribe((response: APIResponse) => {
+        if (response.status === HttpStatusCode.Ok) {
+          this.totalRecords = response.data;
+        } else {
+          this._messageService.errorMessage(response.message);
+        }
+      });
+
+    this._realEsatePostService.getPostdByOwnerId(this.page, this.rows)
       .pipe(takeUntil(this._unsubscribe))
       .subscribe((response: APIResponse) => {
         this._loadingService.loading(false);
         if (response.status === HttpStatusCode.Ok) {
           this.realEstatePosts = response.data;
-          if (this.realEstatePosts.length > 10) {
-            this.currRealEstatePosts = this.realEstatePosts.slice(0, 10);
-          } else {
-            this.currRealEstatePosts = this.realEstatePosts;
-          }
+          // if (this.realEstatePosts.length > 10) {
+          //   this.currRealEstatePosts = this.realEstatePosts.slice(0, 10);
+          // } else {
+          //   this.currRealEstatePosts = this.realEstatePosts;
+          // }
+          this.currRealEstatePosts = response.data;
           this.realEstatePosts.forEach(e => {
             this._realEsatePostService.countNoOfInterestAndComment(e.id)
               .pipe(takeUntil(this._unsubscribe))
@@ -183,7 +204,38 @@ export class ManageMainPostComponent implements OnInit, OnDestroy {
                 }
               })
           });
-          this.realEstatePostSrc = this.realEstatePosts;
+          // this.realEstatePostSrc = this.realEstatePosts;
+        } else {
+          this._messageService.errorMessage(response.message);
+        }
+      });
+
+    this._realEsatePostService.getPostdByOwnerId(0, 1000000)
+      .pipe(takeUntil(this._unsubscribe))
+      .subscribe((response: APIResponse) => {
+        if (response.status === HttpStatusCode.Ok) {
+          // this.realEstatePosts = response.data;
+          // if (this.realEstatePosts.length > 10) {
+          //   this.currRealEstatePosts = this.realEstatePosts.slice(0, 10);
+          // } else {
+          //   this.currRealEstatePosts = this.realEstatePosts;
+          // }
+          // this.currRealEstatePosts = response.data;
+          response.data.forEach((e: any) => {
+            this._realEsatePostService.countNoOfInterestAndComment(e.id)
+              .pipe(takeUntil(this._unsubscribe))
+              .subscribe((response: APIResponse) => {
+                if (response.status === HttpStatusCode.Ok) {
+                  this.postInfos.push({
+                    key: e.id,
+                    data: response.data
+                  });
+                } else {
+                  this._messageService.errorMessage(response.message);
+                }
+              })
+          });
+          this.realEstatePostSrc = response.data;
         } else {
           this._messageService.errorMessage(response.message);
         }
@@ -311,12 +363,41 @@ export class ManageMainPostComponent implements OnInit, OnDestroy {
   }
 
   onPageChange(event: any): void {
-    let selectedPage = event.page;
-    if (selectedPage == event.pageCount - 1) {
-      this.currRealEstatePosts = this.realEstatePosts.slice(selectedPage*10, this.realEstatePosts.length); 
-    } else {
-      this.currRealEstatePosts = this.realEstatePosts.slice(selectedPage*10, (selectedPage + 1)*10); 
-    }
+    // let selectedPage = event.page;
+    // if (selectedPage == event.pageCount - 1) {
+    //   this.currRealEstatePosts = this.realEstatePosts.slice(selectedPage*10, this.realEstatePosts.length); 
+    // } else {
+    //   this.currRealEstatePosts = this.realEstatePosts.slice(selectedPage*10, (selectedPage + 1)*10); 
+    // }
+    
+    this.page = event.page;
+    this.rows = event.rows;
+    
+    this._realEsatePostService.getPostdByOwnerId(this.page, this.rows)
+      .pipe(takeUntil(this._unsubscribe))
+      .subscribe((response: APIResponse) => {
+        this._loadingService.loading(false);
+        if (response.status === HttpStatusCode.Ok) {
+          this.realEstatePosts = response.data;
+          this.realEstatePosts.forEach(e => {
+            this._realEsatePostService.countNoOfInterestAndComment(e.id)
+              .pipe(takeUntil(this._unsubscribe))
+              .subscribe((response: APIResponse) => {
+                if (response.status === HttpStatusCode.Ok) {
+                  this.postInfos.push({
+                    key: e.id,
+                    data: response.data
+                  });
+                } else {
+                  this._messageService.errorMessage(response.message);
+                }
+              })
+          });
+          // this.realEstatePostSrc = this.realEstatePosts;
+        } else {
+          this._messageService.errorMessage(response.message);
+        }
+      });
   }
 
   getNoOfComments(id: string): any {

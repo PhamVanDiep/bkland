@@ -75,24 +75,28 @@ export class MainPostComponent implements OnInit, OnDestroy {
     this.innerWidth = window.innerWidth;
     this.lstStatusDropdown = STATUS_DROPDOWN;
     this.selectedStatus = '';
+    this.realEstatePostsSrc = [];
   }
 
   ngOnInit(): void {
     this._socketService.connect();
     this._socketService.joinNewRepConversation();
     // throw new Error('Method not implemented.');
+
     this._loadingService.loading(true);
     this._realEstatePostService.getAllPost()
       .pipe(takeUntil(this._unsubscribe))
       .subscribe((response: APIResponse) => {
         this._loadingService.loading(false);
         if (response.status === HttpStatusCode.Ok) {
-          this.realEstatePosts = response.data;
           this.realEstatePostsSrc = response.data;
+          this.realEstatePosts = response.data;
         } else {
           this._messageService.errorMessage(response.message);
         }
       });
+
+    this.fetchPost(null);
   }
 
   genType(type: string): string {
@@ -265,5 +269,24 @@ export class MainPostComponent implements OnInit, OnDestroy {
     } else {
       this.realEstatePosts = this.realEstatePostsSrc;
     }
+  }
+
+  fetchPost(event: any): void {
+    let first = 0;
+    let rows = 10;
+    if (event != null) {
+      first = event.first;
+      rows = event.rows;
+    }
+    this._realEstatePostService.getAllPostPaginator(first, rows)
+      .pipe(takeUntil(this._unsubscribe))
+      .subscribe((response: APIResponse) => {
+        this._loadingService.loading(false);
+        if (response.status === HttpStatusCode.Ok) {
+          this.realEstatePosts = response.data;
+        } else {
+          this._messageService.errorMessage(response.message);
+        }
+      });
   }
 }
